@@ -22,8 +22,7 @@ Bar3D = function(data){
   
 }
 
-
-samp = read.csv(file.choose())
+samp = read.csv('data/type1dataset39_ratio0.681_target46.42.csv')
 
 p = Bar2D(samp)
 plot_gg(p, width = 3, height = 3, multicore = T, scale = 200,
