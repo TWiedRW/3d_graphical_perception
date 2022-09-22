@@ -10,17 +10,18 @@
 ##
 ## ---------------------------
 ##
-## Notes:
+## Notes: Ratio as decimal
 ##   
 ##
 ## ---------------------------
 
 #Testing values
 x = 1:10
-cm_values = 10*10^((x-1)/12)
+cm_values = round(10*10^((x-1)/12),2)
 
-target_heights = c(20, 30, 40)
-ratios = c(0.5, 0.7, 0.9)
+target_heights = cm_values
+ratios = c(0.825, 0.825, 0.681, 0.681, 0.562, 
+           0.464, 0.464, 0.383, 0.261, 0.178)
 
 
 
@@ -107,7 +108,8 @@ generate_data = function(target_heights, ratios, type = c('Type1', 'Type3'), ran
     
     #Dataset
     dat = data.frame(Order = 1:10, 
-                     Group = c(1:5, 1:5),
+                     Group = rep(c('A', 'B'), each = 5),
+                     GroupOrder = c(1:5, 1:5),
                      Height = arrangement, 
                      Identifier = identifier)
     
@@ -120,7 +122,7 @@ generate_data = function(target_heights, ratios, type = c('Type1', 'Type3'), ran
               file = paste0('data/', filename, '.csv'),
               row.names = F)
    
-     #Update progress bar    
+    #Update progress bar    
     setTxtProgressBar(pb, i)
   }
   close(pb)
