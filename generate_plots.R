@@ -15,8 +15,6 @@
 ##
 ## ---------------------------
 
-plot_save = list()
-
 generate_plots = function(type = c(2,3), .clean_slate = F){
   require(ggplot2)
   source('generate_plot.R')
@@ -53,6 +51,3 @@ generate_plots = function(type = c(2,3), .clean_slate = F){
 }
 
 generate_plots(type = 2, .clean_slate = T)
-
-library(gridExtra)
-gridExtra::grid.arrange(plot_save)

@@ -1,6 +1,6 @@
 ## ---------------------------
 ##
-## Script name: generate_data.R
+## Script name: generate_data2.R
 ##
 ## Purpose of script:
 ##
@@ -19,14 +19,9 @@
 x = 1:10
 cm_values = round(10*10^((x-1)/12),2)
 
-target_heights = cm_values
-ratios = c(0.825, 0.825, 0.681, 0.681, 0.562, 
-           0.464, 0.464, 0.383, 0.261, 0.178)
 
-
-
-generate_data = function(target_heights, ratios, type = c('Type1', 'Type3'), random_process = c('unif', 'beta'), .clean_slate = F){
- 
+generate_data = function(value1, value2, type = c('Type1', 'Type3'), random_process = c('unif', 'beta'), .clean_slate = F){
+  
   #TESTING PURPOSES ONLY. THIS DELETES THE DATA FOLDER FOR A CLEAN START
   if(.clean_slate == T)(unlink('data', recursive = T))
   
@@ -37,15 +32,14 @@ generate_data = function(target_heights, ratios, type = c('Type1', 'Type3'), ran
   #if(!is.numeric(target_heights))(stop('Requires numeric target heights'))
   #if(!is.numeric(ratios))(stop('Requires numeric ratios'))
   #if(!(type %in% c('Type1','Type3'))(stop('Need to specify type = "Type1" or type = "Type3"'))
-
+  
   #Create data folder if folder does not exist in working directory
   if(!file.exists('data')) {
     dir.create('data')
   }
   
-  #Combinations of ratios and target heights
-  combinations = expand.grid(target_heights, ratios)
-  n_reps = nrow(combinations)
+  #Number of repetitions
+  n_reps = length(value1)
   
   #Progress bar
   pb = txtProgressBar(min = 0,
@@ -56,59 +50,47 @@ generate_data = function(target_heights, ratios, type = c('Type1', 'Type3'), ran
   
   #Generating data
   for(i in 1:n_reps){
-    target = combinations[i,1]
-    ratio = combinations[i,2]
-    newbar = target * ratio
+    height1 = value1[i]
+    height2 = value2[i]
+    
+    values = c(height1, height2)
     
     #Random bars
-    if(random_process == 'beta')(rand_bars = 100 * rbeta(n=8, shape1 = 2, shape2 = 2))
+    if(random_process == 'beta')(rand_bars = 100 * rbeta(n = 8, shape1 = 2, shape2 = 2))
     if(random_process == 'unif')(rand_bars = runif(n = 8, min = 0, max = 100))
     
     #Arrangement of Type 1
     if(type == 'Type1'){
       
-      #Comparison in left or right set of bars
-      set_comparison = sample(1:2, size = 1)
-      
-      #Order of bars within given set
-      bar_arrangement = sample(c(target, newbar, rand_bars[1:3]))
-      
-      #Arranging bars based on set
-      arrangement = numeric(10)
-      if(set_comparison == 1)(arrangement = c(bar_arrangement, rand_bars[4:8]))
-      if(set_comparison == 2)(arrangement = c(rand_bars[4:8], bar_arrangement))
+      #Order of bars
+      arrangement = c(rand_bars[1], sample(values, 2), rand_bars[2:8])
       
       #Tracking bars of interest
-      pos_target = match(target, arrangement)
-      pos_newbar = match(newbar, arrangement)
+      pos_height1 = match(height1, arrangement)
+      pos_height2 = match(height2, arrangement)
       
     }
     
     #Arrangement of Type 3
     if(type == 'Type3'){
       
-      #Target in left or right set
-      set_order = sample(1:2, size = 1)
+      #Value in left set
+      set_order = sample(1:2, size = 2)
       
       #Order of bars within given set
-      bar_arrangement1 = sample(c(target, rand_bars[1:4]))
-      bar_arrangement2 = sample(c(newbar, rand_bars[5:8]))
-      
-      #Arranging bars based on set
-      arrangement = numeric(10)
-      if(set_order == 1)(arrangement = c(bar_arrangement1, bar_arrangement2))
-      if(set_order == 2)(arrangement = c(bar_arrangement2, bar_arrangement1))
+      arrangement = c(rand_bars[1], values[set_order[1]], rand_bars[2:4],
+                      rand_bars[5], values[set_order[2]], rand_bars[6:8])
       
       #Tracking bars of interest
-      pos_target = match(target, arrangement)
-      pos_newbar = match(newbar, arrangement)
+      pos_height1 = match(height1, arrangement)
+      pos_height2 = match(height2, arrangement)
       
     }
     
     #Label positions
     identifier = rep(NA, 10)
-    identifier[pos_target] <- 'Target'
-    identifier[pos_newbar] <- 'Newbar'
+    identifier[pos_height1] <- 'Value1'
+    identifier[pos_height2] <- 'Value2'
     
     #Dataset
     dat = data.frame(Order = 1:10, 
@@ -117,30 +99,35 @@ generate_data = function(target_heights, ratios, type = c('Type1', 'Type3'), ran
                      Height = arrangement, 
                      Identifier = identifier)
     
-    #Saving data into files ("dataset#_type#_ratio#_target#.csv")
+    #Saving data into files ("type#_dataset#_value1_value2.csv")
     filename = paste0(tolower(type),
-                      'dataset', as.character(i), 
-                      '_ratio', as.character(ratio),
-                      '_target', as.character(target))
+                      '_dataset', as.character(i), 
+                      '_', as.character(round(height1, 2)),
+                      '_compared_to_', as.character(round(height2, 2)))
     write.csv(x = dat,
               file = paste0('data/', filename, '.csv'),
               row.names = F)
-   
+    
     #Update progress bar    
     setTxtProgressBar(pb, i)
   }
   close(pb)
 }
 
+
+#Data collection on all CM values
 set.seed(99)
-#Running the functions
-generate_data(target_heights = target_heights,
-              ratios = ratios,
+
+cm_all = expand.grid(cm_values, cm_values)
+cm_all = cm_all[cm_all[,1] != cm_all[,2],]
+
+generate_data(value1 = cm_all[,1],
+              value2 = cm_all[,2],
               type = 'Type1',
               random_process = 'beta',
               .clean_slate = T)
-generate_data(target_heights = target_heights,
-              ratios = ratios,
+generate_data(value1 = cm_all[,1],
+              value2 = cm_all[,2],
               type = 'Type3',
               random_process = 'beta',
               .clean_slate = F)
