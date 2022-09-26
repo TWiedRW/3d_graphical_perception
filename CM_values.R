@@ -107,4 +107,14 @@ for(i in 1:ncol(possible_combinations)){
 end_time2 = Sys.time()
 timediff2 = end_time2 - start_time2
 
-col_index_true
+#col_index_true
+
+#Index for which combinations meet criteria
+saved_index = possible_combinations[,col_index_true]
+
+#Storing the saved combinations into a list
+saved_combinations = list()
+for(i in 1:length(col_index_true)){
+  saved_combinations[[i]] = cbn_limited[,saved_index[,i]]
+}
+saved_combinations
