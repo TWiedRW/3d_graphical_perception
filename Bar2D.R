@@ -15,7 +15,7 @@
 ##
 ## ---------------------------
 
-Bar2D = function(data, mark_height = 1){
+Bar2D = function(data, mark_height = 5){
  
   require(ggplot2)
   
