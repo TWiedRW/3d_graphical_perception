@@ -65,5 +65,7 @@ plot_gg(p, width = 6, height = 1, raytrace = F, scale = 600, multicore = F,
         units = 'in',
         offset_edges = T)  
 
+rayshader::save_3dprint('test_print.stl')
+
 render_snapshot(clear = T)
 
