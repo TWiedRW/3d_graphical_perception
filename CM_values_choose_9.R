@@ -107,7 +107,7 @@ write.table(save.combination.index, 'value_combinations/saved_index.txt',
 
 #Saving combinations
 for(i in 1:length(res)){
-  combinations = round(cbn_limited[,save.combination.index[,i]],2)
+  combinations = round(cbind(known_value, cbn_limited[,save.combination.index[,i]],2))
   write.table(combinations, file = paste0('value_combinations/CM_values_',i,'.txt'),
               row.names = FALSE)
 }
