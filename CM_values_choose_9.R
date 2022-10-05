@@ -66,8 +66,8 @@ check_conditions = function(x){
   ratio_of_values = sort(find_ratios(combinations))
   
   #Check conditions of the values
-  value_conditions <- length(count_of_values) == 10 && 
-    count_of_values == c(1,2,2,2,2,2,2,2,2,1)
+  #value_conditions <- length(count_of_values) == 10 && 
+  #  count_of_values == c(1,2,2,2,2,2,2,2,2,1)
   
   #Check conditions of the ratios
   ratio_conditions <- floor(mean(ratio_of_values == ratios))
