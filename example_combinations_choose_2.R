@@ -44,10 +44,8 @@ ratios = ratios[2:10]
 
 
 
-#Choosing 9 possible value combinations (column is index of possible combinations)
-possible_combinations = combn(1:ncol(cbn_limited), 9)
-
-
+#Choosing 2 possible value combinations (column is index of possible combinations)
+possible_combinations = combn(1:ncol(cbn_limited), 2)
 
 
 #Function to check conditions
@@ -57,13 +55,13 @@ check_conditions = function(x){
   combinations = cbn_limited[,x]
   
   count_of_values = as.numeric(table(c(combinations, cm_values)))
-  ratio_of_values = sort(find_ratios(combinations))
+  ratio_of_values = sort(apply(combinations, 2, find_ratios))
   
   #Check conditions of the values
-  value_conditions <- isTRUE(all.equal(count_of_values, c(2,3,3,3,3,3,3,3,3,2)))
+  value_conditions <- isTRUE(all.equal(count_of_values, c(1,1,1,2,1,1,2,2,2,1)))
   
   #Check conditions of the ratios
-  ratio_conditions <- floor(mean(ratio_of_values == ratios))
+  ratio_conditions <- floor(mean(ratio_of_values == c(0.562, 0.825)))
   
   #Check both conditions true
   res <- ratio_conditions & value_conditions
@@ -77,30 +75,4 @@ check_conditions = function(x){
 #Collecting column index where combination meets criteria
 res = which(apply(possible_combinations, 2, check_conditions))
 
-
-
-#TESTING PURPOSES ONLY (cols of possible_combinations that are correct)
-#res = c(1, 5, 7, 12)
-
-
-
-
-
-#Create folder to store data
-if(!file.exists('value_combinations'))(dir.create('value_combinations'))
-
-
-
-#Saving index
-save.combination.index = possible_combinations[,res]
-write.table(save.combination.index, 'value_combinations/saved_index.txt',
-            row.names = FALSE)
-
-
-
-#Saving combinations
-for(i in 1:length(res)){
-  combinations = round(cbind(known_value, cbn_limited[,save.combination.index[,i]],2))
-  write.table(combinations, file = paste0('value_combinations/CM_values_',i,'.txt'),
-              row.names = FALSE)
-}
+cbn_limited[,possible_combinations[,res]]
