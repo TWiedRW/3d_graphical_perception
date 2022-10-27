@@ -20,5 +20,6 @@ generate_plot = function(data, type = c(2,3), ...){
   #source('Bar3D.R')
   
   if(type == 2)(p = Bar2D(data))
-  if(type == 3)(p = NA)
+  if(type == 3)(p = 'NEED TO MAKE A 3D PLOT HERE')
+  return(p)
 }
