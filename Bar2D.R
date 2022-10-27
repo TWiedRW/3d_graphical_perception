@@ -26,8 +26,7 @@ Bar2D = function(data, mark_height = 5){
   ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
     facet_grid(.~Group, switch = 'x') + 
     
-    geom_col(#position = position_dodge2(padding = 0),
-             color = 'black',
+    geom_col(color = 'black',
              fill = NA,
              width = 1) +
     geom_point(data = data[!is.na(data[,'Identifier']),],

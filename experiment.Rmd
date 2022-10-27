@@ -1,0 +1,481 @@
+---
+title: "experiment"
+author: "Di Cook"
+date: "July 29, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+- Generate 5 numbers with small difference (0-30)
+- Randomly add/subtract up to 3 points diff 
+- Generate 5 sets of 8 other random numbers
+- Randomise positions for the pair
+- Generate bar charts, pie charts, shifted bars, bubble plots, color swatches, dot plot
+- Questions: Is A or B smaller? What is the difference between A and B as a number?
+- Make wufoo pack with order of questions randomised
+- Report needs to have proportion of correct picks by plot type, average difference reported by plot type
+
+```{r}
+test_stems <- sample(1:30, 5)
+test_pairs <- matrix(as.vector(replicate(5,sample(c(-1,1)))) * sample(1:2, 10, replace=TRUE), ncol=2, byrow=T) + matrix(rep(test_stems, 2), ncol=2)
+colnames(test_pairs) <- c("A", "B")
+new_val <- function(x) {
+  sample(1:(100-sum(x)*1.1), 1)
+}
+full_set <- test_pairs
+full_set <- cbind(full_set, apply(full_set, 1, new_val))
+full_set <- cbind(full_set, 100-apply(full_set, 1, sum))
+colnames(full_set) <- letters[1:4]
+write.csv(full_set, file="full_set.csv", row.names=FALSE)
+```
+
+```{r}
+full_set <- read.csv("full_set.csv")
+full_set <- full_set[,sample(1:8)]
+full_set <- data.frame(t(full_set))
+full_set$labels <- factor(rownames(full_set), levels=rownames(full_set))
+full_set$x <- sample(20:80, 8)
+full_set$y <- sample(20:80, 8)
+library(ggplot2)
+library(gridExtra)
+# bar chart
+p1 <- ggplot(full_set, aes(x=labels, y=X1)) + 
+  geom_bar(stat = "identity", fill="black", colour="white")  + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c("a","b"), y=c(2,2), label=c("a","b"), colour="white")
+# pie chart
+p2 <- ggplot(full_set, aes(x = factor(1), y=X1)) + 
+  geom_bar(stat = "identity", width=1, fill="black", colour="white", size=1) +
+  coord_polar(theta="y") + xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,1), y=c(5,97), label=full_set$labels[c(1,8)], colour="white")
+# bubble chart
+p3 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_point(aes(size=X1), colour="black") + 
+  xlab("") + ylab("") + xlim(c(0, 100)) + ylim(c(0, 100)) +
+  scale_size_area(max_size=25) + 
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=full_set$x[c(1,8)], y=full_set$y[c(1,8)],
+           label=full_set$labels[c(1,8)], colour="white") + coord_equal()
+# shifted bar chart
+p4 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_segment(aes(x=1:8, xend=1:8, y=y, yend=y+X1), colour="black", size=10) + 
+  xlab("") + ylab("") +
+  theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,8), 
+           y=full_set$y[c(1,8)] + 0.5*full_set$X1[c(1,8)],
+           label=full_set$labels[c(1,8)],
+           colour="white")
+# color swatch
+p5 <- ggplot(full_set, aes(x = 1:8, y = 1)) + 
+  geom_point(aes(colour=X1), size=20, shape=15) + 
+  scale_colour_gradient() + 
+  xlab("") + ylab("") + ylim(c(0,2)) +
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,8), 
+           y=c(1.2, 1.2), label=full_set$labels[c(1,8)], colour="black")
+# dotplot
+p6 <- ggplot(full_set, aes(x=1:8, y=X1)) + 
+  geom_point(size=5)  + 
+  geom_segment(aes(x=1:8, xend=1:8, y=0, yend=X1), linetype=3) + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank()) + 
+  annotate("text", x=c(1,8), y=full_set$X1[c(1,8)], 
+           label=full_set$labels[c(1,8)], colour="black", vjust=-2) 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+```{r}
+full_set <- read.csv("full_set.csv")
+full_set <- full_set[,sample(1:8)]
+full_set <- data.frame(t(full_set))
+full_set$labels <- factor(rownames(full_set), levels=rownames(full_set))
+full_set$x <- sample(20:80, 8)
+full_set$y <- sample(20:80, 8)
+p1 <- ggplot(full_set, aes(x=labels, y=X2)) + 
+  geom_bar(stat = "identity", fill="black", colour="white")  + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c("a","b"), y=c(2,2), label=c("a","b"), colour="white")
+# pie chart
+p2 <- ggplot(full_set, aes(x = factor(1), y=X2)) + 
+  geom_bar(stat = "identity", width=1, fill="black", colour="white", size=1) +
+  coord_polar(theta="y") + xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,1), y=c(7,92), label=full_set$labels[c(2,7)], colour="white")
+# bubble chart
+p3 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_point(aes(size=X2), colour="black") + 
+  xlab("") + ylab("") + xlim(c(0, 100)) + ylim(c(0, 100)) +
+  scale_size_area(max_size=25) + 
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=full_set$x[c(2,7)], y=full_set$y[c(2,7)],
+           label=full_set$labels[c(2,7)], colour="white") + coord_equal()
+# shifted bar chart
+p4 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_segment(aes(x=1:8, xend=1:8, y=y, yend=y+X2), colour="black", size=10) + 
+  xlab("") + ylab("") +
+  theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(2,7), 
+           y=full_set$y[c(2,7)] + 0.5*full_set$X2[c(2,7)],
+           label=full_set$labels[c(2,7)],
+           colour="white")
+# color swatch
+p5 <- ggplot(full_set, aes(x = 1:8, y = 1)) + 
+  geom_point(aes(colour=X2), size=20, shape=15) + 
+  scale_colour_gradient() + 
+  xlab("") + ylab("") + ylim(c(0,2)) +
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(2,7), 
+           y=c(1.2, 1.2), label=full_set$labels[c(2,7)], colour="black")
+# dotplot
+p6 <- ggplot(full_set, aes(x=1:8, y=X2)) + 
+  geom_point(size=5)  + 
+  geom_segment(aes(x=1:8, xend=1:8, y=0, yend=X2), linetype=3) + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank()) + 
+  annotate("text", x=c(2,7), y=full_set$X2[c(2,7)], 
+           label=full_set$labels[c(2,7)], colour="black", vjust=-2) 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+```{r}
+full_set <- read.csv("full_set.csv")
+full_set <- full_set[,sample(1:8)]
+full_set <- data.frame(t(full_set))
+full_set$labels <- factor(rownames(full_set), levels=rownames(full_set))
+full_set$x <- sample(20:80, 8)
+full_set$y <- sample(20:80, 8)
+p1 <- ggplot(full_set, aes(x=labels, y=X3)) + 
+  geom_bar(stat = "identity", fill="black", colour="white")  + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c("a","b"), y=c(2,2), label=c("a","b"), colour="white")
+# pie chart
+p2 <- ggplot(full_set, aes(x = factor(1), y=X3)) + 
+  geom_bar(stat = "identity", width=1, fill="black", colour="white", size=1) +
+  coord_polar(theta="y") + xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,1), y=c(32,96), label=full_set$labels[c(6,8)], colour="white")
+# bubble chart
+p3 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_point(aes(size=X3), colour="black") + 
+  xlab("") + ylab("") + xlim(c(0, 100)) + ylim(c(0, 100)) +
+  scale_size_area(max_size=25) + 
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=full_set$x[c(6,8)], y=full_set$y[c(6,8)],
+           label=full_set$labels[c(6,8)], colour="white") + coord_equal()
+# shifted bar chart
+p4 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_segment(aes(x=1:8, xend=1:8, y=y, yend=y+X3), colour="black", size=10) + 
+  xlab("") + ylab("") +
+  theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(6,8), 
+           y=full_set$y[c(6,8)] + 0.5*full_set$X3[c(6,8)],
+           label=full_set$labels[c(6,8)],
+           colour="white")
+# color swatch
+p5 <- ggplot(full_set, aes(x = 1:8, y = 1)) + 
+  geom_point(aes(colour=X3), size=20, shape=15) + 
+  scale_colour_gradient() + 
+  xlab("") + ylab("") + ylim(c(0,2)) +
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(6,8), 
+           y=c(1.2, 1.2), label=full_set$labels[c(6,8)], colour="black")
+# dotplot
+p6 <- ggplot(full_set, aes(x=1:8, y=X3)) + 
+  geom_point(size=5)  + 
+  geom_segment(aes(x=1:8, xend=1:8, y=0, yend=X3), linetype=3) + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank()) + 
+  annotate("text", x=c(6,8), y=full_set$X3[c(6,8)], 
+           label=full_set$labels[c(6,8)], colour="black", vjust=-2) 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+```{r}
+full_set <- read.csv("full_set.csv")
+full_set <- full_set[,sample(1:8)]
+full_set <- data.frame(t(full_set))
+full_set$labels <- factor(rownames(full_set), levels=rownames(full_set))
+full_set$x <- sample(20:80, 8)
+full_set$y <- sample(20:80, 8)
+full_set$labels[7] <- "b"
+full_set$labels[4] <- "e"
+full_set$labels <- factor(full_set$labels, levels=full_set$labels)
+p1 <- ggplot(full_set, aes(x=labels, y=X4)) + 
+  geom_bar(stat = "identity", fill="black", colour="white")  + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c("a","b"), y=c(2,2), label=c("a","b"), colour="white")
+# pie chart
+p2 <- ggplot(full_set, aes(x = factor(1), y=X4)) + 
+  geom_bar(stat = "identity", width=1, fill="black", colour="white", size=1) +
+  coord_polar(theta="y") + xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,1), y=c(3.5,94.5), label=full_set$labels[c(1,7)], colour="white")
+# bubble chart
+p3 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_point(aes(size=X4), colour="black") + 
+  xlab("") + ylab("") + xlim(c(0, 100)) + ylim(c(0, 100)) +
+  scale_size_area(max_size=25) + 
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=full_set$x[c(1,7)], y=full_set$y[c(1,7)],
+           label=full_set$labels[c(1,7)], colour="white") + coord_equal()
+# shifted bar chart
+p4 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_segment(aes(x=1:8, xend=1:8, y=y, yend=y+X4), colour="black", size=10) + 
+  xlab("") + ylab("") +
+  theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,7), 
+           y=full_set$y[c(1,7)] + 0.5*full_set$X4[c(1,7)],
+           label=full_set$labels[c(1,7)],
+           colour="white")
+# color swatch
+p5 <- ggplot(full_set, aes(x = 1:8, y = 1)) + 
+  geom_point(aes(colour=X4), size=20, shape=15) + 
+  scale_colour_gradient() + 
+  xlab("") + ylab("") + ylim(c(0,2)) +
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,7), 
+           y=c(1.2, 1.2), label=full_set$labels[c(1,7)], colour="black")
+# dotplot
+p6 <- ggplot(full_set, aes(x=1:8, y=X4)) + 
+  geom_point(size=5)  + 
+  geom_segment(aes(x=1:8, xend=1:8, y=0, yend=X4), linetype=3) + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank()) + 
+  annotate("text", x=c(1,7), y=full_set$X4[c(1,7)], 
+           label=full_set$labels[c(1,7)], colour="black", vjust=-2) 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+```{r}
+full_set <- read.csv("full_set.csv")
+full_set <- full_set[,sample(1:8)]
+full_set <- data.frame(t(full_set))
+full_set$labels <- factor(rownames(full_set), levels=rownames(full_set))
+full_set$x <- sample(20:80, 8)
+full_set$y <- sample(20:80, 8)
+full_set$labels[4] <- "a"
+full_set$labels[8] <- "e"
+full_set$labels <- factor(full_set$labels, levels=full_set$labels)
+p1 <- ggplot(full_set, aes(x=labels, y=X5)) + 
+  geom_bar(stat = "identity", fill="black", colour="white")  + 
+  xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c("a","b"), y=c(2,2), label=c("a","b"), colour="white")
+# pie chart
+p2 <- ggplot(full_set, aes(x = factor(1), y=X5)) + 
+  geom_bar(stat = "identity", width=1, fill="black", colour="white", size=1) +
+  coord_polar(theta="y") + xlab("") + ylab("") + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,1), y=c(12,59), label=full_set$labels[c(1,4)], colour="white")
+# bubble chart
+p3 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_point(aes(size=X5), colour="black") + 
+  xlab("") + ylab("") + xlim(c(0, 100)) + ylim(c(0, 100)) +
+  scale_size_area(max_size=25) + 
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=full_set$x[c(1,4)], y=full_set$y[c(1,4)],
+           label=full_set$labels[c(1,4)], colour="white") + coord_equal()
+# shifted bar chart
+p4 <- ggplot(full_set, aes(x = x, y = y)) + 
+  geom_segment(aes(x=1:8, xend=1:8, y=y, yend=y+X5), colour="black", size=10) + 
+  xlab("") + ylab("") +
+  theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,4), 
+           y=full_set$y[c(1,4)] + 0.5*full_set$X5[c(1,4)],
+           label=full_set$labels[c(1,4)],
+           colour="white")
+# color swatch
+p5 <- ggplot(full_set, aes(x = 1:8, y = 1)) + 
+  geom_point(aes(colour=X5), size=20, shape=15) + 
+  scale_colour_gradient() + 
+  xlab("") + ylab("") + ylim(c(0,2)) +
+  theme_bw() + 
+  theme(legend.position="none", axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank(), 
+        rect = element_blank()) + 
+  annotate("text", x=c(1,4), 
+           y=c(1.2, 1.2), label=full_set$labels[c(1,4)], colour="black")
+# dotplot
+p6 <- ggplot(full_set, aes(x=1:8, y=X5)) + 
+  geom_point(size=5)  + 
+  geom_segment(aes(x=1:8, xend=1:8, y=0, yend=X5), linetype=3) + 
+  xlab("") + ylab("") + ylim(c(0, 30)) + theme_bw() + 
+  theme(axis.ticks = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.line = element_blank(), 
+        panel.grid = element_blank()) + 
+  annotate("text", x=c(1,4), y=full_set$X5[c(1,4)], 
+           label=full_set$labels[c(1,4)], colour="black", vjust=-2) 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+```{r}
+final_pairs <- data.frame(a=c(7,8,20,7,26), b=c(10,14,15,6,24))
+final_order_pie <- c(5, 4, 2, 3, 1)
+final_order_bar <- c(1, 2, 3, 4, 5)
+final_order_bubble <- c(4, 5, 2, 1, 3)
+final_order_color <- c(4, 1, 2, 3, 5)
+final_order_unaligned <- c(1, 5, 2, 3, 4)
+```

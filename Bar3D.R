@@ -17,9 +17,6 @@
 
 Bar3D = function(data){
   require(rayshader)
-  
-  
-  
 }
 
 
@@ -40,32 +37,45 @@ samp[is.na(samp[,'Identifier']),'Marker'] <- NA
 
 
 require(ggplot2)
+require(rayshader)
 
 p = ggplot(samp, mapping = aes(x = GroupOrder, y = 1,
                            fill = Height)) +
   facet_grid(.~Group, switch = 'x') + 
-  geom_tile(color = 'black', size = 3/4) +
+  geom_tile(size = 1) +
   geom_point(mapping = aes(x = Marker), na.rm = T) +
   scale_fill_gradient(low = 'grey20', high = 'grey80',
                       limits = c(0, 100)) +
   coord_equal() +
-  theme_minimal() +
-  theme(axis.title = element_blank(),
+  theme(legend.position = 'none',
+        #panel.background = element_blank(),
         panel.grid = element_blank(),
-        axis.text.y = element_blank(),
-        axis.text.x = element_blank(),
-        strip.text.x = element_text(size = 12),
-        plot.background = element_rect(fill = 'white', color = 'white'),
-        legend.position = 'none',
-        panel.background = element_rect(fill = 'white', color = 'white'))
+        #plot.background = element_blank(),
+        strip.background = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        axis.text = element_blank(),
+        axis.title = element_blank())
 p
 
-plot_gg(p, width = 6, height = 1, raytrace = F, scale = 600, multicore = F,
+plot_gg(p, width = 4.125, height = 1, raytrace = F, scale = 500*1.171, multicore = F,
         shadow_intensity = 0,
         units = 'in',
-        offset_edges = T)  
+        offset_edges = T,
+        theta = 0,
+        phi = 0)  
 
-rayshader::save_3dprint('test_print.stl')
 
-render_snapshot(clear = T)
+
+#rayshader::save_3dprint('test_print.stl',
+#                        remove_extras = F,
+#                        unit = 'in',
+#                        maxwidth = 4.125,
+#                        clear = T)
+
+
+
+
+
+
 

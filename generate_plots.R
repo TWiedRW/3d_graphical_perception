@@ -42,8 +42,8 @@ generate_plots = function(type = c(2,3), .clean_slate = F){
     p = generate_plot(data = dat, type = type)
 
     ggsave(paste0('plots/', files[i], '.jpeg'),
-           width = 6,
-           height = 6)
+           width = 4.125,
+           height = 5)
     #Update progress bar    
     setTxtProgressBar(pb, i)
   }
@@ -51,3 +51,5 @@ generate_plots = function(type = c(2,3), .clean_slate = F){
 }
 
 generate_plots(type = 2, .clean_slate = T)
+generate_plots(type = 3)
+
