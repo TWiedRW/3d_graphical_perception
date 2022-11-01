@@ -139,7 +139,7 @@ Bar3D = function(samp, output_style = c('3D', 'stl')){
 }
 Bar3D(samp)
 
-Sys.sleep(7)
+#Sys.sleep(7)
 #render_snapshot(clear = T, title_text = 'Snapshot of 3D Print Format')
-rgl::rgl.close()
+#rgl::rgl.close()
 
