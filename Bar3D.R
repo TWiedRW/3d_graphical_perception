@@ -109,6 +109,7 @@ Bar3D = function(samp){
           offset_edges = 0.000001,
           theta = 0,
           phi = 0,
+          background = 'pink',
           soliddepth = -100/1000,
           solidcolor = 'green', 
           solidlinecolor = 'blue',
@@ -118,7 +119,7 @@ Bar3D = function(samp){
   
   
 }
-
+Bar3D(samp)
 
 
 
