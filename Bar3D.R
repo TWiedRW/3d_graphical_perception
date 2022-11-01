@@ -50,7 +50,7 @@ Bar3D = function(samp, output_style = c('3D', 'stl')){
                                       color = 'white'),
       plot.background = element_rect(fill = 'white',
                                      color = 'white'),
-      strip.text = element_text(size = 12),
+      strip.text = element_text(size = 20),
       panel.grid = element_blank(),
       axis.text = element_blank()
     )
@@ -78,7 +78,7 @@ Bar3D = function(samp, output_style = c('3D', 'stl')){
                                       color = 'white'),
       plot.background = element_rect(fill = 'white',
                                      color = 'white'),
-      strip.text = element_text(size = 20, face = 'bold'),
+      strip.text = element_text(size = 24, face = 'bold'),
       panel.grid = element_blank(),
       axis.text = element_blank()
     )
@@ -102,9 +102,9 @@ Bar3D = function(samp, output_style = c('3D', 'stl')){
 #          shadow = FALSE)  
   
   
-  plot_gg(p, width = 4.125, height = 1, raytrace = F, scale = 1500, multicore = F,
+  plot_gg(p, width = 4.125, height = 1, raytrace = F, scale = 1000, multicore = F,
           shadow_intensity = 0,
-          emboss_text = 0.025,
+          emboss_text = 0.0125,
           #emboss_text = 0,
           preview = F,
           units = 'in',
@@ -137,7 +137,7 @@ Bar3D = function(samp, output_style = c('3D', 'stl')){
   
   
 }
-Bar3D(samp)
+#Bar3D(samp)
 
 #Sys.sleep(7)
 #render_snapshot(clear = T, title_text = 'Snapshot of 3D Print Format')
