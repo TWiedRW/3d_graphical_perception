@@ -31,7 +31,7 @@ ui <- fluidPage(
     # Application title
     titlePanel("Test of 3D graphics"),
         mainPanel(
-           rglwidgetOutput("rglPlot"),
+           rglwidgetOutput("rglPlot", width = '100%'),
            imageOutput('plot2')
         )
     
@@ -42,7 +42,7 @@ server <- function(input, output) {
   test_plot = normalizePath('plots/Set 1/2D/Type 1/type1_dataset1.jpeg')
   
   output$plot2 = renderImage({
-    list(src = test_plot, width="516px", height = "auto")
+    list(src = test_plot, width="100%", height = "auto")
   }, deleteFile = FALSE)
   
   output$rglPlot <- renderRglwidget({
