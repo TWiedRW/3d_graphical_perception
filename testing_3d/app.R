@@ -17,7 +17,7 @@
 
 library(shiny)
 library(rgl)
-
+source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/Bar3D.R')
 
 
 # Define UI for application that draws a histogram
@@ -31,63 +31,25 @@ ui <- fluidPage(
     # Application title
     titlePanel("Test of 3D graphics"),
         mainPanel(
-           #rglwidgetOutput("rglPlot", width = '516px', height = '516px'),
-           plotOutput('plot2.2', width = '100px', height = '100px')
+           rglwidgetOutput("rglPlot"),
+           imageOutput('plot2')
         )
     
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
-  #samp = read.csv('data/type1_dataset54_56.23_compared_to_26.1.csv')
-  samp = read.csv('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/data/type1_dataset54_56.23_compared_to_26.1.csv')
-  samp[,'Marker'] <- rep(1:5, 2)
+  test_plot = normalizePath('plots/Set 1/2D/Type 1/type1_dataset1.jpeg')
   
-  samp[is.na(samp[,'Identifier']),'Marker'] <- NA
-  
-  
-  require(ggplot2)
-  require(rayshader)
-  
-  p = ggplot(samp, mapping = aes(x = GroupOrder, y = 1,
-                                 fill = Height)) +
-    facet_grid(.~Group, switch = 'x') + 
-    geom_tile() +
-    geom_point(mapping = aes(x = Marker), na.rm = T) +
-    scale_fill_gradient(low = 'grey20', high = 'grey80',
-                        limits = c(0, 100)) +
-    coord_equal()
-  
-  p3 = plot_gg(p, 
-               width = 4.125, 
-               height = 1, 
-               raytrace = F, 
-               scale = 500*1.171, 
-               multicore = F,
-          shadow_intensity = 0,
-          units = 'in',
-          offset_edges = T,
-          theta = 0,
-          phi = 0)  
-  
-  
-  
-  
+  output$plot2 = renderImage({
+    list(src = test_plot, width="516px", height = "auto")
+  }, deleteFile = FALSE)
   
   output$rglPlot <- renderRglwidget({
-    p3
-    aspect3d(4.125, 5, 1)
+    plot_dat = read.csv('data/Set 1/2D/Type 1/type1_dataset1.csv')
+    Bar3D(plot_dat)
     rglwidget()
   })
-  
-  output$plot2 <- renderUI({
-    img(src = '/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/plots/type1_dataset54_56.23_compared_to_26.1.csv.jpeg')
-  })
-  
-  output$plot2.2 <- renderImage({
-    list(src = '/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/plots/type1_dataset54_56.23_compared_to_26.1.csv.jpeg')
-  }, deleteFile = F)
   
 }
 
