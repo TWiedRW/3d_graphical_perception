@@ -94,6 +94,7 @@ Bar3D = function(samp){
           phi = 0,
           soliddepth = -100/1000,
           solidcolor = 'green', 
+          background = 'pink',
           solidlinecolor = 'blue',
           shadow = FALSE,
           linewidth = 3)  
