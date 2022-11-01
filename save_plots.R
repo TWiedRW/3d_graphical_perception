@@ -44,22 +44,44 @@ for(i in 1:n_sets){
 
 
 
-
+#List of all data folders
 folders = list.dirs(path = 'data')
+
+#Full file paths (Last component is "Type")
 folder_locs = folders[grepl('Type', folders)]
 
+
+
+
+
+
+###
 for(i in 1:length(folder_locs)){
+  
+  #Identify graph type folder
   if(grepl('2D', folder_locs[i]))(graph_type = 2)
-  if(grepl('3D', folder_locs[i]))(graph_type = 3)
+  if(grepl('3D', folder_locs[i]))(graph_type = 3) #NEED TO ADJUST FOR STL AND PLOTTED GRAPH
+  
+  #Getting data within type and set
   data_sets = dir(folder_locs[i])
   
+  ###Generating plots for each data set
   for(j in 1:length(data_sets)){
+    
+    #File location
     file_loc = paste0(folder_locs[i], '/', data_sets[j])
+    
+    #Reading data
     data = read.csv(file_loc)
+    
+    #Generating plot
     p = generate_plot(data, type = graph_type)
     
+    #Change location to match plots file path
     plot_loc = gsub('data/', 'plots/', file_loc)
     plot_loc = gsub('csv', 'jpeg', plot_loc)
+    
+    #SAVE 2D ONLY!!! NEED TO INCLUDE STL ONCE Bar3D IS COMPLETE!
     ggsave(plot_loc, 
            width = 4.125,
            height = 5)
