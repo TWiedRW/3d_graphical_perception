@@ -16,7 +16,7 @@
 ## ---------------------------
 
 
-generate_data = function(value1, value2, type = c('Type1', 'Type3'), random_process = c('unif', 'beta'), save_dir){
+generate_data = function(value1, value2, type = c('Type1', 'Type3'), random_process = c('unif', 'beta'), filename){
   
   #Number of repetitions
   n_reps = length(value1)
@@ -73,10 +73,8 @@ generate_data = function(value1, value2, type = c('Type1', 'Type3'), random_proc
                      Identifier = identifier)
     
     #Saving data into files ("type#_dataset#_value1_value2.csv")
-    filename = paste0(tolower(type),
-                      '_dataset', as.character(i))
     write.csv(x = dat,
-              file = paste0(save_dir, '/', filename, '.csv'),
+              file = paste0(filename, '.csv'),
               row.names = F)
   }
 }
