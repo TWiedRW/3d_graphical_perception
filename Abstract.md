@@ -73,7 +73,7 @@ The only difference between the digital and 3D printed versions of these charts 
 
 # Pilot Study
 
-Data is generated for a Block Incomplete Design. Participants will be given one of 12 kits, with each kit containing five graphs of each graph type for a total of 15 graphs. Five of seven unique ratios will be chosen at random and used for each graph type within a kit. The graphs will then be randomly assigned a length comparison or a position comparison. The goal is to detect differences between graph types.
+Data is generated for a Incomplete Block Design. Participants will be given one of 12 kits, with each kit containing five graphs of each graph type for a total of 15 graphs. Five of seven unique ratios will be chosen at random and used for each graph type within a kit. The graphs will then be randomly assigned a length comparison or a position comparison. The goal is to detect differences between graph types.
 
 The 2D and digital 3D charts will be fully enclosed within a Shiny application. **HOW WILL PARTICIPANTS ANSWER QUESTIONS ABOUT 3D PRINTS?? SHINY WITH IDENTIFIER? PAPER?** Subjects will identify which bar is smaller and what percentage the smaller bar is of the larger bar. 
 
