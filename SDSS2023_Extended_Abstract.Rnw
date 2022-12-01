@@ -1,0 +1,87 @@
+% File SDSS2020_SampleExtendedAbstract.tex
+\documentclass[10pt]{article}
+\usepackage{sdss2020} % Uses Times Roman font (either newtx or times package)
+\setlength\titlebox{1.5cm}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{amsmath, amsthm, amsfonts}
+\usepackage{algorithm, algorithmic}  
+\usepackage{graphicx}
+
+\title{Demonstrative Evidence and the Use of Algorithms in Jury Trials}
+
+% \author{
+%   Rachel E.S. Rogers \And Susan Vanderplas\\
+%   University of Nebraska-Lincoln \\
+%   {\tt rachel.rogers@huskers.unl.edu}, {\tt susan.vanderplas@unl.edu}}
+% \thanks{This work was funded (or partially funded) by the Center for Statistics and Applications in Forensic Evidence (CSAFE) through Cooperative Agreements 70NANB15H176 and 70NANB20H019 between NIST and Iowa State University, which includes activities carried out at Carnegie Mellon University, Duke University, University of California Irvine, University of Virginia, West Virginia University, University of Pennsylvania, Swarthmore College and University of Nebraska, Lincoln.}
+
+\date{}
+\usepackage[dvipsnames]{xcolor} % colors
+\newcommand{\rr}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\svp}[1]{{\textcolor{RedOrange}{#1}}}
+
+\usepackage[capitalise]{cleveref}
+\newcommand\pcref[1]{(\cref{#1})}
+
+
+\begin{document}
+\maketitle
+% \begin{abstract}
+% We are interested in investigating how the potential use of algorithms and demonstrative evidence may affect potential jurors’ feelings of reliability, credibility, and understanding of expert witnesses and presented evidence. The use of statistical methods in forensic science is motivated by a lack of scientific validity and error rate issues present in many forensic analysis methods. We explore how this new method may be perceived in the courtroom – where individuals unfamiliar with advanced statistical methods are asked to evaluate its use in order to assess guilt.
+% \end{abstract}
+
+{\bf Keywords:} Explainable Machine Learning, Forensic Science, Jury Perception
+
+\section{Introduction}
+The foundational belief in bullet comparison in the forensic sciences is that guns can leave individualizing marks on bullets when fired, which can be used to identify the gun ~\cite{pcast2016}. Current bullet matching methods rely on a subjective visual comparison of bullets completed by a forensic scientist in order to reach a conclusion ~\cite{nrc2009}. In order to improve upon the bullet matching method with increased scientific validity, PCAST ~\shortcite{pcast2016} urged the development of more objective methods of analysis. \svp{These reports have spurred increased research, development, and assessment of statistical matching methods for firearms analysis, including~\cite{hare2017,vanderplas2020,songDevelopmentBallisticsIdentification2012}. As these algorithms are developed and validated, it becomes more important to understand how they may impact the evidentiary process - how will jurors react to algorithms used to match bullets?}.
+
+% \subsection{Bullet Matching Algorithm}
+The bullet matching algorithm developed by Hare et. al.~\shortcite{hare2017} \svp{follows these steps}: first, a 3D scan is taken of each bullet land, a stable cross-section is extracted, and shoulders \svp{(edges)} are removed; then a smoothing function is applied twice in order to extract \svp{a representative profile, called} the signature, which can be compared to signatures from other bullets; finally, traits are combined using a random forest to produce a match score for each land, \svp{these individual scores are aggregated to create} a \svp{bullet-level} match score. The algorithm was \svp{validated on external test sets} by Vanderplas et. al.~\shortcite{vanderplas2020} for its use on undamaged bullets\svp{, which is a critical step in the path to putting the algorithm into forensic labs}. \svp{For the algorithm to be used in practice, though, we must understand how jurors without statistical expertise understand and interpret the results from the algorithm as presented during testimony. This problem has been encountered before, in disciplines such as DNA and fingerprints\cite{koehler2001,garrett2018}.} 
+% \rr{XXX DNA citation about understanding probabilities, not specifically algorithmic explanation XXX .}
+
+% \subsection{Explainable Machine Learning - Previous Research}
+Swofford and Champod ~\shortcite{swofford2022} interviewed \svp{judges, lawyers, scientists, and researchers} in order to \svp{assess} their feelings \svp{about} the use of statistical methods and probabilistic language \svp{in court}. They found that some individuals were concerned about jurors’ ability to understand and properly interpret probabilistic language; some suggested that a mix of probabilistic language and match language may be more beneficial than strictly using one or the other. The use of likelihood ratios was also investigated by Garrett et. al. ~\shortcite{garrett2018} \rr{through the use of FRStat language, which is used in fingerprint analysis. FRStat language in this case was framed as  "The probability of observing this amount of correspondence is approximately [XXX] times greater when the impressions are made by the same source rather than by different sources"  \cite{DFSCLPInformation2018}. They} found that jurors did not provide significantly different likelihoods that the individual committed the crime when they were presented with a wide range of \rr{FRStat} likelihood \rr{results} \cite{garrett2018}. These examples illustrate that there is (\svp{justifiable}) concern for how statistical methods and results may be presented and interpreted in the courtroom.
+% \subsection{Demonstrative Evidence}
+
+Demonstrative evidence, such as images, can serve as an aid in explaining results and methods used in the forensic sciences. However, there is the potential that the use of images can be biasing. In a study conducted by Cardwell et. al.~\shortcite{cardwell2016}, researchers found that \svp{topically related} images may make a scenario more believable\svp{, even if the images provide no additional evidentiary value}. 
+\svp{As statistical graphics can improve our ability to understand data and model results, it is possible that the use of explanatory images may increase jurors' ability to understand the use of algorithms for evaluating forensic evidence. These graphics differ from those in Cardwell et. al.\shortcite{cardwell2016} as they are directly showing evidence that is also being presented and explained verbally.}
+
+\svp{In this factorial study, we examine the effect of algorithm use and demonstrative evidence (photos and data visualizations) in jurors' perception of examiner testimony. We assess the perception of the strength of evidence, guilt or innocence, examiner credibility, and the reliability and scientific validity of firearms examination. This study is intended to lay the groundwork for the use of algorithmic firearms comparisons in court.}
+When presented with the same evidence, it is important to know whether or not images affect potential jurors’ views on the reliability or credibility of the witness and the evidence that they present.
+
+\section{Methods}
+
+\subsection{Participants}
+Participants were recruited using Prolific, an online \svp{platform for scientific research}. 
+\svp{Prolific offers researchers the ability to obtain a representative sample of participants from a specific region (in this case, the United States) across age, race, and gender. 
+Individuals were additionally asked to self-screen for jury eligibility (no past felony convictions, over the age of majority, not emergency response personnel, etc.). 
+Participants were paid \$8.40 for their participation in the study and completed the study with a median response time of around 18 minutes.}
+
+\subsection{Design}
+\svp{In order to assess the effect of evidence presentation and the use of algorithms on how jurors evaluated firearms evidence, we developed a factorial experiment, manipulating the examiner's conclusion (Identification, Inconclusive, or Elimination), whether algorithm testimony was included, and whether testimony included demonstrative evidence (pictures and charts), for a 3x2x2 factorial experiment. Participants were randomly assigned to one of the 12 experimental conditions.}
+
+\subsection{Study Format}
+Participants \svp{were asked to} read a short excerpt of court testimony with regards to an attempted robbery – a scenario based on Garrett et. al. ~\shortcite{garrett2020}’s study. 
+The transcripts were based on testimony given in real trials. 
+In order to facilitate participants' recall and provide insight into the portions of the testimony participants found to be important, participants were provided with a way to take notes throughout the presentation of testimony. 
+At the end of the transcripts, participants were asked to rate their impression of the evidence presented, as well as their impression of the expert witnesses \svp{ using a Likert scale}.
+
+
+
+\section{Results}
+
+
+% \svp{XXX This is an abstract, so let's write this up instead highlighting the ways we intend to analyze the data: linear models (but cautioning that these effects are fairly subtle), text analysis of participant notes, and what this study tells us about which factors are and are not extremely impactful. Mention that the goal is to both assess factors impacting firearms testimony and to develop a better protocol for testing. XXX}
+
+\rr{Participants were asked to rate the following according to a Likert scale: their views on the examiner's credibility; and their views on the reliability, scientificity, and strength of evidence. These scales are explored through charts, and analyzed through the use of linear models. A common feature in many of these charts is scale compression - most individuals limited their Likert scale selection to the two highest values in terms of credibility, reliability, and scientificity. This may result in linear models that do not adequately respresent the data. Linear models will also be used for questions regarding the probability that Cole committed the crime and the probability that the gun was used in the crime. Participants' notes will be analyzed to determine the portions of the testimony that individuals found most impactful.}  
+
+\rr{We found that the use of images had little effect on the participants' responses. The examiner's conclusion had the widest effect, both in the expected areas of strength of evidence and probability that Cole/the gun was involved in the crime, as well as in areas of reliability and scientificity. There was also some difference between perceptions of the algorithm and the traditional bullet analysis method.}\svp{In the remainder of this paper, we will examine specific factors impacting firearms testimony. In addition, we will use the results of this preliminary study to develop a better protocol for assessing jury perception of transcripted testimony.}
+
+\section{Future Research}
+In order to combat scale compression, we \svp{must} develop questions that may elicit a more numerical response from participants. \svp{We also intend} to provide jury instructions with regards to critical evaluation of expert testimony, \svp{to enhance existing differences between experimental conditions}. In pursuit of a more accurate courtroom setting in an easy-to-distribute online format, we \svp{will} use of visual representations of individuals in the courtroom, \svp{with cues to indicate which individual is speaking at any particular time}. \svp{We expect that these modifications will produce a study with more nuanced participant responses and will alleviate the scale compression seen in this experiment}. \svp{By SDSS 2023, we should have preliminary results from the revised protocol and will be able to assess the effectiveness of these modifications.}
+
+\bibliographystyle{sdss2020} % Please do not change the bibliography style
+\bibliography{ReferencesForExtendedAbstract}
+
+\end{document}
