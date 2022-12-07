@@ -19,7 +19,7 @@
 
 #Design parameters
 n_kits = 12
-n_ratio = 5
+n_ratio = 5 # for each kit, 7 total
 
 #Packages and seed for reproducibility
 library(purrr)
