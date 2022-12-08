@@ -27,9 +27,9 @@ Cleveland and McGill provided a theory and tested for the ordering of perceptual
 The first experiment, referenced as the position-length experiment, used two bar charts and three stacked bar charts.
 Each chart had two bars used for comparison and participants were asked what bar was smaller and what was the ratio of the smaller to the larger bar.
 The two bar charts are for the perceptual element of position, where one has zero distance between bars and the other has a fixed distance between bars.
-Cleveland and McGill found that the distance between bars could influence the error of responses and that position along a common scale comparisions are better than length comparisons.
+Cleveland and McGill found that the distance between bars could influence the error of responses and that position along a common scale comparisons are better than length comparisons.
 
-Our study will replicate the proceedure of the comparisons for the two types of bar charts, but with an objective of detecting differences between 2D graphs, 3D digital graphs, and 3D printed graphs.
+Our study will replicate the procedure of the comparisons for the two types of bar charts, but with an objective of detecting differences between 2D graphs, 3D digital graphs, and 3D printed graphs.
 
 # Methods
 
