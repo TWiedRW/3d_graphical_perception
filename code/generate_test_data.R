@@ -105,7 +105,8 @@ write_data <- function(dat, filename) {
   # Create chart
   plot_2d = Bar2D(dat)
   ggsave(plot = plot_2d, filename = paste0(filename, ".png"), 
-         width = 130*5, height = 100*5, units = "px")
+         width = 4.125, height = 5, units = "in", dpi = 300)
+         # width = 130*5, height = 100*5, units = "px")
   
   # Render STL (if openscad is available)
   if (system("which openscad") == 0)
@@ -113,21 +114,21 @@ write_data <- function(dat, filename) {
   
   return(plot_2d)
 }
-
-#Reading data and selecting random possible set
-
-set.seed(21)
-data <- read.csv('CM_possible_values.csv') %>%
-  nest(data = -Set) %>%
-  arrange(Set) %>%
-  slice_sample(n = 1) %>%
-  crossing(rep = 1:n_sets, .) %>%
-  unnest(data) %>%
-  rename(ratio = X) %>%
-  mutate(bars = purrr::map2(Value1, Value2, create_data)) %>%
-  crossing(type = c(1, 3)) %>%
-  mutate(filename = sprintf("data/Set%02d/Ratio%04d/Type%d-Rep%02d", Set, ratio, type, rep)) %>%
-  mutate(data = purrr::map2(bars, type, fix_data_type)) %>%
-  mutate(plot_2d = purrr::map2(data, filename, write_data))
-
-save(data, file = "data/Overall_Data_Frame.Rdata")
+# 
+# #Reading data and selecting random possible set
+# 
+# set.seed(21)
+# data <- read.csv('CM_possible_values.csv') %>%
+#   nest(data = -Set) %>%
+#   arrange(Set) %>%
+#   slice_sample(n = 1) %>%
+#   crossing(rep = 1:n_sets, .) %>%
+#   unnest(data) %>%
+#   rename(ratio = X) %>%
+#   mutate(bars = purrr::map2(Value1, Value2, create_data)) %>%
+#   crossing(type = c(1, 3)) %>%
+#   mutate(filename = sprintf("data/Set%02d/Ratio%04d/Type%d-Rep%02d", Set, ratio, type, rep)) %>%
+#   mutate(data = purrr::map2(bars, type, fix_data_type)) %>%
+#   mutate(plot_2d = purrr::map2(data, filename, write_data))
+# 
+# save(data, file = "data/Overall_Data_Frame.Rdata")
