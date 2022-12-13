@@ -18,6 +18,7 @@
 # Block design ------------------------------------------------------------
 
 #Design parameters
+n_sets = 1 # number of replicates of each set of 7 ratios x 2 types
 n_kits = 12
 n_ratio = 5 # for each kit, 7 total
 
@@ -25,10 +26,36 @@ n_ratio = 5 # for each kit, 7 total
 library(purrr)
 library(dplyr)
 library(tidyr)
-source('generate_data2.R')
-source('generate_plot.R')
+source('code/generate_data2.R')
+source('code/generate_plot.R')
+source('code/generate_test_data.R')
 set.seed(6214)
 
+
+
+#Reading data and selecting random possible set
+
+data <- read.csv('CM_possible_values.csv') %>%
+  group_by(Set) %>%
+  mutate(ratio = round(Value1/Value2, 3), 
+         ratio_id = 1:n()) %>%
+  filter(!duplicated(ratio)) %>%
+  ungroup() %>%
+  arrange(Set, ratio) %>%
+  select(Set, Value1, Value2, ratio, ratio_id) %>%
+  nest(data = -Set) %>%
+  arrange(Set) %>%
+  slice_sample(n = 1) %>% # This selects a set
+  crossing(rep = 1:n_sets, .) %>%
+  unnest(data) %>%
+  mutate(bars = purrr::map2(Value1, Value2, create_data)) %>%
+  crossing(type = c(1, 3)) %>%
+  mutate(filename = sprintf("data/pilot/Set%02d/id-%02d/Type%d-Rep%02d", 
+                            Set, ratio_id, type, rep)) %>%
+  mutate(data = purrr::map2(bars, type, fix_data_type)) %>%
+  mutate(plot_2d = purrr::map2(data, filename, write_data))
+
+save(data, file = "data/pilot/Overall_Data_Frame.Rdata")
 
 
 #Factor combinations
@@ -55,30 +82,6 @@ data1 = data[data$Set == sample(1:max(data$Set), 1),]
 data1$ratio = round(data1$Value1/data1$Value2,3)
 values = data1[!duplicated(data1$ratio),c('Value1', 'Value2', 'ratio')]
 
-
-#Reading data and selecting random possible set
-
-data <- read.csv('CM_possible_values.csv') %>%
-  group_by(Set) %>%
-  mutate(ratio = round(Value1/Value2, 3), 
-         ratio_id = 1:n()) %>%
-  ungroup() %>%
-  arrange(Set, ratio) %>%
-  nest(data = -Set) %>%
-  mutate(data = purrr::map(data, ~filter(., !duplicated(ratio)) %>% 
-                             select(Value1, Value2, ratio, ratio_id))) %>%
-  arrange(Set) %>%
-  slice_sample(n = 1) %>%
-  crossing(rep = 1:n_sets, .) %>%
-  unnest(data) %>%
-  mutate(bars = purrr::map2(Value1, Value2, create_data)) %>%
-  crossing(type = c(1, 3)) %>%
-  mutate(filename = sprintf("data/pilot/Set%02d/id-%02d/Type%d-Rep%02d", 
-                            Set, ratio_id, type, rep)) %>%
-  mutate(data = purrr::map2(bars, type, fix_data_type)) %>%
-  mutate(plot_2d = purrr::map2(data, filename, write_data))
-
-save(data, file = "data/pilot/Overall_Data_Frame.Rdata")
 
 #Pilot study
 pilot_study = dat %>% 
