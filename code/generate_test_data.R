@@ -65,27 +65,7 @@ fix_data_type <- function(data, type, shuffle_first = F) {
     select(Order, Group, GroupOrder, Height, Identifier, IDchr)
 }
 
-
-Bar2D <- function(data, mark_height = 5){
-  ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
-    facet_grid(.~Group, switch = 'x') + 
-    geom_col(color = 'black',
-             fill = NA,
-             width = 1) +
-    geom_point(data = filter(data, IDchr != ""),
-               mapping = aes(x = GroupOrder, y = mark_height, shape = IDchr),
-               size = 2) +
-    scale_x_discrete() +
-    ylim(0, 100) +
-    theme_minimal() +
-    theme(axis.title = element_blank(),
-          panel.grid = element_blank(),
-          axis.text.y = element_blank(),
-          axis.text.x = element_text(size = 20),
-          strip.text = element_text(size = 20),
-          legend.position = 'none')
-}
-
+source("code/Bar2D.R")
 
 scad <- readLines("template.scad")
 
