@@ -84,7 +84,10 @@ render() {
             }
         };
         // Subtract off the code
-        translate([base_x/2,base_y/2,0])
+        
+
+        translate([base_x/2,base_y/2,letter_height])
+            rotate([180,0,0])
             letter(code);
     }
 }

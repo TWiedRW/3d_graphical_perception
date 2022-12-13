@@ -11,6 +11,7 @@
 ## ---------------------------
 ##
 ## Notes:
+##   Intended to be run from project directory. Stored in ./code/
 ##   Read CM values
 ##   Choose one set
 ##   Generate n_sets replicates
@@ -67,7 +68,7 @@ fix_data_type <- function(data, type, shuffle_first = F) {
 
 source("code/Bar2D.R")
 
-scad <- readLines("template.scad")
+scad <- readLines("other/template.scad")
 
 ## Write the SCAD file
 write_scad <- function(dat, filename) {
