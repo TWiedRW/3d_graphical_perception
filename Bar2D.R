@@ -32,12 +32,18 @@ Bar2D = function(data, mark_height = 5){
                mapping = aes(x = GroupOrder, y = as.numeric(Identifier)),
                size = 1) +
     scale_x_discrete() +
-    ylim(0, 100) +
+    scale_y_continuous(breaks = seq(0,100, by = 10),
+                       labels = seq(0,100, by = 10)) +
+    #ylim(0, 100) +
     theme_minimal() +
     theme(axis.title = element_blank(),
+          axis.line.y = element_line(color = 'black'),
           panel.grid = element_blank(),
           axis.text.y = element_blank(),
           axis.text.x = element_text(size = 20),
           strip.text = element_text(size = 20),
-          legend.position = 'none')
+          legend.position = 'none',
+          aspect.ratio = 4/3.3) 
 }
+
+Bar2D(samp)

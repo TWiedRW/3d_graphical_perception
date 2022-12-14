@@ -68,9 +68,9 @@ pilot_study = dat %>%
 
 
 
-for(i in 1:nrow(pilot_study)){
-  ggsave(filename = paste0('pilot/data', i),
-         plot = pilot_study$plot2d[[i]],
-         width = 4.125, height = 5,
-         device = 'png')
-}
+# for(i in 1:nrow(pilot_study)){
+#   ggsave(filename = paste0('pilot/data', i),
+#          plot = pilot_study$plot2d[[i]],
+#          width = 4.125, height = 5,
+#          device = 'png')
+# }
