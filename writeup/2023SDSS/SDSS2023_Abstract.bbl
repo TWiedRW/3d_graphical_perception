@@ -1,0 +1,33 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Barfield and Robless}1989]{barfield_effects_1989}
+Woodrow Barfield and Robert Robless.
+\newblock 1989.
+\newblock The effects of two- or three-dimensional graphics on the
+  problem-solving performance of experienced and novice decision makers.
+\newblock {\em Behaviour \& Information Technology}, 8(5):369--385, October.
+
+\bibitem[\protect\citename{Brath}2014]{brath_3d_2014}
+Richard Brath.
+\newblock 2014.
+\newblock {3D} {InfoVis} is here to stay: {Deal} with it.
+\newblock In {\em 2014 {IEEE} {VIS} {International} {Workshop} on {3DVis}
+  ({3DVis})}, pages 25--31, Paris, France, November. IEEE.
+
+\bibitem[\protect\citename{Cleveland and McGill}1984]{cleveland_graphical_1984}
+William~S. Cleveland and Robert McGill.
+\newblock 1984.
+\newblock Graphical {Perception}: {Theory}, {Experimentation}, and
+  {Application} to the {Development} of {Graphical} {Methods}.
+\newblock {\em Journal of the American Statistical Association},
+  79(387):531--554, September.
+
+\bibitem[\protect\citename{Fisher \bgroup et al.\egroup
+  }1997]{fisher_data_1997}
+Samuel~H. Fisher, John~V. Dempsey, and Robert~T. Marousky.
+\newblock 1997.
+\newblock Data {Visualization}: {Preference} and {Use} of {Two}-{Dimensional}
+  and {Three}-{Dimensional} {Graphs}.
+\newblock {\em Social Science Computer Review}, 15(3):256--263, October.
+
+\end{thebibliography}
