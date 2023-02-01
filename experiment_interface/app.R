@@ -432,13 +432,13 @@ server <- function(input, output) {
     
     
     
-    
+
     if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
       output$plot <- renderPlot({print3DPlot})
     }
-    # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
-    #   output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
-    # }
+    if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
+      output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
+    }
     if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
       output$plot <- renderPlot({Bar2D(reactiveData$df)})
     }
@@ -457,20 +457,20 @@ server <- function(input, output) {
     if(nrow(reactiveKit$df) == 0){
       updateNavbarPage(inputId = 'nav', selected = 'Exit Screen')
     }
-    
-    #Plotting functions
-    if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
-      output$plot <- renderPlot({print3DPlot})
+    else{
+      # Plotting functions
+      if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
+        output$plot <- renderPlot({print3DPlot})
+      }
+      if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
+        output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
+      }
+      if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
+        output$plot <- renderPlot({Bar2D(reactiveData$df)})
+      }
+      
+      output$text <- renderText(as.character(reactiveKit$df[1,'plot']))
     }
-    # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
-    #   output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
-    # }
-    if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
-      output$plot <- renderPlot({Bar2D(reactiveData$df)})
-    }
-    
-    output$text <- renderText(as.character(reactiveKit$df[1,'plot']))
-    
   })
   
   output$react <- renderTable(reactiveKit$df)
