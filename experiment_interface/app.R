@@ -1,9 +1,42 @@
 library(shiny)
 library(shinyWidgets)
+library(rgl)
 library(tidyverse)
+library(rayshader)
 
 datasets <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/data/pilot/set85data.Rdata')
 kits <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/data/pilot/kits.Rdata')
+
+
+#Plotting Functions
+# source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar2D.R')
+source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar3D.R')
+
+Bar2D = function(data, mark_height = 5){
+  ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
+    facet_grid(.~Group, switch = 'x') + 
+    geom_col(color = 'black',
+             fill = NA,
+             width = 1) +
+    geom_point(data = filter(data, IDchr != ""),
+               mapping = aes(x = GroupOrder, y = mark_height, shape = IDchr),
+               size = 2) +
+    scale_x_discrete() +
+    ylim(0, 100) +
+    theme_minimal() +
+    theme(axis.title = element_blank(),
+          panel.grid = element_blank(),
+          aspect.ratio = 4/3.3,
+          axis.text.y = element_blank(),
+          axis.text.x = element_text(size = 20),
+          strip.text = element_text(size = 20),
+          legend.position = 'none')
+}
+
+print3DPlot <- ggplot(mapping = aes(x = 1, y = 1)) +
+  geom_text(aes(label = 'Choose a graph from your kit')) +
+  theme_void() +
+  theme(aspect.ratio = 4/3.3)
 
 
 # Pages -------------------------------------------------------------------
@@ -132,8 +165,8 @@ experimentUI <- fluidPage(
   #Plot
   fluidRow(
     column(8, offset = 2, align = 'center',
-           #renderRglwidget('plot3Digital'),
-           renderPlot('plot'),
+           # rglwidgetOutput('plot'),
+           plotOutput('plot'),
            tableOutput('data')),
     ),
   #Which is smaller
@@ -164,7 +197,8 @@ experimentUI <- fluidPage(
     column(4, offset = 4, align = 'center',
            actionButton('expNext', 'Next'))),
   fluidRow(
-    tableOutput('react'), tableOutput('dataset')
+    tableOutput('react'), tableOutput('dataset'),
+    textOutput('text')
   )
 )
 
@@ -184,7 +218,7 @@ exitUI <- fluidPage(
     )),
   fluidRow(
     column(8, offset = 2, align = 'left',
-           p('Your response has been submitted. Please click the "New Submission" button to reset the application for the next user.'),
+           p('Your response has been submitted. Please return the graphs to the kit bag and click the "New Submission" button to reset the application for the next user.'),
     )),
   fluidRow(
     actionButton('reset', 'New Submission'),
@@ -234,12 +268,15 @@ server <- function(input, output) {
     
     #Randomize order of kit
     subjectKit <- subjectKit[sample(1:15),] %>% 
-      ungroup() %>% 
-      mutate(rownumber = row_number())
+      ungroup()
     
     #Get list of 3D printed identifiers
     printedPlots <- sort(subjectKit$file[subjectKit$plot == '3dPrint'])
     updateSelectizeInput(inputId = '3dID', choices = c('-- Select ID --', printedPlots, 'Other'))
+    
+    #Remove info from 3d print since the user picks out graphs from kit at random
+    subjectKit[subjectKit[,'plot'] == '3dPrint', setdiff(names(subjectKit), 'plot')] <- NA
+    
     
     #Display data for test purposes
     output$data <- renderTable(subjectKit)
@@ -274,7 +311,9 @@ server <- function(input, output) {
     updateNavbarPage(inputId = 'nav', selected = 'Practice')
   })
   
-  #Experiment Screen to Experiment, initialize first plot
+  output$plot <- renderPlot({})
+  
+  #Experiment Screen to Experiment, initialize first set of data and plots
   observeEvent(input$beginExp, {
     updateNavbarPage(inputId = 'nav', selected = 'Experiment')
     # hideTab(inputId = 'nav', target = 'Instructions')
@@ -282,15 +321,47 @@ server <- function(input, output) {
     # hideTab(inputId = 'nav', target = 'Practice')
     # hideTab(inputId = 'nav', target = 'Experiment Screen')
     
-    reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'])
+    #Gathering values from dataset list and extracting only the dataset
+    reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
     output$dataset <- renderTable(reactiveData$df)
+    
+    if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
+      output$plot <- renderPlot({print3DPlot})
+    }
+    # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
+    #   output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
+    # }
+    if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
+      output$plot <- renderPlot({Bar2D(reactiveData$df)})
+    }
+    
   })
   
   
-  #Removing first row of dataframe
+  #Removing first row of dataframe, storing data
   observeEvent(input$expNext, {
-    temp <- reactiveKit$df[-1,]
-    reactiveKit$df <- temp
+    reactiveKit$df <- reactiveKit$df[-1,]
+    
+    reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
+    output$dataset <- renderTable(reactiveData$df)
+    
+    if(nrow(reactiveKit$df) == 0){
+      updateNavbarPage(inputId = 'nav', selected = 'Exit Screen')
+    }
+    
+    #Plotting functions
+    if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
+      output$plot <- renderPlot({print3DPlot})
+    }
+    # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
+    #   output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
+    # }
+    if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
+      output$plot <- renderPlot({Bar2D(reactiveData$df)})
+    }
+    
+    output$text <- renderText(as.character(reactiveKit$df[1,'plot']))
+    
   })
   
   output$react <- renderTable(reactiveKit$df)
