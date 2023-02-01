@@ -10,7 +10,7 @@ kits <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-Universityo
 
 #Plotting Functions
 # source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar2D.R')
-source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar3D.R')
+# source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar3D.R')
 
 Bar2D = function(data, mark_height = 5){
   ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
@@ -20,7 +20,7 @@ Bar2D = function(data, mark_height = 5){
              width = 1) +
     geom_point(data = filter(data, IDchr != ""),
                mapping = aes(x = GroupOrder, y = mark_height, shape = IDchr),
-               size = 2) +
+               size = 3) +
     scale_x_discrete() +
     ylim(0, 100) +
     theme_minimal() +
@@ -34,10 +34,105 @@ Bar2D = function(data, mark_height = 5){
 }
 
 print3DPlot <- ggplot(mapping = aes(x = 1, y = 1)) +
-  geom_text(aes(label = 'Choose a graph from your kit')) +
+  geom_text(aes(label = 'Choose a graph from your kit'),
+            size = 8) +
   theme_void() +
   theme(aspect.ratio = 4/3.3)
 
+Bar3D = function(samp, output_style = '3D', scale = 1096.935){
+
+  if(output_style == '3D'){
+    emboss <- 0
+  } else {
+    emboss <- 0.0125
+  }
+
+  require(ggplot2)
+  require(rayshader)
+
+  p = ggplot(samp, mapping = aes(x = GroupOrder, y = 1,
+                                 fill = Height
+  )) +
+    facet_grid(.~Group, switch = 'x') +
+    geom_tile(color = 'black') +
+
+    scale_fill_gradient(low = 'grey80', high = 'grey80',
+                        limits = c(0, 100)) +
+
+    coord_equal() +
+    theme(
+      legend.position = 'none',
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      strip.background = element_blank(),
+      panel.background = element_rect(fill = 'white',
+                                      color = 'white'),
+      plot.background = element_rect(fill = 'white',
+                                     color = 'white'),
+      strip.text = element_text(size = 20, face = 'bold'),
+      panel.grid = element_blank(),
+      axis.text = element_blank()
+    )
+
+
+
+  #Height of bars of interest
+  samp[samp[,'Identifier'] == 'random','Height'] <- NA
+  p2 = ggplot(samp, mapping = aes(x = GroupOrder, y = 1,
+                                  color = Height + 2)) +
+    facet_grid(.~Group, switch = 'x') +
+    geom_tile(fill = NA, color = NA) +
+    geom_point(mapping = aes(x = GroupOrder, shape = IDchr),
+               na.rm = T,
+               size = 6) +
+    scale_color_gradient(low = '#000000', high = '#000000',
+                         limits = c(0, 100)) +
+    coord_equal() +
+    theme(
+      legend.position = 'none',
+      axis.title = element_blank(),
+      axis.ticks = element_blank(),
+      strip.background = element_blank(),
+      panel.background = element_rect(fill = 'white',
+                                      color = 'white'),
+      plot.background = element_rect(fill = 'white',
+                                     color = 'white'),
+      strip.text = element_text(size = 20, face = 'bold'),
+      panel.grid = element_blank(),
+      axis.text = element_blank()
+    )
+
+
+  plot_gg(p, width = 4.125, height = 1, raytrace = F, scale = scale, multicore = F,
+          shadow_intensity = 0,
+          emboss_text = emboss,
+          #emboss_text = 0,
+          preview = F,
+          offset_edges = 0.000001,
+          units = 'in',
+          theta = 20,
+          phi = 15,
+          soliddepth = -5/100,
+          solidcolor = 'grey80',
+          background = 'white',
+          solidlinecolor = 'grey80',
+          shadow = FALSE)
+
+
+  #THIS ADDS THE POINTS! DO NOT DELETE
+  plot_gg(p2, width = 4.125, height = 1, raytrace = F, scale = scale, multicore = F,
+          shadow_intensity = 0,
+          emboss_text = emboss,
+          preview = F,
+          units = 'in',
+          theta = 20,
+          phi = 15,
+          soliddepth = -5/100,
+          solidcolor = 'grey80',
+          background = 'white',
+          solidlinecolor = 'grey80',
+          shadow = FALSE)
+}
 
 # Pages -------------------------------------------------------------------
 
@@ -74,7 +169,7 @@ instructions <- fluidPage(
 
 #### Practice Page starting screen ####
 
-ui2 <- fluidPage(
+practiceScreenUI <- fluidPage(
   
   fluidRow(
     column(8, offset = 2, align = 'center',
@@ -94,7 +189,7 @@ ui2 <- fluidPage(
 
 
 #### Begin Experiment screen ####
-ui3 <- fluidPage(
+expScreenUI <- fluidPage(
   
   fluidRow(
     column(8, offset = 2, align = 'center',
@@ -111,7 +206,11 @@ ui3 <- fluidPage(
 )
 
 
-#### Experiment ####
+#### Experiment (DEPRECIATED) ####
+#
+# Contains sample widges
+#
+
 ui4 <- fluidPage(
   
   # fluidRow(
@@ -158,7 +257,11 @@ ui4 <- fluidPage(
 
 
 
-# Experiment UI -----------------------------------------------------------
+#### Experiment UI ####
+#
+#
+#
+#
 
 experimentUI <- fluidPage(
   
@@ -191,8 +294,8 @@ experimentUI <- fluidPage(
     column(6, offset = 3, align = 'center',
            selectizeInput('3dID', 'What is the identifier on the bottom of the graph?',
                           choices = c('-- SELECT ID --', paste('Graph', 1:7))),
-           textInput('incorrectGraph', 'If the identifier on the bottom of the plot does not match any of the available options, please enter the identifier here: '))
-  ),
+           textInput('incorrectGraph', 'If the identifier on the bottom of the plot does not match any of the available options, please enter the identifier here: ')
+  )),
   fluidRow(
     column(4, offset = 4, align = 'center',
            actionButton('expNext', 'Next'))),
@@ -234,9 +337,9 @@ exitUI <- fluidPage(
 ui <- navbarPage('Perceptual Judgements Experiment',
                  id = 'nav',
                  tabPanel('Instructions', instructions),
-                 tabPanel('Practice Screen', ui2),
+                 tabPanel('Practice Screen', practiceScreenUI),
                  tabPanel('Practice', 'SECTION FOR PRACTICE GRAPHS'),
-                 tabPanel('Experiment Screen', ui3),
+                 tabPanel('Experiment Screen', expScreenUI),
                  tabPanel('Experiment', experimentUI),
                  tabPanel('Exit Screen', exitUI))
 
@@ -325,6 +428,11 @@ server <- function(input, output) {
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
     output$dataset <- renderTable(reactiveData$df)
     
+
+    
+    
+    
+    
     if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
       output$plot <- renderPlot({print3DPlot})
     }
@@ -334,6 +442,7 @@ server <- function(input, output) {
     if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
       output$plot <- renderPlot({Bar2D(reactiveData$df)})
     }
+    
     
   })
   
