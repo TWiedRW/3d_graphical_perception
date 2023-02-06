@@ -1,17 +1,19 @@
 library(shiny)
 library(shinyWidgets)
 library(rgl)
+library(RSQLite)
 library(tidyverse)
 library(rayshader)
+library(shinyjs)
 
 datasets <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/data/pilot/set85data.Rdata')
 kits <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/data/pilot/kits.Rdata')
 
 
-#Plotting Functions
-# source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar2D.R')
-# source('https://raw.githubusercontent.com/TWiedRW/3d_graphical_perception/main/code/Bar3D.R')
 
+# Plotting Functions ------------------------------------------------------
+
+#### 2D Bar Chart ####
 Bar2D = function(data, mark_height = 5){
   ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
     facet_grid(.~Group, switch = 'x') + 
@@ -33,12 +35,14 @@ Bar2D = function(data, mark_height = 5){
           legend.position = 'none')
 }
 
+#### 3D Printed (Choose from kit) ####
 print3DPlot <- ggplot(mapping = aes(x = 1, y = 1)) +
   geom_text(aes(label = 'Choose a graph from your kit'),
             size = 8) +
   theme_void() +
   theme(aspect.ratio = 4/3.3)
 
+#### 3D Bar Chart ####
 Bar3D = function(samp, output_style = '3D', scale = 1096.935){
 
   if(output_style == '3D'){
@@ -134,7 +138,116 @@ Bar3D = function(samp, output_style = '3D', scale = 1096.935){
           shadow = FALSE)
 }
 
+
+
+
+# Database ----------------------------------------------------------------
+
+con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
+
+# dbWriteTable(con, 'users', data.frame(
+#   
+# ))
+# 
+# dbWriteTable(con, '')
+
+dbDisconnect(con)
+
+
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Pages -------------------------------------------------------------------
+
+# useShinyjs()
+# extendShinyjs(text = jsResetCode, functions = "reset")
+
+#### Research Acknowledgement ####
+
+acknowledgement <-
+  fluidPage(
+    fluidRow(
+      column(width = 8, offset = 2,
+      conditionalPanel(
+        condition = "!input.toDemographics || !input.consent",
+        h4("Welcome"),
+        helpText(
+          "In this survey, a series of graphs will be given to you with two bars identified with either a circle or a triangle.",
+          "We would like you to respond to the following questions."),
+        helpText("1. Which of the identified bars are smaller?"),
+        helpText("2. What size is the smaller bar with respect to the larger bar?"),
+        helpText("3. For the 3D printed bar charts, what is the identifier on the bottom of the chart?"),
+        helpText(
+          "Finally we would like to collect some information about you.",
+          "(age category, education and gender)"),
+        helpText(
+          "Your response is voluntary and any information we collect from you will be kept confidential.",
+          "Please read the informed consent document (click the button below) before you decide whether to participate."),
+        
+        a("Show Informed Consent Document", href = "informed_consent.html", target = "_blank"),
+        
+        checkboxInput("consent","I have read the informed consent document and agree.", width = "100%"),
+        
+        actionButton("toDemographics", "Next")
+      ),
+      
+      conditionalPanel(
+        condition = 'input.consent && input.toDemographics',
+        h4('Demographic Information'),
+        textInput("nickname", "Please enter a nickname to be used as your identifier: "),
+        selectizeInput("age", "Age Range",
+                       choices = c("", "Under 19", "19-25", "26-30",
+                                   "31-35", "36-40", "41-45", "46-50",
+                                   "51-55", "56-60", "Over 60",
+                                   "Prefer not to answer")),
+        radioButtons("gender", "Gender Identity",
+                     choices = c("Female", "Male",
+                                 "Variant/Nonconforming",
+                                 "Prefer not to answer"),
+                     selected = NA),
+        selectizeInput("education",
+                       "Highest Education Level",
+                       choices = c("", "High School or Less",
+                                   "Some Undergraduate Courses",
+                                   "Undergraduate Degree",
+                                   "Some Graduate Courses",
+                                   "Graduate Degree",
+                                   "Prefer not to answer")),
+        
+        actionButton("submitdemo", "Submit Demographics", class = "btn btn-info")
+      )
+      
+      )
+    ))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #### Instructions ####
 #
@@ -167,6 +280,17 @@ instructions <- fluidPage(
 )
 
 
+
+
+
+
+
+
+
+
+
+
+
 #### Practice Page starting screen ####
 
 practiceScreenUI <- fluidPage(
@@ -184,6 +308,17 @@ practiceScreenUI <- fluidPage(
            actionButton('beginPractice', 'Begin Practice'))
   )
 )
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -206,9 +341,19 @@ expScreenUI <- fluidPage(
 )
 
 
+
+
+
+
+
+
+
+
+
+
 #### Experiment (DEPRECIATED) ####
 #
-# Contains sample widges
+# Contains sample widgets
 #
 
 ui4 <- fluidPage(
@@ -257,6 +402,16 @@ ui4 <- fluidPage(
 
 
 
+
+
+
+
+
+
+
+
+
+
 #### Experiment UI ####
 #
 #
@@ -268,9 +423,9 @@ experimentUI <- fluidPage(
   #Plot
   fluidRow(
     column(8, offset = 2, align = 'center',
-           # rglwidgetOutput('plot'),
-           plotOutput('plot'),
-           tableOutput('data')),
+           #rglwidgetOutput('plot'),
+           # plotOutput('plot')
+           ),
     ),
   #Which is smaller
   fluidRow(
@@ -291,11 +446,10 @@ experimentUI <- fluidPage(
                        step = 0.1, ticks = F))
   ), 
   fluidRow(
-    column(6, offset = 3, align = 'center',
-           selectizeInput('3dID', 'What is the identifier on the bottom of the graph?',
-                          choices = c('-- SELECT ID --', paste('Graph', 1:7))),
-           textInput('incorrectGraph', 'If the identifier on the bottom of the plot does not match any of the available options, please enter the identifier here: ')
-  )),
+    column(3, offset = 3, align = 'center',
+           uiOutput('printed_graph_choice')),
+    column(3, align = 'center',
+           uiOutput('printed_writein'))),
   fluidRow(
     column(4, offset = 4, align = 'center',
            actionButton('expNext', 'Next'))),
@@ -304,6 +458,15 @@ experimentUI <- fluidPage(
     textOutput('text')
   )
 )
+
+
+
+
+
+
+
+
+
 
 
 
@@ -336,6 +499,7 @@ exitUI <- fluidPage(
 
 ui <- navbarPage('Perceptual Judgements Experiment',
                  id = 'nav',
+                 tabPanel('Research Acknowledgement', acknowledgement),
                  tabPanel('Instructions', instructions),
                  tabPanel('Practice Screen', practiceScreenUI),
                  tabPanel('Practice', 'SECTION FOR PRACTICE GRAPHS'),
@@ -353,20 +517,68 @@ ui <- navbarPage('Perceptual Judgements Experiment',
 # Server ------------------------------------------------------------------
 server <- function(input, output) {
   
-  #Initialize reactive kits and data
+  #### Initialize reactive kits and data ####
   reactiveKit <- reactiveValues(df = NA)
   reactiveData <- reactiveValues(df = NA)
+  printedPlots <- reactiveValues(vals = NA)
+  plotStartTime <- reactiveValues(time = NA)
+  appStartTime <- reactiveValues(time = NA)
   
-  #Start experiment from instruction screen
+  
+  
+  
+  
+  #### Demographics to Instructions, write demographic info to table ####
+  observeEvent(input$submitdemo, {
+    
+    con <- dbConnect(SQLite(), "20230209-graphicsGroup.db" )
+    
+    #User start time with the app, use with nickname for unique ID
+    appStartTime$time <- Sys.time()
+    
+    #Demographic dataset
+    demographics <- data.frame(
+      userAppStartTime = appStartTime$time,
+      consent = input$consent,
+      nickname = input$nickname,
+      age = input$age,
+      education = input$education
+    )
+    dbWriteTable(con, 'user', demographics, append = T)
+    dbDisconnect(con)
+    
+    #Move to instructions
+    updateNavbarPage(inputId = 'nav', selected = 'Instructions')
+  })
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  #### Start experiment from instruction screen ####
   observeEvent(input$toPracticeScreen, {
-    #Record start time
-    subjectStartTime <- Sys.time()
     
     #Filter data for given kit
     subjectKit <- kits[[input$userID]] %>% 
       bind_rows(.id = 'plot') %>% 
       mutate(file = paste0('data/pilot/Set85/', gsub('.csv', '', file)),
-             userStart = subjectStartTime,
+             userStart = appStartTime$time,
              kit = input$userID)
     
     #Randomize order of kit
@@ -374,11 +586,10 @@ server <- function(input, output) {
       ungroup()
     
     #Get list of 3D printed identifiers
-    printedPlots <- sort(subjectKit$file[subjectKit$plot == '3dPrint'])
-    updateSelectizeInput(inputId = '3dID', choices = c('-- Select ID --', printedPlots, 'Other'))
+    printedPlots$vals <- sort(subjectKit$file[subjectKit$plot == '3dPrint'])
     
     #Remove info from 3d print since the user picks out graphs from kit at random
-    subjectKit[subjectKit[,'plot'] == '3dPrint', setdiff(names(subjectKit), 'plot')] <- NA
+    subjectKit[subjectKit[,'plot'] == '3dPrint', setdiff(names(subjectKit), c('plot', 'kit'))] <- NA
     
     
     #Display data for test purposes
@@ -396,7 +607,7 @@ server <- function(input, output) {
   # hideTab(inputId = 'nav', target = 'Experiment Screen')
   # hideTab(inputId = 'nav', target = 'Experiment')
   
-  #Instructions to Practice Screen
+  #### Instructions to Practice Screen ####
   observeEvent(input$toPracticeScreen, {
     updateNavbarPage(inputId = 'nav', selected = 'Practice Screen')
     showTab(inputId = 'nav', target = 'Practice Screen')
@@ -404,19 +615,22 @@ server <- function(input, output) {
     #hideTab(inputId = 'nav', target = 'Instructions')
   })
   
-  #Practice Screen to Practice
+  #### Practice Screen to Practice ####
   observeEvent(input$beginPractice, {
     updateNavbarPage(inputId = 'nav', selected = 'Practice')
   })
   
-  #Practice to Experiment Screen
+  #### Practice to Experiment Screen ####
   observeEvent(input$beginPractice, {
     updateNavbarPage(inputId = 'nav', selected = 'Practice')
   })
   
-  output$plot <- renderPlot({})
   
-  #Experiment Screen to Experiment, initialize first set of data and plots
+  
+  
+  
+
+  #### Experiment Screen to Experiment, initialize first set of data and plots ####
   observeEvent(input$beginExp, {
     updateNavbarPage(inputId = 'nav', selected = 'Experiment')
     # hideTab(inputId = 'nav', target = 'Instructions')
@@ -428,20 +642,42 @@ server <- function(input, output) {
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
     output$dataset <- renderTable(reactiveData$df)
     
+    #UI for 3D plot identifier, conditional on if the plot is 3D printed
+    output$printed_graph_choice <- renderUI({
+      if(reactiveKit$df[1,'plot'] == '3dPrint'){
+        selectizeInput('3dID', 'What is the identifier on the bottom of the graph?',
+                       choices = c('-- Select ID --', printedPlots$vals, 'Other'))
+      }
+      else{
+        return()
+      }
+        
+    })
+    
+    #Spot for user to manually enter plot ID if an incorrect plot is in the kit
+    output$printed_writein <- renderUI({
+      if(reactiveKit$df[1,'plot'] == '3dPrint'){
+        textInput('incorrectGraph', 'If the identifier on the bottom of the plot does not match any of the available options, please enter the identifier here: ')
+      }
+      else {
+        return()
+      }
+    })
+    
 
-    
-    
-    
 
-    if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
-      output$plot <- renderPlot({print3DPlot})
-    }
-    if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
-      output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
-    }
-    if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
-      output$plot <- renderPlot({Bar2D(reactiveData$df)})
-    }
+    # if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
+    #   output$plot <- renderPlot({print3DPlot})
+    # }
+    # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
+    #   output$plot <- renderRglwidget({
+    #     Bar3D(reactiveData$df)
+    #     rglwidget()
+    #     })
+    # }
+    # if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
+    #   output$plot <- renderPlot({Bar2D(reactiveData$df)})
+    # }
     
     
   })
@@ -449,6 +685,22 @@ server <- function(input, output) {
   
   #Removing first row of dataframe, storing data
   observeEvent(input$expNext, {
+    
+    
+    
+    con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
+    results <- reactiveKit$df[1,] %>% 
+      mutate(nickname = input$nickname,
+             appStartTime = appStartTime$time,
+             whichIsSmaller = input$smaller,
+             byHowMuch = input$ratio,
+             file = ifelse(is.na(file), input$`3dID`, file),
+             graphCorrecter = input$incorrectGraph)
+    
+    dbWriteTable(con, 'results', results, append = T)
+    
+    
+    
     reactiveKit$df <- reactiveKit$df[-1,]
     
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
@@ -459,15 +711,18 @@ server <- function(input, output) {
     }
     else{
       # Plotting functions
-      if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
-        output$plot <- renderPlot({print3DPlot})
-      }
-      if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
-        output$plot <- renderRglwidget({Bar3D(reactiveData$df)})
-      }
-      if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
-        output$plot <- renderPlot({Bar2D(reactiveData$df)})
-      }
+      # if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
+      #   output$plot <- renderPlot({print3DPlot})
+      # }
+      # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
+      #   output$plot <- renderRglwidget({
+      #     Bar3D(reactiveData$df)
+      #     rglwidget()
+      #     })
+      # }
+      # if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
+      #   output$plot <- renderPlot({Bar2D(reactiveData$df)})
+      # }
       
       output$text <- renderText(as.character(reactiveKit$df[1,'plot']))
     }
@@ -477,15 +732,19 @@ server <- function(input, output) {
 
   #https://stackoverflow.com/questions/39136385/delete-row-of-dt-data-table-in-shiny-app
   
-  #Exit screen
+  #### Exit screen ####
   observeEvent(input$reset, {
-    updateNavbarPage(inputId = 'nav', selected = 'Instructions')
+    updateNavbarPage(inputId = 'nav', selected = 'Research Acknowledgement')
     updateNumericInput(inputId = 'userID', value = NA)
+    updateCheckboxInput(inputId = 'consent', value = NA)
+    # js$reset()
   })
+  
   
   
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
 
