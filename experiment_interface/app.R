@@ -454,8 +454,7 @@ experimentUI <- fluidPage(
     column(4, offset = 4, align = 'center',
            actionButton('expNext', 'Next'))),
   fluidRow(
-    tableOutput('react'), tableOutput('dataset'),
-    textOutput('text')
+    tableOutput('react'), tableOutput('dataset')
   )
 )
 
@@ -723,9 +722,7 @@ server <- function(input, output) {
       # if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
       #   output$plot <- renderPlot({Bar2D(reactiveData$df)})
       # }
-      
-      output$text <- renderText(as.character(reactiveKit$df[1,'plot']))
-    }
+          }
   })
   
   output$react <- renderTable(reactiveKit$df)
