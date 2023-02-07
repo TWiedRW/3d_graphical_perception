@@ -143,24 +143,9 @@ Bar3D = function(samp, output_style = '3D', scale = 1096.935){
 
 # Database ----------------------------------------------------------------
 
+#Create database if does not exist
 con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
-
-# dbWriteTable(con, 'users', data.frame(
-#   
-# ))
-# 
-# dbWriteTable(con, '')
-
 dbDisconnect(con)
-
-
-
-#
-
-
-
-
-
 
 
 
@@ -423,15 +408,16 @@ experimentUI <- fluidPage(
   #Plot
   fluidRow(
     column(8, offset = 2, align = 'center',
-           #rglwidgetOutput('plot'),
-           # plotOutput('plot')
+           uiOutput('expPlot'),
+           textOutput('text')
            ),
     ),
   #Which is smaller
   fluidRow(
     column(4, offset = 4, align = 'center',
            radioButtons('smaller', 'Which bar is smaller?',
-                        choices = c('Circle (●)', 'Triangle (▲)')))
+                        choices = c('Circle (●)', 'Triangle (▲)'),
+                        selected = NA))
   ),
   
   #Size
@@ -442,14 +428,17 @@ experimentUI <- fluidPage(
            sliderInput('ratio', label = div(style='width:300px;', 
                                             div(style='float:left;', 'Smaller'), 
                                             div(style='float:right;', 'Larger')),
-                       min = 0, max = 100, value = 0,
+                       min = 0, max = 100, value = 50,
                        step = 0.1, ticks = F))
   ), 
   fluidRow(
-    column(3, offset = 3, align = 'center',
-           uiOutput('printed_graph_choice')),
-    column(3, align = 'center',
-           uiOutput('printed_writein'))),
+    column(4, offset = 4, align = 'center',
+           uiOutput('printed_graph_choice'))
+  ),
+  fluidRow(
+    column(4, offset = 4, align = 'center',
+           uiOutput('printed_writein'))
+  ),
   fluidRow(
     column(4, offset = 4, align = 'center',
            actionButton('expNext', 'Next'))),
@@ -521,7 +510,9 @@ server <- function(input, output) {
   reactiveData <- reactiveValues(df = NA)
   printedPlots <- reactiveValues(vals = NA)
   plotStartTime <- reactiveValues(time = NA)
+  plotEndTime <- reactiveValues(time = NA)
   appStartTime <- reactiveValues(time = NA)
+  
   
   
   
@@ -629,7 +620,7 @@ server <- function(input, output) {
   
   
 
-  #### Experiment Screen to Experiment, initialize first set of data and plots ####
+  #### Experiment Screen to Experiment ####
   observeEvent(input$beginExp, {
     updateNavbarPage(inputId = 'nav', selected = 'Experiment')
     # hideTab(inputId = 'nav', target = 'Instructions')
@@ -637,93 +628,116 @@ server <- function(input, output) {
     # hideTab(inputId = 'nav', target = 'Practice')
     # hideTab(inputId = 'nav', target = 'Experiment Screen')
     
+    #First plot start time
+    plotStartTime$time <- Sys.time()
+    
     #Gathering values from dataset list and extracting only the dataset
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
-    output$dataset <- renderTable(reactiveData$df)
-    
-    #UI for 3D plot identifier, conditional on if the plot is 3D printed
-    output$printed_graph_choice <- renderUI({
-      if(reactiveKit$df[1,'plot'] == '3dPrint'){
-        selectizeInput('3dID', 'What is the identifier on the bottom of the graph?',
-                       choices = c('-- Select ID --', printedPlots$vals, 'Other'))
-      }
-      else{
-        return()
-      }
-        
-    })
-    
-    #Spot for user to manually enter plot ID if an incorrect plot is in the kit
-    output$printed_writein <- renderUI({
-      if(reactiveKit$df[1,'plot'] == '3dPrint'){
-        textInput('incorrectGraph', 'If the identifier on the bottom of the plot does not match any of the available options, please enter the identifier here: ')
-      }
-      else {
-        return()
-      }
-    })
-    
-
-
-    # if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
-    #   output$plot <- renderPlot({print3DPlot})
-    # }
-    # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
-    #   output$plot <- renderRglwidget({
-    #     Bar3D(reactiveData$df)
-    #     rglwidget()
-    #     })
-    # }
-    # if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
-    #   output$plot <- renderPlot({Bar2D(reactiveData$df)})
-    # }
-    
     
   })
   
   
-  #Removing first row of dataframe, storing data
+  
+  
+
+  
+  #### Plots ####
+  
+
+  
+  
+  
+  
+  #### UI for 3D plot identifier, conditional on if the plot is 3D printed ####
+  output$printed_graph_choice <- renderUI({
+    if(reactiveKit$df[1,'plot'] == '3dPrint' & nrow(reactiveKit$df) > 0){
+      selectizeInput('3dID', 'What is the identifier on the bottom of the graph?',
+                     choices = c('-- Select ID --', printedPlots$vals, 'Other'))
+    }
+    else{
+      return()
+    }
+    
+  })
+  
+  #### UI for manual 3D plot identifier entry ####
+  output$printed_writein <- renderUI({
+    if(reactiveKit$df[1,'plot'] == '3dPrint' & nrow(reactiveKit$df) > 0){
+      textInput('incorrectGraph', 'If the identifier on the bottom of the plot does not match any of the available options, please enter the identifier here: ')
+    }
+    else {
+      return()
+    }
+  })
+  
+  
+  
+  
+  
+  output$text <- renderText({nrow(reactiveKit$df)})
+  
+  output$dataset <- renderTable({reactiveData$df})
+  
+  
+  
+  
+  #### Save data and update next plot ####
   observeEvent(input$expNext, {
     
-    
+    plotEndTime$time <- Sys.time()  
     
     con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
+    
+    #Save data
     results <- reactiveKit$df[1,] %>% 
       mutate(nickname = input$nickname,
              appStartTime = appStartTime$time,
+             plotStartTime = plotStartTime$time,
+             plotEndTime = plotEndTime$time,
              whichIsSmaller = input$smaller,
              byHowMuch = input$ratio,
              file = ifelse(is.na(file), input$`3dID`, file),
-             graphCorrecter = input$incorrectGraph)
-    
+             graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA))
     dbWriteTable(con, 'results', results, append = T)
     
+    #Reset plot information
+    updateTextInput(inputId = 'incorrectGraph', value = NA)
+    updateRadioButtons(inputId = 'smaller', selected = NA)
+    updateSliderInput(inputId = 'ratio', value = 50)
     
-    
+    #Remove first row from data
     reactiveKit$df <- reactiveKit$df[-1,]
+
+    #Update time for next plot
+    plotStartTime$time <- Sys.time()
     
-    reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
-    output$dataset <- renderTable(reactiveData$df)
+    
     
     if(nrow(reactiveKit$df) == 0){
       updateNavbarPage(inputId = 'nav', selected = 'Exit Screen')
     }
     else{
-      # Plotting functions
-      # if(as.character(reactiveKit$df[1,'plot']) == '3dPrint'){
-      #   output$plot <- renderPlot({print3DPlot})
-      # }
-      # if(as.character(reactiveKit$df[1,'plot']) == '3dDigital'){
-      #   output$plot <- renderRglwidget({
-      #     Bar3D(reactiveData$df)
-      #     rglwidget()
-      #     })
-      # }
-      # if(as.character(reactiveKit$df[1,'plot']) == '2dDigital'){
-      #   output$plot <- renderPlot({Bar2D(reactiveData$df)})
-      # }
-          }
+      #Gathering values from dataset list and extracting only the dataset
+      reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
+    }
   })
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   output$react <- renderTable(reactiveKit$df)
 
@@ -734,12 +748,22 @@ server <- function(input, output) {
     updateNavbarPage(inputId = 'nav', selected = 'Research Acknowledgement')
     updateNumericInput(inputId = 'userID', value = NA)
     updateCheckboxInput(inputId = 'consent', value = NA)
+    
     # js$reset()
   })
   
   
   
-}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+} #End server
 
 # Run the application 
 shinyApp(ui = ui, server = server)
