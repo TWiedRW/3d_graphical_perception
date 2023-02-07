@@ -145,6 +145,43 @@ Bar3D = function(samp, output_style = '3D', scale = 1096.935){
 
 #Create database if does not exist
 con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
+
+dbTables <- dbListTables(con)
+
+# #Create user space
+# if(!('user' %in% dbTables)){
+#   dbWriteTable(con, 'users', data.frame(
+#     userAppStartTime = NA,
+#     consent = NA,
+#     nickname = NA,
+#     age = NA, 
+#     gender = NA,
+#     education = NA
+#   ))
+# }
+# 
+# #Create result space
+# if(!('results' %in% dbTables)){
+#   dbWriteTable(con, 'results', data.frame(
+#     plot = NA,
+#     ratio = NA,
+#     type = NA,
+#     file = NA,
+#     fileID = NA,
+#     set85id = NA,
+#     graphtype = NA,
+#     userStart = NA,
+#     kit = NA,
+#     nickname = NA,
+#     appStartTime = NA,
+#     plotStartTime = NA,
+#     plotEndTime = NA,
+#     whichIsSmaller = NA,
+#     byHowMuch = NA,
+#     graphCorrecter = NA
+#   ))
+# }
+
 dbDisconnect(con)
 
 
@@ -199,11 +236,10 @@ acknowledgement <-
                                    "31-35", "36-40", "41-45", "46-50",
                                    "51-55", "56-60", "Over 60",
                                    "Prefer not to answer")),
-        radioButtons("gender", "Gender Identity",
-                     choices = c("Female", "Male",
+        selectizeInput("gender", "Gender Identity",
+                     choices = c('', "Female", "Male",
                                  "Variant/Nonconforming",
-                                 "Prefer not to answer"),
-                     selected = NA),
+                                 "Prefer not to answer")),
         selectizeInput("education",
                        "Highest Education Level",
                        choices = c("", "High School or Less",
@@ -336,56 +372,6 @@ expScreenUI <- fluidPage(
 
 
 
-#### Experiment (DEPRECIATED) ####
-#
-# Contains sample widgets
-#
-
-ui4 <- fluidPage(
-  
-  # fluidRow(
-  #   column(8, offset = 2, align = 'center',
-  #          plotOutput('testGraph'))
-  # ),
-  fluidRow(
-    tags$head(tags$style(HTML('.irs-single {
-            visibility: hidden !important;
-    }'))),
-    column(3),
-    column(3, offset = 0, align = 'center',
-           sliderInput('ratio', 'Ratio of smaller bar to larger bar (%)',
-                       min = 0, max = 100, value = 0,
-                       step = 0.1, ticks = F)),
-    column(3, offset = 0, align = 'center',
-           numericInput('ratioN', 'Numeric Input (%)',
-                        min = 0, max = 100, value = 0))
-  ),
-  fluidRow(
-    column(4, offset = 4, align = 'center',
-           selectizeInput('3dID', 'What is the identifier on the bottom of the graph?',
-                          choices = c('-- SELECT ID --', paste('Graph', 1:7))))
-  ),
-  fluidRow(
-    sliderTextInput('test', 'Text Input', choices = c('Smaller', seq(0, 1, by = 0.01), 'Larger'),
-                    selected = '0.5', grid = F,
-                    from_min = 0, from_max = 1,
-                    to_min = 0, to_max = 1)
-  ),
-  fluidRow(
-    sliderInput('ratio', label = div(style='width:300px;', 
-                                     div(style='float:left;', 'Smaller'), 
-                                     div(style='float:right;', 'Larger')),
-                min = 0, max = 100, value = 0,
-                step = 0.1, ticks = F), align = 'right'
-  ),
-  fluidRow(tableOutput('data'))
-  
-)
-
-# https://stackoverflow.com/questions/40415471/sliderinput-max-min-text-labels
-
-
-
 
 
 
@@ -415,8 +401,8 @@ experimentUI <- fluidPage(
   #Which is smaller
   fluidRow(
     column(4, offset = 4, align = 'center',
-           radioButtons('smaller', 'Which bar is smaller?',
-                        choices = c('Circle (●)', 'Triangle (▲)'),
+           selectizeInput('smaller', 'Which bar is smaller?',
+                        choices = c('', 'Circle (●)', 'Triangle (▲)'),
                         selected = NA))
   ),
   
@@ -512,6 +498,7 @@ server <- function(input, output) {
   plotStartTime <- reactiveValues(time = NA)
   plotEndTime <- reactiveValues(time = NA)
   appStartTime <- reactiveValues(time = NA)
+  endMarker <- reactiveValues(val = 0)
   
   
   
@@ -532,6 +519,7 @@ server <- function(input, output) {
       consent = input$consent,
       nickname = input$nickname,
       age = input$age,
+      gender = input$gender,
       education = input$education
     )
     dbWriteTable(con, 'user', demographics, append = T)
@@ -633,6 +621,7 @@ server <- function(input, output) {
     
     #Gathering values from dataset list and extracting only the dataset
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
+    output$dataset <- renderTable(reactiveData$df)
     
   })
   
@@ -699,26 +688,30 @@ server <- function(input, output) {
              file = ifelse(is.na(file), input$`3dID`, file),
              graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA))
     dbWriteTable(con, 'results', results, append = T)
-    
-    #Reset plot information
-    updateTextInput(inputId = 'incorrectGraph', value = NA)
-    updateRadioButtons(inputId = 'smaller', selected = NA)
-    updateSliderInput(inputId = 'ratio', value = 50)
+    dbDisconnect(con)
     
     #Remove first row from data
     reactiveKit$df <- reactiveKit$df[-1,]
 
+    #Updating data for the next dataset
+    reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
+    output$dataset <- renderTable(reactiveData$df)
+    
     #Update time for next plot
     plotStartTime$time <- Sys.time()
     
+    #Reset plot information
+    updateTextInput(inputId = 'incorrectGraph', value = NA)
+    updateSelectizeInput(inputId = 'smaller', selected = NA) #THIS ONE BREAKS
+    updateSliderInput(inputId = 'ratio', value = 50)
     
     
+    
+    #To exit screen
     if(nrow(reactiveKit$df) == 0){
       updateNavbarPage(inputId = 'nav', selected = 'Exit Screen')
     }
     else{
-      #Gathering values from dataset list and extracting only the dataset
-      reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
     }
   })
   
@@ -748,15 +741,16 @@ server <- function(input, output) {
     updateNavbarPage(inputId = 'nav', selected = 'Research Acknowledgement')
     updateNumericInput(inputId = 'userID', value = NA)
     updateCheckboxInput(inputId = 'consent', value = NA)
+    updateTextInput(inputId = 'nickname', value = NA)
+    updateNumericInput(inputId = 'age', value = NA)
+    updateSelectizeInput(inputId = 'gender', selected = NA)
+    updateSelectizeInput(inputId = 'education', selected = NA)
     
     # js$reset()
   })
   
   
-  
-  
-  
-  
+
   
   
   
