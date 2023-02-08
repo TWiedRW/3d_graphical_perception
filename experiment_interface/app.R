@@ -6,8 +6,8 @@ library(tidyverse)
 library(rayshader)
 library(shinyjs)
 
-datasets <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/data/pilot/set85data.Rdata')
-kits <- readRDS('/Users/tylerwiederich/Library/CloudStorage/OneDrive-UniversityofNebraska-Lincoln/Research/3d_graphical_perception/data/pilot/kits.Rdata')
+datasets <- readRDS('data/set85data.Rdata')
+kits <- readRDS('data/kits.Rdata')
 
 
 
@@ -37,8 +37,8 @@ Bar2D = function(data, mark_height = 5){
 
 #### 3D Printed (Choose from kit) ####
 print3DPlot <- ggplot(mapping = aes(x = 1, y = 1)) +
-  geom_text(aes(label = 'Choose a graph from your kit'),
-            size = 8) +
+  geom_text(aes(label = 'Please randomly select a kit\nfrom your kit'),
+            size = 6) +
   theme_void() +
   theme(aspect.ratio = 4/3.3)
 
@@ -249,7 +249,7 @@ acknowledgement <-
                                    "Graduate Degree",
                                    "Prefer not to answer")),
         
-        actionButton("submitdemo", "Submit Demographics", class = "btn btn-info")
+        actionButton("submitdemo", "Submit Demographics")
       )
       
       )
@@ -287,7 +287,7 @@ instructions <- fluidPage(
     fluidRow(
       column(8, offset = 2, align = 'left',
       p('Thank you for participating in our experiment on the perceptual judgements on different graphical mediums. You will be presented with a series of graphs and asked to select which of the identified bars are smaller than the other for each graph. You will then be asked to estimate the ratio of the smaller bar to the larger bar. One bar is marked with a circle and the other with a triangle. For each graph, make a quick assessment and do not use anything other than your own judgment for estimating each ratio. The 3D printed graphs will trigger a prompt for you to remove a chart from your assigned box and record the identifier located on the bottom of the graph.'),
-      p('Before you start, please enter your identification number into the entry box below and then click “Begin”.')
+      p('Before you start, please enter the number on your kit into the entry box below and then click “Begin”.')
     )),
     
     fluidRow(
@@ -373,6 +373,18 @@ expScreenUI <- fluidPage(
 
 
 
+#### Practice Graphs #### 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -393,14 +405,13 @@ experimentUI <- fluidPage(
   
   #Plot
   fluidRow(
-    column(8, offset = 2, align = 'center',
-           uiOutput('expPlot'),
-           textOutput('text')
+    column(8, offset = 2, align = 'left',
+           uiOutput('expPlot')
            ),
     ),
   #Which is smaller
   fluidRow(
-    column(4, offset = 4, align = 'center',
+    column(4, offset = 4, align = 'left',
            selectizeInput('smaller', 'Which bar is smaller?',
                         choices = c('', 'Circle (●)', 'Triangle (▲)'),
                         selected = NA))
@@ -410,7 +421,7 @@ experimentUI <- fluidPage(
   fluidRow(tags$head(tags$style(HTML('.irs-single {
             visibility: hidden !important;
     }'))),
-    column(4, offset = 4, align = 'center',
+    column(4, offset = 4, align = 'left',
            sliderInput('ratio', label = div(style='width:300px;', 
                                             div(style='float:left;', 'Smaller'), 
                                             div(style='float:right;', 'Larger')),
@@ -418,19 +429,20 @@ experimentUI <- fluidPage(
                        step = 0.1, ticks = F))
   ), 
   fluidRow(
-    column(4, offset = 4, align = 'center',
+    column(4, offset = 4, align = 'left',
            uiOutput('printed_graph_choice'))
   ),
   fluidRow(
-    column(4, offset = 4, align = 'center',
+    column(4, offset = 4, align = 'left',
            uiOutput('printed_writein'))
   ),
   fluidRow(
     column(4, offset = 4, align = 'center',
            actionButton('expNext', 'Next'))),
-  fluidRow(
-    tableOutput('react'), tableOutput('dataset')
-  )
+  
+  # fluidRow( #To display reactive datasets
+  #   tableOutput('react'), tableOutput('dataset')
+  # )
 )
 
 
@@ -476,7 +488,7 @@ ui <- navbarPage('Perceptual Judgements Experiment',
                  tabPanel('Research Acknowledgement', acknowledgement),
                  tabPanel('Instructions', instructions),
                  tabPanel('Practice Screen', practiceScreenUI),
-                 tabPanel('Practice', 'SECTION FOR PRACTICE GRAPHS'),
+                 tabPanel('Practice', "PRACTICE GRAPHS GO HERE!"),
                  tabPanel('Experiment Screen', expScreenUI),
                  tabPanel('Experiment', experimentUI),
                  tabPanel('Exit Screen', exitUI))
@@ -711,6 +723,8 @@ server <- function(input, output) {
     
     #Remove first row from data
     reactiveKit$df <- reactiveKit$df[-1,]
+    
+    try(close3d())
 
     #Updating data for the next dataset
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
@@ -723,9 +737,6 @@ server <- function(input, output) {
     updateTextInput(inputId = 'incorrectGraph', value = NA)
     updateSelectizeInput(inputId = 'smaller', selected = NA)
     updateSliderInput(inputId = 'ratio', value = 50)
-    
-    .check3d()
-    rgl.close()
     
     #To exit screen
     if(nrow(reactiveKit$df) == 0){
@@ -781,5 +792,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
 
