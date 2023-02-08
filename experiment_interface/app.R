@@ -499,7 +499,7 @@ server <- function(input, output) {
   plotEndTime <- reactiveValues(time = NA)
   appStartTime <- reactiveValues(time = NA)
   endMarker <- reactiveValues(val = 0)
-  
+  plotType <- reactiveValues(val = NA)
   
   
   
@@ -631,8 +631,22 @@ server <- function(input, output) {
 
   
   #### Plots ####
-  
+  output$bar2d <- renderPlot({Bar2D(reactiveData$df)})
+  output$print3d <- renderPlot({print3DPlot})
 
+  output$expPlot <- renderUI({
+    
+    switch(
+      as.character(reactiveKit$df[1,'plot']),
+      '2dDigital' = plotOutput('bar2d'),
+      '3dPrint' = plotOutput('print3d')
+    )
+      
+  })
+  
+  
+  
+  
   
   
   
@@ -702,7 +716,7 @@ server <- function(input, output) {
     
     #Reset plot information
     updateTextInput(inputId = 'incorrectGraph', value = NA)
-    updateSelectizeInput(inputId = 'smaller', selected = NA) #THIS ONE BREAKS
+    updateSelectizeInput(inputId = 'smaller', selected = NA)
     updateSliderInput(inputId = 'ratio', value = 50)
     
     
