@@ -633,13 +633,18 @@ server <- function(input, output) {
   #### Plots ####
   output$bar2d <- renderPlot({Bar2D(reactiveData$df)})
   output$print3d <- renderPlot({print3DPlot})
+  output$bar3d <- renderRglwidget({
+    Bar3D(reactiveData$df)
+    rglwidget()
+    })
 
   output$expPlot <- renderUI({
     
     switch(
       as.character(reactiveKit$df[1,'plot']),
       '2dDigital' = plotOutput('bar2d'),
-      '3dPrint' = plotOutput('print3d')
+      '3dPrint' = plotOutput('print3d'),
+      '3dDigital' = rglwidgetOutput('bar3d')
     )
       
   })
@@ -719,7 +724,8 @@ server <- function(input, output) {
     updateSelectizeInput(inputId = 'smaller', selected = NA)
     updateSliderInput(inputId = 'ratio', value = 50)
     
-    
+    .check3d()
+    rgl.close()
     
     #To exit screen
     if(nrow(reactiveKit$df) == 0){
