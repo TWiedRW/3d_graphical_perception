@@ -141,6 +141,91 @@ Bar3D = function(samp, output_style = '3D', scale = 1096.935){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Plots for Instructions --------------------------------------------------
+
+p1 = ggplot(mapping = aes(x = 1:2, y = c(80, 40))) +
+  geom_col(width = 1,
+           fill = NA,
+           color = 'black') +
+  geom_point(aes(y = 5), shape = c(16,17),
+             size = 2) +
+  ylim(0, 100) +
+  labs(title = 'Smaller bar is 50% the \nsize of the larger bar') +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        strip.text = element_text(size = 20),
+        legend.position = 'none',
+        aspect.ratio = 4/3.3)
+
+
+
+p2 = ggplot(mapping = aes(x = 1:2, y = c(60, 80))) +
+  geom_col(width = 1,
+           fill = NA,
+           color = 'black') +
+  geom_point(aes(y = 5), shape = c(16,17),
+             size = 2) +
+  ylim(0, 100) +
+  labs(title = 'Smaller bar is 75% the \nsize of the larger bar') +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        strip.text = element_text(size = 20),
+        legend.position = 'none',
+        aspect.ratio = 4/3.3)
+
+p3 = ggplot(mapping = aes(x = 1:2, y = c(80, 20))) +
+  geom_col(width = 1,
+           fill = NA,
+           color = 'black') +
+  geom_point(aes(y = 5), shape = c(16,17),
+             size = 2) +
+  ylim(0, 100) +
+  labs(title = 'Smaller bar is 25% the \nsize of the larger bar') +
+  theme_minimal() +
+  theme(axis.title = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        strip.text = element_text(size = 20),
+        legend.position = 'none',
+        aspect.ratio = 4/3.3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Database ----------------------------------------------------------------
 
 #Create database if does not exist
@@ -195,8 +280,7 @@ dbDisconnect(con)
 
 # Pages -------------------------------------------------------------------
 
-# useShinyjs()
-# extendShinyjs(text = jsResetCode, functions = "reset")
+
 
 #### Research Acknowledgement ####
 
@@ -206,12 +290,12 @@ acknowledgement <-
       column(width = 8, offset = 2,
       conditionalPanel(
         condition = "!input.toDemographics || !input.consent",
-        h4("Welcome"),
+        h2("Welcome"),
         helpText(
           "In this survey, a series of graphs will be given to you with two bars identified with either a circle or a triangle.",
-          "We would like you to respond to the following questions."),
-        helpText("1. Which of the identified bars are smaller?"),
-        helpText("2. What size is the smaller bar with respect to the larger bar?"),
+          "We would like you to respond to the following questions for each graph."),
+        helpText("1. Which of the identified bars is smaller?"),
+        helpText("2. Approximately what size is the smaller bar in comparison to the larger bar?"),
         helpText("3. For the 3D printed bar charts, what is the identifier on the bottom of the chart?"),
         helpText(
           "Finally we would like to collect some information about you.",
@@ -281,12 +365,18 @@ instructions <- fluidPage(
     # Application title
     fluidRow(
       column(8, offset = 2,
-        h3('Instructions'),
+        h2('Instructions'),
         align = 'center'
     )),
     fluidRow(
       column(8, offset = 2, align = 'left',
-      p('Thank you for participating in our experiment on the perceptual judgements on different graphical mediums. You will be presented with a series of graphs and asked to select which of the identified bars are smaller than the other for each graph. You will then be asked to estimate the ratio of the smaller bar to the larger bar. One bar is marked with a circle and the other with a triangle. For each graph, make a quick assessment and do not use anything other than your own judgment for estimating each ratio. The 3D printed graphs will trigger a prompt for you to remove a chart from your assigned box and record the identifier located on the bottom of the graph.'),
+      p('Thank you for participating in our experiment on the perceptual judgements on different graphical mediums. 
+        You will be presented with a series of graphs and asked to select which of the identified bars are smaller than the other for each graph. 
+        You will then be asked to estimate the size of the smaller bar in relation to the larger bar. 
+        One bar is marked with a circle and the other with a triangle. 
+        For each graph, make a quick assessment and do not use anything other than your own judgment for estimating each ratio. 
+        The 3D printed graphs will trigger a prompt for you to remove a chart from your assigned box and record the identifier located on the bottom of the graph.
+        For the 3D digital graphs, you are able to rotate the plot using your computer mouse or trackpad'),
       p('Before you start, please enter the number on your kit into the entry box below and then click “Begin”.')
     )),
     
@@ -318,20 +408,93 @@ practiceScreenUI <- fluidPage(
   
   fluidRow(
     column(8, offset = 2, align = 'center',
-           h2('Practice Graphs'))
+           h2('Sample Graphs'))
   ),
   fluidRow(
     column(8, offset = 2, align = 'left',
-           p('Here are a few practice graphs for you to get acquainted with the testing procedure. Click “Begin Practice” to begin the practice graphs.'))
+           p('The next screen will display a few sample graphs. 
+             Each graph has the answer to which bar is smaller and what the size of of the smaller bar is in relation to the larger bar.
+             '),
+           p('When you are finished on the next page, click on the "Continue to Experiment" button to move to the next page.'))
   ),
   fluidRow(
     column(8, offset = 2, align = 'center',
-           actionButton('beginPractice', 'Begin Practice'))
+           actionButton('beginPractice', 'Next'))
   )
 )
 
 
 
+
+
+
+
+#### Practice Graphs #### 
+
+
+instructPlots <- fluidPage(
+  fluidRow(
+    column(12,
+      align = 'center',
+      h3('Sample Graphs with Ratio Solutions')
+    )
+  ),
+  br(),
+  fluidRow(
+    column(width = 4, offset = 0, plotOutput('prac1')),
+    column(width = 4, offset = 0, plotOutput('prac2')),
+    column(width = 4, offset = 0, plotOutput('prac3'))
+  ),
+  fluidRow(
+    column(width = 4, offset = 0, selectizeInput('dummy4', 'Which bar is smaller?',
+                                                 choices = c('', 'Circle (●)', 'Triangle (▲)'),
+                                                 selected = 'Triangle (▲)')),
+    column(width = 4, offset = 0, selectizeInput('dummy5', 'Which bar is smaller?',
+                                                 choices = c('', 'Circle (●)', 'Triangle (▲)'),
+                                                 selected = 'Circle (●)')),
+    column(width = 4, offset = 0, selectizeInput('dummy6', 'Which bar is smaller?',
+                                                 choices = c('', 'Circle (●)', 'Triangle (▲)'),
+                                                 selected = 'Triangle (▲)'))
+  ),
+  fluidRow(
+    tags$head(tags$style(HTML(".irs-single {
+            visibility: hidden !important;
+            position: fixed;
+            }
+            
+            .irs-min {
+            visibility: hidden !important;
+            }
+            .irs-min:before {
+            visibility: visible;
+            content: 'Smaller';
+            position: left;
+            }
+            
+            .irs-max {
+            visibility: hidden !important;
+            }
+            .irs-max:after {
+            visibility: visible;
+            content: 'Larger';
+            position: left;
+            }
+
+            "))),
+    column(width = 4, offset = 0, sliderInput('dummy1', label = 'Approximately what size is the smaller bar in comparison to the larger bar?',
+                                              min = 0, max = 100, value = 50,
+                                              step = 0.1, ticks = F)),
+    column(width = 4, offset = 0, sliderInput('dummy2', label = 'Approximately what size is the smaller bar in comparison to the larger bar?',
+                                              min = 0, max = 100, value = 75,
+                                              step = 0.1, ticks = F)),
+    column(width = 4, offset = 0, sliderInput('dummy3', label = 'Approximately what size is the smaller bar in comparison to the larger bar?',
+                                              min = 0, max = 100, value = 25,
+                                              step = 0.1, ticks = F))
+  ),
+  fluidRow(align = 'center',
+    actionButton(inputId = 'toExpScreen', label = 'Continue to \nExperiment')
+  )
+)
 
 
 
@@ -349,32 +512,19 @@ expScreenUI <- fluidPage(
   
   fluidRow(
     column(8, offset = 2, align = 'center',
-           h2(''))
+           h2('Experiment Screen'))
   ),
   fluidRow(
     column(8, offset = 2, align = 'left',
-           p('You are now about to begin the experiment. Please remember to use quick judgements. Click “Begin Experiment” to begin the experiment.'))
+           p('You are now about to begin the experiment. 
+             Please remember to use quick judgements. 
+             Click “Begin Experiment” to begin the experiment.'))
   ),
   fluidRow(
     column(8, offset = 2, align = 'center',
            actionButton('beginExp', 'Begin Experiment'))
   )
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-#### Practice Graphs #### 
-
 
 
 
@@ -438,12 +588,76 @@ experimentUI <- fluidPage(
   ),
   fluidRow(
     column(4, offset = 4, align = 'center',
-           actionButton('expNext', 'Next'))),
-  
-  # fluidRow( #To display reactive datasets
-  #   tableOutput('react'), tableOutput('dataset')
-  # )
+           actionButton('expNext', 'Next')))
 )
+
+
+
+
+
+
+
+
+
+
+
+#### Experiment UI NEW ####
+
+
+experimentUI <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      tags$head(tags$style(HTML(".irs-single {
+            visibility: hidden !important;
+            position: fixed;
+            }
+            
+            .irs-min {
+            visibility: hidden !important;
+            }
+            .irs-min:before {
+            visibility: visible;
+            content: 'Smaller';
+            position: left;
+            }
+            
+            .irs-max {
+            visibility: hidden !important;
+            }
+            .irs-max:after {
+            visibility: visible;
+            content: 'Larger';
+            position: left;
+            }
+
+            "))),
+      selectizeInput('smaller', 'Which bar is smaller?',
+                     choices = c('', 'Circle (●)', 'Triangle (▲)'),
+                     selected = NA),
+      sliderInput('ratio', label = 'Approximately what size is the smaller bar in comparison to the larger bar?',
+                  min = 0, max = 100, value = 50,
+                  step = 0.1, ticks = F),
+      uiOutput('printed_graph_choice'),
+      uiOutput('printed_writein'),
+      actionButton('expNext', 'Next'),
+      width = 4
+      
+    ),
+    mainPanel(
+      uiOutput('expPlot'),
+      width = 8
+    )
+  )
+)
+
+
+
+
+
+
+
+
+
 
 
 
@@ -489,8 +703,8 @@ ui <- navbarPage('Perceptual Judgements Experiment',
                  id = 'nav',
                  tabPanel('Research Acknowledgement', acknowledgement),
                  tabPanel('Instructions', instructions),
-                 # tabPanel('Practice Screen', practiceScreenUI),
-                 # tabPanel('Practice', "PRACTICE GRAPHS GO HERE!"),
+                 tabPanel('Instructions for Graphs', practiceScreenUI),
+                 tabPanel('Sample Graphs', instructPlots),
                  tabPanel('Experiment Screen', expScreenUI),
                  tabPanel('Experiment', experimentUI),
                  tabPanel('Exit Screen', exitUI))
@@ -504,6 +718,37 @@ ui <- navbarPage('Perceptual Judgements Experiment',
 
 # Server ------------------------------------------------------------------
 server <- function(input, output) {
+  
+  #### Tab Display/Hide ####
+  
+  #Initially hide all but research acknowledgement
+  hideTab(inputId = 'nav', target = 'Instructions')
+  hideTab(inputId = 'nav', target = 'Instructions for Graphs')
+  hideTab(inputId = 'nav', target = 'Sample Graphs')
+  hideTab(inputId = 'nav', target = 'Experiment Screen')
+  hideTab(inputId = 'nav', target = 'Experiment')
+  hideTab(inputId = 'nav', target = 'Exit Screen')
+  
+  
+  
+  
+  
+  
+  
+  
+  #### Render sample plots ###
+  output$prac1 <- renderPlot({p1})
+  output$prac2 <- renderPlot({p2})
+  output$prac3 <- renderPlot({p3})
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   #### Initialize reactive kits and data ####
   reactiveKit <- reactiveValues(df = NA)
@@ -539,8 +784,14 @@ server <- function(input, output) {
     dbWriteTable(con, 'user', demographics, append = T)
     dbDisconnect(con)
     
-    #Move to instructions
+    
+    #Tab updates
+    showTab(inputId = 'nav', target = 'Instructions')
+    showTab(inputId = 'nav', target = 'Exit Screen')
+    
     updateNavbarPage(inputId = 'nav', selected = 'Instructions')
+    hideTab(inputId = 'nav', target = 'Research Acknowledgement')
+    
   })
   
   
@@ -566,6 +817,8 @@ server <- function(input, output) {
   #### Start experiment from instruction screen ####
   observeEvent(input$toPracticeScreen, {
     
+    #-------Validate that user inputted ID
+  
     #Filter data for given kit
     subjectKit <- kits[[input$userID]] %>% 
       bind_rows(.id = 'plot') %>% 
@@ -589,32 +842,54 @@ server <- function(input, output) {
     
     #Reactive data
     reactiveKit$df <- subjectKit
+    
+    #Tab updates
+    showTab(inputId = 'nav', target = 'Instructions')
+    showTab(inputId = 'nav', target = 'Exit Screen')
+    
+    updateNavbarPage(inputId = 'nav', selected = 'Instructions')
+    hideTab(inputId = 'nav', target = 'Research Acknowledgement')
 
   })
   
   
-  # hideTab(inputId = 'nav', target = 'Instructions')
-  # hideTab(inputId = 'nav', target = 'Practice Screen')
-  # hideTab(inputId = 'nav', target = 'Practice')
-  # hideTab(inputId = 'nav', target = 'Experiment Screen')
-  # hideTab(inputId = 'nav', target = 'Experiment')
+  
+  
+  
+  
+  
+  
   
   #### Instructions to Practice Screen ####
   observeEvent(input$toPracticeScreen, {
-    updateNavbarPage(inputId = 'nav', selected = 'Practice Screen')
-    showTab(inputId = 'nav', target = 'Practice Screen')
-    showTab(inputId = 'nav', target = 'Practice')
-    #hideTab(inputId = 'nav', target = 'Instructions')
+    showTab(inputId = 'nav', target = 'Instructions for Graphs')
+    updateNavbarPage(inputId = 'nav', selected = 'Instructions for Graphs')
+    hideTab(inputId = 'nav', target = 'Instructions')
   })
+  
+  
+  
+  
+  
+  
+  
   
   #### Practice Screen to Practice ####
   observeEvent(input$beginPractice, {
-    updateNavbarPage(inputId = 'nav', selected = 'Practice')
+    showTab(inputId = 'nav', target = 'Sample Graphs')
+    updateNavbarPage(inputId = 'nav', selected = 'Sample Graphs')
+    hideTab(inputId = 'nav', target = 'Instructions for Graphs')
   })
   
+  
+  
+  
+  
   #### Practice to Experiment Screen ####
-  observeEvent(input$beginPractice, {
-    updateNavbarPage(inputId = 'nav', selected = 'Practice')
+  observeEvent(input$toExpScreen, {
+    showTab(inputId = 'nav', target = 'Experiment Screen')
+    updateNavbarPage(inputId = 'nav', selected = 'Experiment Screen')
+    hideTab(inputId = 'nav', target = 'Sample Graphs')
   })
   
   
@@ -624,8 +899,8 @@ server <- function(input, output) {
 
   #### Experiment Screen to Experiment ####
   observeEvent(input$beginExp, {
+    showTab(inputId = 'nav', target = 'Experiment')
     updateNavbarPage(inputId = 'nav', selected = 'Experiment')
-    # hideTab(inputId = 'nav', target = 'Instructions')
     # hideTab(inputId = 'nav', target = 'Practice Screen')
     # hideTab(inputId = 'nav', target = 'Practice')
     # hideTab(inputId = 'nav', target = 'Experiment Screen')
@@ -645,6 +920,9 @@ server <- function(input, output) {
 
   
   #### Plots ####
+  
+  #----- I suspect there that these might be causing the errors
+  
   output$bar2d <- renderPlot({Bar2D(reactiveData$df)})
   output$print3d <- renderPlot({print3DPlot})
   output$bar3d <- renderRglwidget({
@@ -656,9 +934,9 @@ server <- function(input, output) {
     
     switch(
       as.character(reactiveKit$df[1,'plot']),
-      '2dDigital' = plotOutput('bar2d'),
-      '3dPrint' = plotOutput('print3d'),
-      '3dDigital' = rglwidgetOutput('bar3d')
+      '2dDigital' = plotOutput('bar2d', width = '70%'),
+      '3dPrint' = plotOutput('print3d', width = '70%'),
+      '3dDigital' = rglwidgetOutput('bar3d', width = '100%')
     )
       
   })
@@ -751,6 +1029,7 @@ server <- function(input, output) {
     #To exit screen
     if(nrow(reactiveKit$df) == 0){
       updateNavbarPage(inputId = 'nav', selected = 'Exit Screen')
+      hideTab(inputId = 'nav', target = 'Experiment')
     }
     else{
     }
