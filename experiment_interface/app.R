@@ -37,7 +37,7 @@ Bar2D = function(data, mark_height = 5){
 
 #### 3D Printed (Choose from kit) ####
 print3DPlot <- ggplot(mapping = aes(x = 1, y = 1)) +
-  geom_text(aes(label = 'Please randomly select a kit\nfrom your kit'),
+  geom_text(aes(label = 'Please randomly select a chart\nfrom your kit'),
             size = 6) +
   theme_void() +
   theme(aspect.ratio = 4/3.3)
@@ -462,6 +462,8 @@ experimentUI <- fluidPage(
 
 exitUI <- fluidPage(
   
+  useShinyjs(),
+  
   # Application title
   fluidRow(
     column(8, offset = 2,
@@ -487,8 +489,8 @@ ui <- navbarPage('Perceptual Judgements Experiment',
                  id = 'nav',
                  tabPanel('Research Acknowledgement', acknowledgement),
                  tabPanel('Instructions', instructions),
-                 tabPanel('Practice Screen', practiceScreenUI),
-                 tabPanel('Practice', "PRACTICE GRAPHS GO HERE!"),
+                 # tabPanel('Practice Screen', practiceScreenUI),
+                 # tabPanel('Practice', "PRACTICE GRAPHS GO HERE!"),
                  tabPanel('Experiment Screen', expScreenUI),
                  tabPanel('Experiment', experimentUI),
                  tabPanel('Exit Screen', exitUI))
@@ -706,6 +708,8 @@ server <- function(input, output) {
     
     plotEndTime$time <- Sys.time()  
     
+    try(close3d())
+    
     con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
     
     #Save data
@@ -724,7 +728,13 @@ server <- function(input, output) {
     #Remove first row from data
     reactiveKit$df <- reactiveKit$df[-1,]
     
-    try(close3d())
+    
+    
+    #Update 3D printed graph list
+    printedPlots$vals <- setdiff(c('-- Select ID --', printedPlots$vals, 'Other'),
+                                 ifelse(input$`3dID` %in% c('-- Select ID --', 'Other'),
+                                        NA, input$`3dID`))
+    updateSelectizeInput(inputId = '3dID', choices = printedPlots$vals, selected = '')
 
     #Updating data for the next dataset
     reactiveData$df <- unnest(datasets[as.numeric(reactiveKit$df[1,'fileID']), 'data'], cols = c(data))
@@ -769,6 +779,9 @@ server <- function(input, output) {
   
   #### Exit screen ####
   observeEvent(input$reset, {
+    
+    refresh()
+    
     updateNavbarPage(inputId = 'nav', selected = 'Research Acknowledgement')
     updateNumericInput(inputId = 'userID', value = NA)
     updateCheckboxInput(inputId = 'consent', value = NA)
@@ -776,8 +789,8 @@ server <- function(input, output) {
     updateNumericInput(inputId = 'age', value = NA)
     updateSelectizeInput(inputId = 'gender', selected = NA)
     updateSelectizeInput(inputId = 'education', selected = NA)
+
     
-    # js$reset()
   })
   
   
