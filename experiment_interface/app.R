@@ -436,7 +436,7 @@ instructPlots <- fluidPage(
   fluidRow(
     column(12,
       align = 'center',
-      h3('Sample Graphs with Ratio Solutions')
+      h3('Sample Graphs with Solutions')
     )
   ),
   br(),
