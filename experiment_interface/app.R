@@ -903,7 +903,7 @@ server <- function(input, output) {
     updateNavbarPage(inputId = 'nav', selected = 'Experiment')
     # hideTab(inputId = 'nav', target = 'Practice Screen')
     # hideTab(inputId = 'nav', target = 'Practice')
-    # hideTab(inputId = 'nav', target = 'Experiment Screen')
+    hideTab(inputId = 'nav', target = 'Experiment Screen')
     
     #First plot start time
     plotStartTime$time <- Sys.time()
