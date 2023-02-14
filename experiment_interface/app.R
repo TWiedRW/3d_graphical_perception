@@ -550,60 +550,30 @@ expScreenUI <- fluidPage(
 #
 #
 #
-
-experimentUI <- fluidPage(
-  
-  #Plot
-  fluidRow(
-    column(8, offset = 2, align = 'left',
-           uiOutput('expPlot')
-           ),
-    ),
-  #Which is smaller
-  fluidRow(
-    column(4, offset = 4, align = 'left',
-           selectizeInput('smaller', 'Which bar is smaller?',
-                        choices = c('', 'Circle (●)', 'Triangle (▲)'),
-                        selected = NA))
-  ),
-  
-  #Size
-  fluidRow(tags$head(tags$style(HTML('.irs-single {
-            visibility: hidden !important;
-    }'))),
-    column(4, offset = 4, align = 'left',
-           sliderInput('ratio', label = div(style='width:300px;', 
-                                            div(style='float:left;', 'Smaller'), 
-                                            div(style='float:right;', 'Larger')),
-                       min = 0, max = 100, value = 50,
-                       step = 0.1, ticks = F))
-  ), 
-  fluidRow(
-    column(4, offset = 4, align = 'left',
-           uiOutput('printed_graph_choice'))
-  ),
-  fluidRow(
-    column(4, offset = 4, align = 'left',
-           uiOutput('printed_writein'))
-  ),
-  fluidRow(
-    column(4, offset = 4, align = 'center',
-           actionButton('expNext', 'Next')))
-)
-
-
-
-
-
-
-
-
-
-
-
-#### Experiment UI NEW ####
-
-
+# 
+# experimentUI <- fluidPage(
+#   fluidRow(
+#     column(
+#       4, 
+#       tags$head(tags$style(HTML('.irs-single {visibility: hidden !important;}'))),
+#       uiOutput('printed_graph_choice'),
+#       uiOutput('printed_writein'),
+#       br(),
+#       selectizeInput('smaller', 'Which bar is smaller?',
+#                      choices = c('', 'Circle (●)', 'Triangle (▲)'),
+#                      selected = NA),
+#       sliderInput('ratio', label = div(style='width:300px;', 
+#                                        div(style='float:left;', 'Smaller'), 
+#                                        div(style='float:right;', 'Larger')),
+#                   min = 0, max = 100, value = 50,
+#                   step = 0.1, ticks = F),
+#       br(),
+#       actionButton('expNext', 'Next')
+#     ),
+#     column(8, uiOutput('expPlot'))
+#     
+#   )
+# )
 experimentUI <- fluidPage(
   sidebarLayout(
     sidebarPanel(
@@ -631,17 +601,20 @@ experimentUI <- fluidPage(
             }
 
             "))),
+      
+      uiOutput('printed_graph_choice'),
+      uiOutput('printed_writein'),
+      br(),
+      
       selectizeInput('smaller', 'Which bar is smaller?',
                      choices = c('', 'Circle (●)', 'Triangle (▲)'),
                      selected = NA),
       sliderInput('ratio', label = 'Approximately what size is the smaller bar in comparison to the larger bar?',
                   min = 0, max = 100, value = 50,
                   step = 0.1, ticks = F),
-      uiOutput('printed_graph_choice'),
-      uiOutput('printed_writein'),
+      br(),
       actionButton('expNext', 'Next'),
       width = 4
-      
     ),
     mainPanel(
       uiOutput('expPlot'),
@@ -649,28 +622,6 @@ experimentUI <- fluidPage(
     )
   )
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Thank you page ----------------------------------------------------------
 
@@ -699,21 +650,17 @@ exitUI <- fluidPage(
 
 # Page Navigation ---------------------------------------------------------
 
-ui <- navbarPage('Perceptual Judgements Experiment',
-                 id = 'nav',
-                 tabPanel('Research Acknowledgement', acknowledgement),
-                 tabPanel('Instructions', instructions),
-                 tabPanel('Instructions for Graphs', practiceScreenUI),
-                 tabPanel('Sample Graphs', instructPlots),
-                 tabPanel('Experiment Screen', expScreenUI),
-                 tabPanel('Experiment', experimentUI),
-                 tabPanel('Exit Screen', exitUI))
-
-
-
-
-
-
+ui <- navbarPage(
+  'Perceptual Judgements Experiment',
+  id = 'nav',
+  tabPanel('Research Acknowledgement', acknowledgement),
+  tabPanel('Instructions', instructions),
+  tabPanel('Instructions for Graphs', practiceScreenUI),
+  tabPanel('Sample Graphs', instructPlots),
+  tabPanel('Experiment Screen', expScreenUI),
+  tabPanel('Experiment', experimentUI),
+  tabPanel('Exit Screen', exitUI)
+)
 
 
 # Server ------------------------------------------------------------------
@@ -730,25 +677,10 @@ server <- function(input, output) {
   hideTab(inputId = 'nav', target = 'Exit Screen')
   
   
-  
-  
-  
-  
-  
-  
   #### Render sample plots ###
   output$prac1 <- renderPlot({p1})
   output$prac2 <- renderPlot({p2})
   output$prac3 <- renderPlot({p3})
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   #### Initialize reactive kits and data ####
   reactiveKit <- reactiveValues(df = NA)
@@ -759,9 +691,6 @@ server <- function(input, output) {
   appStartTime <- reactiveValues(time = NA)
   endMarker <- reactiveValues(val = 0)
   plotType <- reactiveValues(val = NA)
-  
-  
-  
   
   
   #### Demographics to Instructions, write demographic info to table ####
