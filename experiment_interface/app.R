@@ -596,7 +596,7 @@ experimentUI <- fluidPage(
             }
             .irs-max:after {
             visibility: visible;
-            content: 'Larger';
+            content: 'Total = size of larger bar';
             position: left;
             }
 
