@@ -1,0 +1,26 @@
+---
+title: "Measurement Instrument Screenshots"
+author: "Susan Vanderplas, Tyler Wiederich"
+format: pdf
+---
+
+### 2D Bar Charts
+
+![Two-dimensional bar charts. Bars are marked with a circle and a triangle; participants must indicate which bar is smaller, and then estimate the ratio of the smaller bar to the larger bar using the slider.](Screenshot_20230214_134328.png)
+
+![Another two-dimensional bar chart. Bars are marked with a circle and a triangle; participants must indicate which bar is smaller, and then estimate the ratio of the smaller bar to the larger bar using the slider.](Screenshot_20230214_134629.png)
+
+### 3D Projections
+
+![A screenshot of the measurement applet displaying a 3D bar chart in as an interactive projection.](Screenshot_20230214_133452.png)
+
+![Another screenshot of the measurement applet showing a different chart at a different angle. The user can rotate the chart to get a different perspective on the question before answering.](Screenshot_20230214_133711.png)
+
+
+![Another screenshot of the measurement applet showing a different chart at a different angle. The user will drag the circle to represent the size of one bar relative to the other.](Screenshot_20230214_133824.png)
+
+### 3D Printed Charts
+
+![One set of 3D printed charts used in this experiment. Each ratio of bars is printed in a different color, and the chart ID is engraved on the bottom of the chart during the 3D printing process.](b7c4360f827e4989.png)
+
+![The applet will direct the user to select a 3D printed chart when appropriate during the course of the experiment. A kit consists of 5 3D printed charts.](Screenshot_20230214_133935.png)

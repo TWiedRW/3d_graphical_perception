@@ -1,0 +1,34 @@
+---
+title: "Stat 218 Recruitment"
+author: "Susan Vanderplas, Tyler Wiederich"
+format: pdf
+---
+
+## Stat 218 Project Description
+
+As part of Stat 218, you will be participating in a research study (Part I) and reflecting on what you are learning in Stat 218 (Part II). In Part II, you will examine and reflect on the experimental design from your experience as a study participant, as well as from the perspective of a researcher, and as a consumer of scientific information.
+
+We are interested both in the results from the study you are participating in as part of the class, and in how this experience influences your understanding of critical course content. 
+
+Your reflections and responses will be collected both as part of Stat 218 and as part of this study, however, your instructor will assign an ID code to your responses at the end of the semester (before they are included in the study data) in order to guarantee that your written responses cannot be traced back to you. 
+Your instructor may grade the content of your responses as part of Stat 218, however, these numerical grades will not be included in the study data.
+
+## Part I Description
+
+In this experiment, you will answer some questions relating to statistical charts.
+You will be asked to estimate some numerical quantites relating to the charts you are shown.
+Some of these charts will be shown in the web browser; for other questions, you may be asked to reference a specific color of 3D-printed chart.
+You should have been given a set of 3D-printed charts for this purpose.
+
+By participating in this experiment, you will help us understand how different types of statistical charts are read and understood.
+You will also help us replicate an experiment performed in the 1980s to see if the results still hold with modern graphics and technology.
+Your responses will be completely anonymous and there is no risk to you for participating. 
+You will not be paid for participating in this experiment.
+You will receive a code at the end of this study that you will enter into Canvas in order to get credit for participating in this experiment as part of Stat 218.
+
+The experiment will consist of 15 questions, plus some limited demographic information that we will use to describe the participants in our experiments. We expect that it will take at most 20 minutes to complete.
+
+You can participate in this experiment by going to <url>. 
+
+## Part II Description
+
