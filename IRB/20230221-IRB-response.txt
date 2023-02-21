@@ -1,0 +1,44 @@
+Dear Dr. VanderPlas and Tyler Wiederich,
+
+Project ID: 22579
+Form ID: 60077
+Review Type: New Project Form
+Title: Exploration of Statistical Graphics and Experiential Learing
+Status: Submitted to RCS Office
+
+A pre-review of this form has been completed. Based upon this review, the following clarifications and revisions will be needed before proceeding with the review.
+
+1. ~~It appears that there is a typo in the title of the project (a missing N in learning). Please revise in section 1.1 of the protocol.~~
+
+2. ~~Please revise section 3.5 of the protocol to describe the inclusion criteria for each phase. (E.g., Phase one will be adults over the age of 19 who are faculty members and graduate students and their partners/roommates.) The inclusion criteria for Phase 2 participants is unclear other than the fact that they are students in Stats 218.~~
+
+a. Please review the protocol and attachments and revise throughout for consistency about the age of participation for Phase 2 participants. (For example, section 7.3 says they will need to indicate that they are over the age of 19. But section 3.1 and 3.2 includes children. And 7.8.a. requests a waiver of parental consent.)
+
+3. Please revise section 5.6 of the protocol to describe how long, in terms of time, the procedures will take a participant to complete. The description should include the duration of a session, the number of sessions, over what period of time and the total time required to complete the procedures. Please provide one description for the Phase 1 participants and a separate description for the phase 2 participants.
+a. Please note the amount of time for each procedure and the total time should also be reflected in the consent language for each group.
+
+
+4. Please revise section 8.3. to describe how long the project records and data will be kept. The description should differentiate between the length of storage time for identifiable and de-identified records, if applicable. The question recognizes the difference between project records and research data as both should be addressed.
+As the investigator will be collecting identifiable information, this answer should indicate how long identifiable records will be maintained and when it will be destroyed or deidentified.
+UNL HRPP 2018 Policy #3.013: Research Records Retention and Security, specifically section 2.3.A. states that research records must be retained for at least three years beyond the closure of the study. This policy can be found on our website here: https://research.unl.edu/researchcompliance/policies-procedures/. If de-identified/anonymous data will be stored indefinitely either on approved University storage or in a data repository, please revise to clarify.
+
+
+5. Please upload a course syllabus for Stats 218 that includes the procedures described in this protocol.
+
+6. Please upload a Phase 2 consent document that contains the choice to opt out of participation in the research. For more information the investigator may wish to review the information provided in the A-Z Guidance document Students as Research Participants in the Classroom Environment available on the IRB website at https://research.unl.edu/researchcompliance/guidance-topics-a-z/
+a. Because students will have the option of not having their course work be a part of the research and participation in research cannot be a requirement of the class, please revise the language in the document (Stat218_Recruitment_Information.pdf).
+7. Please upload a consent document for the Phase 1 participants. Templates for consent documents may be found on the IRB website at https://research.unl.edu/researchcompliance/templates-forms/
+
+8. GitHub is indicated in section 8.3 and 8.8.b. of the protocol. Many projects utilize UNLDR the University of Nebraska Libraries Data Repository or (OSF) Open Science Framework. However, if the investigator wishes to use GitHub, a IT Data Security review will need to be requested. For the use of GitHub, which is not a UNL licensed service, please request an ITS Data Security review by submitting a ticket with Attention to Chris Cashmere describing the project, the data being stored, and the purpose of the storage. When that review is complete, please attach the approval documentation as an attachment to this form.
+
+If you have questions about any of these revisions, please contact me at eshultz2@unl.edu and we can set up a Zoom call to discuss.
+
+NOTE: When you have completed all revisions throughout the form and before officially clicking submit revisions, please include a summarized response within the comments box or upload a Word document within the files that details how each revision requested was addressed. It is recommended that you make sure the status of the form includes revisions submitted in the status name once you have clicked on the submit revisions button. You may have to refresh your browser for the updated status to show on the form.
+
+Once you have addressed the outlined concerns, please resubmit your protocol. Please note, revisions are required to be submitted via NUgrant by 3/7/2023. If the revisions have not been submitted, the form will be set to a Preparation status. You will then have 30 days to complete the revisions or the form will be administratively closed.
+
+Cordially,
+
+Emily Shultz
+Research Compliance Services
+Human Research Protection Program
