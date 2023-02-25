@@ -164,7 +164,7 @@ practice_data = data.frame(fileID = 15, file = 'data/Set63/Ratio1895/Type1-Rep01
 datasets <- bind_rows(datasets, practice_data)
 
 #### Saving data ####
-saveRDS(kitsWithData, 'experiment_interface/data/kits.Rdata')
-saveRDS(datasets, 'experiment_interface/data/set85data.Rdata')
+save(kitsWithData, file = 'experiment_interface/data/kits.Rdata')
+save(datasets, file = 'experiment_interface/data/set85data.Rdata')
 
 
