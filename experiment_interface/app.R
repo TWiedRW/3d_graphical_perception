@@ -224,7 +224,7 @@ instructions <- {fluidPage(
   ),
   fluidRow(
     column(8, offset = 2, align = 'left',
-           p('Thank you for participating in our experiment on perceptual judgements in different graphical mediums.',
+           p('Thank you for participating in our experiment on perceptual judgments in different graphical mediums.',
              'You will see a series of 15 charts in this experiment',
              'On each screen, you will see either a rendered chart (in 2D or 3D), or a prompt to choose a 3D printed chart from your kit'),
            br(),
@@ -296,7 +296,7 @@ exitUI <- {fluidPage(
 # Page Navigation ---------------------------------------------------------
 
 ui <- navbarPage(
-  'Perceptual Judgements Experiment',
+  'Perceptual Judgments Experiment',
   # Common header for all panels
   header = tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
