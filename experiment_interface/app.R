@@ -629,7 +629,7 @@ server <- function(input, output) {
     output$completion_code <- renderText(generate_completion_code())
     
     #To exit screen
-    if (trial_data$trialID > trial_data$max_trials) {
+    if (trial_data$trialID > trial_data$max_trials + 1) {
       updateNavbarPage(inputId = 'nav', selected = 'Finishing Up')
       
       # hideTab(inputId = 'nav', target = 'Experiment')
