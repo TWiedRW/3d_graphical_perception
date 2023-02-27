@@ -619,6 +619,7 @@ server <- function(input, output) {
     
     # set trial ID
     trial_data$trialID <- trial_data$trialID + 1
+    trial_data$full_info <- FALSE
     
     #Reset plot information
     updateTextInput(inputId = 'incorrectGraph', value = NA)
