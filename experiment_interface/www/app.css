@@ -1,0 +1,22 @@
+.irs-single {
+visibility: hidden !important;
+position: fixed;
+}
+
+.irs-min {
+visibility: hidden !important;
+}
+.irs-min:before {
+visibility: visible;
+content: 'Smaller';
+position: left;
+}
+
+.irs-max {
+visibility: hidden !important;
+}
+.irs-max:after {
+visibility: visible;
+content: 'Larger';
+position: left;
+}
