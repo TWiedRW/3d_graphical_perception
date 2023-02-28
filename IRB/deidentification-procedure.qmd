@@ -1,0 +1,27 @@
+---
+title: "Instructions for Stat 218 Instructors"
+format: pdf
+---
+
+For each of the components of this experiment/active learning project, please complete the following procedure:
+
+1. Download student responses from canvas as a CSV file.
+2. Create a data frame containing the following columns:
+    - Year
+    - Semester
+    - Section number
+    - Student name or NUID
+    - A unique ID code for each student. 
+    In R, you can generate this using the following code on the column containing the student's name or NUID:
+
+```{r}
+library(digest) 
+digest("name")
+digest("NUID")
+```
+
+3. Merge this data frame with each of the CSV files obtained in step 1
+4. Delete any columns containing the student's name or NUID
+5. Write out each CSV file.
+
+Please see Tyler Wiederich or Dr. Vanderplas if you need help with this operation.
