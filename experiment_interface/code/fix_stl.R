@@ -25,5 +25,3 @@ fix_stl <- function(file){
   return(tf)
   unlink(tf)
 }
-file = 'stl_files/id-03-Type1-Rep01.stl'
-fix_stl(file)
