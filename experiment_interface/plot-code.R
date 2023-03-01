@@ -6,8 +6,9 @@ Bar2D <- function(data, mark_height = 5){
     geom_col(color = 'black',
              fill = NA,
              width = 1) +
-    geom_point(data = filter(data, IDchr != ""),
-               mapping = aes(x = GroupOrder, y = mark_height, shape = IDchr),
+    geom_point(data = dplyr::filter(data, IDchr != ""),
+               mapping = aes(x = GroupOrder, y = mark_height),
+               shape = c(17,16),
                size = 3) +
     scale_x_discrete() +
     ylim(0, 100) +
