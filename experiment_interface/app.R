@@ -9,8 +9,8 @@ library(markdown)
 
 
 
-datasets <- readRDS('data/set85data.Rdata')
-kits <- readRDS('data/kits.Rdata')
+datasets <- load('data/set85data.Rdata')
+kits <- load('data/kits.Rdata')
 
 # Read in p1, p2, p3 demo plots
 source("demo-plots.R")
