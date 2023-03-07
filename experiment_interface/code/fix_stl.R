@@ -16,12 +16,19 @@
 ##
 ## ---------------------------
 
+#Python to read/write binary stl files
 library(reticulate)
 source_python('code/convert_stl.py')
 
+#Use function with R function
 fix_stl <- function(file){
-  tf <- tempfile(fileext = '.stl')
-  convert_stl(file, tf)
-  return(tf)
-  unlink(tf)
+  convert_stl(file, file)
+}
+
+#List of all stl files in experiment_interface
+files <- list.files(pattern = '.stl$', recursive = T)
+
+#Go through files and convert to binary
+for(i in 1:length(files)){
+  fix_stl(files[i])
 }
