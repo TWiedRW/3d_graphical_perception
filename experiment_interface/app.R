@@ -591,26 +591,7 @@ server <- function(input, output) {
     colors <- rep(set85id_colors$print_color, each = 2)
     tmpID <- plots_trial()$fileID[trial_data$trialID]
 
-    Bar3D(paste0('stl_files/', stl_files[tmpID]), colors[tmpID])
-   
-    # clear3d(type = 'lights')
-    # rgl.pop('lights')
-    
-    #Colors back of plot
-    light3d(viewpoint.rel = F,
-            theta = 30, phi = 30,
-            specular = 'grey50',
-            ambient = 'grey50')
-    #Colors front of plot
-    light3d(viewpoint.rel = F,
-            theta = -30, phi = -30,
-            specular = 'grey50',
-            ambient = 'grey50')
-    light3d(viewpoint.rel = F,
-            theta = 180, phi = 0,
-            specular = 'grey50',
-            ambient = 'grey50')
-    
+    try(Bar3D(paste0('stl_files/', stl_files[tmpID]), colors[tmpID]), silent = T)
      rglwidget()
   })
   
@@ -697,12 +678,13 @@ server <- function(input, output) {
     output$completion_code <- renderText(generate_completion_code())
     
     #To exit screen
-    if (trial_data$trialID > trial_data$max_trials + 1) {
+    if (trial_data$trialID  > trial_data$max_trials + 1) {
       updateNavbarPage(inputId = 'nav', selected = 'Finishing Up')
-      
       # hideTab(inputId = 'nav', target = 'Experiment')
     }
   })
+  
+  
   
   # Exit screen
   observeEvent(input$reset, {
