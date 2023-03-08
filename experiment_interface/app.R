@@ -326,6 +326,8 @@ server <- function(input, output) {
   shinyjs::disable(selector = '.navbar-nav a[data-value="Experiment"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Finishing Up"]')
   
+  #See if this prevents unneccesary plots from appearing
+  try(close3d())
   
   # Keep track of experiment time milestones
   timing <- reactiveValues()
@@ -572,13 +574,48 @@ server <- function(input, output) {
     tmpID <- plots_trial()$fileID[trial_data$trialID]
 
     Bar3D(paste0('stl_files/', stl_files[tmpID]), colors[tmpID])
-    rglwidget()
+   
+    # clear3d(type = 'lights')
+    # rgl.pop('lights')
+    
+    #Colors back of plot
+    light3d(viewpoint.rel = F,
+            theta = 30, phi = 30,
+            specular = 'grey50',
+            ambient = 'grey50')
+    #Colors front of plot
+    light3d(viewpoint.rel = F,
+            theta = -30, phi = -30,
+            specular = 'grey50',
+            ambient = 'grey50')
+    light3d(viewpoint.rel = F,
+            theta = 180, phi = 0,
+            specular = 'grey50',
+            ambient = 'grey50')
+    
+     rglwidget()
   })
+  
+  # output$expPlot <- renderUI({
+  #   validate(need(!is.na(as.numeric(input$kitID)), "Please provide kit ID to continue"))
+  #   
+  #   if (trial_data$trialID) {} # Debugging
+  #   message(sprintf("Trial: %d is a %s", trial_data$trialID, trial_data$info$plot))
+  #   switch(
+  #     as.character(trial_data$info$plot),
+  #     'refresh' = plotOutput('refresh'),
+  #     '2dDigital' = plotOutput('bar2d', width = '70%'),
+  #     '3dPrint' = plotOutput('print3d', width = '70%'),
+  #     '3dDigital' = rglwidgetOutput('bar3d', width = '100%')
+  #   )
+  # })
   
   output$expPlot <- renderUI({
     validate(need(!is.na(as.numeric(input$kitID)), "Please provide kit ID to continue"))
     
-    if (trial_data$trialID) {} # Debugging
+    if (trial_data$trialID > trial_data$max_trials) {
+      message('Trial ID exceeds maximum number of trials')
+    } else{
     message(sprintf("Trial: %d is a %s", trial_data$trialID, trial_data$info$plot))
     switch(
       as.character(trial_data$info$plot),
@@ -586,8 +623,10 @@ server <- function(input, output) {
       '2dDigital' = plotOutput('bar2d', width = '70%'),
       '3dPrint' = plotOutput('print3d', width = '70%'),
       '3dDigital' = rglwidgetOutput('bar3d', width = '100%')
-    )
+    )}
   })
+  
+
 
   observeEvent(input$expNext, {
     

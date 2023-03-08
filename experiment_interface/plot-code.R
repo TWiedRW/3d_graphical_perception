@@ -41,7 +41,8 @@ Bar3D <- function(file, color = 'black'){
                fog = F,
                shininess = 95)
   clear3d(type = 'lights')
-  
+  # rgl.pop('lights')
+  # 
   #Colors back of plot
   light3d(viewpoint.rel = F,
            theta = 30, phi = 30,
@@ -52,6 +53,7 @@ Bar3D <- function(file, color = 'black'){
           theta = -30, phi = -30,
           specular = 'grey50',
           ambient = 'grey50')
+  #Colors bottom of plot
   light3d(viewpoint.rel = F,
           theta = 180, phi = 0,
           specular = 'grey50',
