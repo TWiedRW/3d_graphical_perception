@@ -7,7 +7,7 @@ badwords <- readLines("https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-N
   unlist() %>% 
   unique() %>%
   tibble(word = .) %>%
-  filter(nchar(word) > 0)
+  dplyr::filter(nchar(word) > 0)
 
 contains_badwords <- filter(badwords, nchar(word) > 3) %>%
   `[[`("word") %>%
@@ -15,7 +15,7 @@ contains_badwords <- filter(badwords, nchar(word) > 3) %>%
 
 words <- words %>%
   anti_join(badwords) %>%
-  filter(!str_detect(word, contains_badwords))
+  dplyr::filter(!str_detect(word, contains_badwords))
 
 generate_completion_code <- function(nwords = 4, sep = '-', exclusion_file = "codes.txt") {
   # Generate new code

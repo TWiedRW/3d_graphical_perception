@@ -1,3 +1,4 @@
+require(ggplot2)
 p1 <- ggplot(mapping = aes(x = 1:2, y = c(80, 40))) +
   geom_col(width = 1,
            fill = NA,

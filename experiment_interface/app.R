@@ -6,11 +6,15 @@ library(tidyverse)
 library(rayshader)
 library(shinyjs)
 library(markdown)
+library(reactlog)
 
 
 
-datasets <- load('data/set85data.Rdata')
-kits <- load('data/kits.Rdata')
+#Run if new stl files are provided. This will fix the format so R can read it
+#source('code/fix_stl.R')
+
+load('data/set85data.Rdata')
+load('data/kits.Rdata')
 
 # Read in p1, p2, p3 demo plots
 source("demo-plots.R")
@@ -38,7 +42,9 @@ shinyjs.enableTab = function(param) {
 "
 
 set85id_colors <- tibble(set85id = c(1, 2, 3, 4, 5, 6, 9), 
-                         print_color = c("Teal", "Green", "Red", "Yellow", "Blue", "Orange", "Purple"))
+                         print_color = c("Cyan", "Green", "Red", "Yellow", "Blue", "Orange", "Purple"))
+
+stl_files <- list.files('stl_files', pattern = '.stl$')
 
 # Database ----------------------------------------------------------------
 
@@ -433,7 +439,7 @@ server <- function(input, output) {
     kitID_num <- as.numeric(input$kitID)
     if (!is.na(kitID_num)) {
       # Filter data for given kit
-      kits[[kitID_num]] %>% 
+      kitsWithData[[kitID_num]] %>% 
         bind_rows(.id = 'plot') %>% 
         mutate(file = paste0('data/pilot/Set85/', gsub('.csv', '', file)),
                kit = kitID_num) %>%
@@ -452,11 +458,12 @@ server <- function(input, output) {
     tmp[tmp$plot == '3dPrint', setdiff(names(tmp), c('plot', 'kit', 'trial'))] <- NA
     
     tmp
+    
   })
   
   plots_3d <- reactive({
     tmp <- plots_in_kit()
-    filter(tmp, plot == "3dPrint")
+    dplyr::filter(tmp, plot == "3dPrint")
   })
   
   # Initialize reactive values for trial information
@@ -522,14 +529,15 @@ server <- function(input, output) {
   
   # Set dataset and file ID when trial ID is set
   observeEvent(trial_data$trialID, {
+    # print(plots_trial())
     # First set info := current trial row from plots_in_kit()
-    trial_data$info <- filter(plots_trial(), trial == trial_data$trialID)
+    trial_data$info <- dplyr::filter(plots_trial(), trial == trial_data$trialID) 
     trial_data$full_info <- !is3dtrial()
   })
   
   # Update dataset when plotID3d is set
   observeEvent(input$`plotID3d`, {
-    actual_trial_info <- filter(plots_3d(), file == input$`plotID3d`)
+    actual_trial_info <- dplyr::filter(plots_3d(), file == input$`plotID3d`)
     if (nrow(actual_trial_info) > 0) {
       idx <- which(names(trial_data$info) %in% c("plot", "kit", "trial"))
       trial_data$info[,-idx] <- actual_trial_info[,-idx]
@@ -559,8 +567,11 @@ server <- function(input, output) {
     print3DPlot
   })
   
-  output$bar3d <- renderRglwidget({
-    Bar3D(trial_data$df)
+  output$bar3d <- renderRglwidget({ #3d plot from stl file
+    colors <- rep(set85id_colors$print_color, each = 2)
+    tmpID <- plots_trial()$fileID[trial_data$trialID]
+
+    Bar3D(paste0('stl_files/', stl_files[tmpID]), colors[tmpID])
     rglwidget()
   })
   
