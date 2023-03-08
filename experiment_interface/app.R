@@ -8,7 +8,8 @@ library(shinyjs)
 library(markdown)
 library(reactlog)
 
-
+#Current database to work with
+currentDB <- "20230209-graphicsGroup.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -49,7 +50,7 @@ stl_files <- list.files('stl_files', pattern = '.stl$')
 # Database ----------------------------------------------------------------
 
 #Create database if does not exist
-con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
+con <- dbConnect(SQLite(), currentDB)
 
 dbTables <- dbListTables(con)
 
@@ -106,11 +107,28 @@ consent_form <- {fluidPage(
 )}
 
 demographicsUI <- {fluidPage(
+  tags$head(
+    # tags$link(rel = "stylesheet", type = "text/css", href = "app.css"),
+    HTML("<script>
+  // Initialize the agent at application startup.
+  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3')
+    .then(FingerprintJS => FingerprintJS.load())
+  // Get the visitor identifier when you need it.
+  fpPromise
+    .then(fp => fp.get())
+    .then(result => {
+      // This is the visitor identifier:
+      const visitorId = result.visitorId
+      console.log(visitorId)
+      Shiny.setInputValue('fingerprint', visitorId);
+    })
+    .catch(error => console.error(error))</script>")
+  ),
   fluidRow(
     column(
       width = 8, offset = 2,
       h4('Demographic Information'),
-      textInput("nickname", "Please enter a nickname to be used as your identifier: "),
+      # textInput("nickname", "Please enter a nickname to be used as your identifier: "),
       selectizeInput("age", "Age Range",
                      choices = c("", "Under 19", "19-25", "26-30",
                                  "31-35", "36-40", "41-45", "46-50",
@@ -351,7 +369,7 @@ server <- function(input, output) {
       )
     } else { 
       # Only enforce conditions if data is saved
-      validate(need(input$nickname != "", "Please select a nickname to continue"))
+      # validate(need(input$nickname != "", "Please select a nickname to continue"))
       validate(need(input$age != "", "Please select your age to continue"))
       validate(need(input$gender != "", "Please select your gender identity to continue"))
       validate(need(input$education != "", "Please select your education level to continue"))
@@ -366,7 +384,7 @@ server <- function(input, output) {
       
       # Only write to DB if consent
       if (input$consent == "TRUE") {
-        con <- dbConnect(SQLite(), "20230209-graphicsGroup.db" )
+        con <- dbConnect(SQLite(), currentDB )
         
         #User start time with the app, use with nickname for unique ID
         timing$startExp <- Sys.time()
@@ -375,7 +393,7 @@ server <- function(input, output) {
         demographics <- data.frame(
           userAppStartTime = timing$startExp,
           consent = input$consent,
-          nickname = input$nickname,
+          nickname = input$fingerprint,
           age = input$age,
           gender = input$gender,
           education = input$education
@@ -637,14 +655,14 @@ server <- function(input, output) {
     
     # Write data to database
     if (input$consent == "TRUE") {
-      con <- dbConnect(SQLite(), '20230209-graphicsGroup.db')
+      con <- dbConnect(SQLite(), currentDB)
       
       message("Results written to database")
       
       #Save data
       results <- trial_data$info %>% 
         select(-trial) %>%
-        mutate(nickname = input$nickname,
+        mutate(nickname = input$fingerprint,
                appStartTime = timing$startExp,
                plotStartTime = trial_data$startTime,
                plotEndTime = trial_data$endTime,
@@ -692,7 +710,7 @@ server <- function(input, output) {
     updateNavbarPage(inputId = 'nav', selected = 'Research Consent')
     updateNumericInput(inputId = 'kitID', value = NA)
     updateCheckboxInput(inputId = 'consent', value = NA)
-    updateTextInput(inputId = 'nickname', value = NA)
+    # updateTextInput(inputId = 'nickname', value = NA)
     updateNumericInput(inputId = 'age', value = NA)
     updateSelectizeInput(inputId = 'gender', selected = NA)
     updateSelectizeInput(inputId = 'education', selected = NA)
