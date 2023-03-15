@@ -9,7 +9,7 @@ library(markdown)
 library(reactlog)
 
 #Current database to work with
-currentDB <- "20230209-graphicsGroup.db"
+currentDB <- "testing.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -127,8 +127,13 @@ demographicsUI <- {fluidPage(
   fluidRow(
     column(
       width = 8, offset = 2,
-      h4('Demographic Information'),
+      h2('Participant Identifier'),
+      p('To ensure that we have a unique identifier for your responses, you will need to provide an answer to the following question.',
+        'Your response for this question will not be used with your survey responses and will not be used to attempt to identify you.'),
+      textInput('participantUnique', 'What is your favorite zoo animal?'),
       # textInput("nickname", "Please enter a nickname to be used as your identifier: "),
+      br(),
+      h2('Demographic Information'),
       selectizeInput("age", "Age Range",
                      choices = c("", "Under 19", "19-25", "26-30",
                                  "31-35", "36-40", "41-45", "46-50",
@@ -250,10 +255,10 @@ instructions <- {fluidPage(
     column(8, offset = 2, align = 'left',
            p('Thank you for participating in our experiment on perceptual judgments in different graphical mediums.',
              'You will see a series of 15 charts in this experiment',
-             'On each screen, you will see either a rendered chart (in 2D or 3D), or a prompt to choose a 3D printed chart from your kit'),
+             'On each screen, you will see either a rendered chart (in 2D or 3D), or a prompt to choose a 3D printed chart from your kit.'),
            br(),
-           p("Before you start, please enter your kit number so that we know what charts you have"),
-           selectizeInput('kitID', 'Kit ID: ', choices = c(1:21, "Other"), width = '15%',   
+           p("Before you start, please enter your kit number so that we know what charts you have."),
+           selectizeInput('kitID', 'Kit ID: ', choices = c(1:21, "Other"), width = '30%',   
                           # https://stackoverflow.com/questions/24175997/force-no-default-selection-in-selectinput
                           options = list(
                             placeholder = 'Please select an option below',
@@ -270,10 +275,12 @@ instructions <- {fluidPage(
            p("First, select which marked bar, circle or triangle, is smaller.", 
              "Then, visually estimate how big the smaller bar is in comparison to the larger bar."),
            br(),
-           p("When you are ready, click 'Begin'"),
-           uiOutput('toExpBtn')
+           p("When you are ready, click 'Begin'")
+           
     )
-  )
+  ),
+  fluidRow(column(8, offset = 2, align = 'center', 
+                  uiOutput('toExpBtn')))
 )}
 
 experimentUI <- {fluidPage(
@@ -316,7 +323,6 @@ exitUI <- {fluidPage(
 
 
 
-
 # Page Navigation ---------------------------------------------------------
 
 ui <- navbarPage(
@@ -344,7 +350,7 @@ server <- function(input, output) {
   shinyjs::disable(selector = '.navbar-nav a[data-value="Experiment"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Finishing Up"]')
   
-  #See if this prevents unneccesary plots from appearing
+  #See if this prevents unnecessary plots from appearing
   try(close3d())
   
   # Keep track of experiment time milestones
@@ -369,7 +375,7 @@ server <- function(input, output) {
       )
     } else { 
       # Only enforce conditions if data is saved
-      # validate(need(input$nickname != "", "Please select a nickname to continue"))
+      validate(need(input$participantUnique != "", "Please enter your favorite zoo animal to continue"))
       validate(need(input$age != "", "Please select your age to continue"))
       validate(need(input$gender != "", "Please select your gender identity to continue"))
       validate(need(input$education != "", "Please select your education level to continue"))
@@ -394,6 +400,7 @@ server <- function(input, output) {
           userAppStartTime = timing$startExp,
           consent = input$consent,
           nickname = input$fingerprint,
+          participantUnique = input$participantUnique,
           age = input$age,
           gender = input$gender,
           education = input$education
@@ -471,6 +478,7 @@ server <- function(input, output) {
     }
   })
   
+  
   plots_trial <- reactive({
     tmp <- plots_in_kit()
     
@@ -480,6 +488,7 @@ server <- function(input, output) {
     tmp
     
   })
+  
   
   plots_3d <- reactive({
     tmp <- plots_in_kit()
@@ -569,7 +578,11 @@ server <- function(input, output) {
   observeEvent(trial_data$full_info, {
     if (trial_data$full_info) {
       # Get corresponding dataset
-      trial_data$df <- datasets$data[[trial_data$info$fileID]]
+      # trial_data$df <- datasets$data[[trial_data$info$fileID]]
+      
+      if(trial_data$trialID <= trial_data$max_trials){
+        trial_data$df <- datasets$data[[trial_data$info$fileID]]
+      }
       
       trial_data$startTime <- Sys.time()
     }
@@ -580,19 +593,22 @@ server <- function(input, output) {
   output$text <- renderText(nrow(trial_data$df))
   
   output$bar2d <- renderPlot({
+    validate(need(trial_data$info$plot == '2dDigital', ''))
     Bar2D(trial_data$df)
   })
   
   output$print3d <- renderPlot({
+    validate(need(trial_data$info$plot == '3dPrint', ''))
     print3DPlot
   })
   
   output$bar3d <- renderRglwidget({ #3d plot from stl file
+    validate(need(trial_data$info$plot == '3dDigital', ''))
     colors <- rep(set85id_colors$print_color, each = 2)
     tmpID <- plots_trial()$fileID[trial_data$trialID]
-
-    try(Bar3D(paste0('stl_files/', stl_files[tmpID]), colors[tmpID]), silent = T)
-     rglwidget()
+    validate(need(trial_data$info$plot == '3dDigital', ''))
+    Bar3D(paste0('stl_files/', stl_files[tmpID]), colors[tmpID])
+    rglwidget()
   })
   
   # output$expPlot <- renderUI({
@@ -611,6 +627,7 @@ server <- function(input, output) {
   
   output$expPlot <- renderUI({
     validate(need(!is.na(as.numeric(input$kitID)), "Please provide kit ID to continue"))
+    # validate(need(trial_data$trialID <= trial_data$max_trials, 'Too many trials'))
     
     if (trial_data$trialID > trial_data$max_trials) {
       message('Trial ID exceeds maximum number of trials')
@@ -678,7 +695,7 @@ server <- function(input, output) {
     output$completion_code <- renderText(generate_completion_code())
     
     #To exit screen
-    if (trial_data$trialID  > trial_data$max_trials + 1) {
+    if (trial_data$trialID  >= trial_data$max_trials + 1) {
       updateNavbarPage(inputId = 'nav', selected = 'Finishing Up')
       # hideTab(inputId = 'nav', target = 'Experiment')
     }
@@ -689,13 +706,6 @@ server <- function(input, output) {
   # Exit screen
   observeEvent(input$reset, {
     refresh()
-    updateNavbarPage(inputId = 'nav', selected = 'Research Consent')
-    updateNumericInput(inputId = 'kitID', value = NA)
-    updateCheckboxInput(inputId = 'consent', value = NA)
-    # updateTextInput(inputId = 'nickname', value = NA)
-    updateNumericInput(inputId = 'age', value = NA)
-    updateSelectizeInput(inputId = 'gender', selected = NA)
-    updateSelectizeInput(inputId = 'education', selected = NA)
   })
 
 } #End server
