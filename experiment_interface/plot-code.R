@@ -45,20 +45,28 @@ Bar3D <- function(file, color = 'black'){
   # 
   #Colors back of plot
   light3d(viewpoint.rel = F,
-           theta = 30, phi = 30,
-           specular = 'grey50',
-           ambient = 'grey50')
+           x = 7*130, y = -1000, z = 1000,
+           diffuse = 'grey80',
+           specular = 'grey80',
+           ambient = 'grey80')
   #Colors front of plot
   light3d(viewpoint.rel = F,
-          theta = -30, phi = -30,
-          specular = 'grey50',
-          ambient = 'grey50')
+          x = -6*130, y = 1030, z = 1000,
+          diffuse = 'grey80',
+          specular = 'grey80',
+          ambient = 'grey80')
   #Colors bottom of plot
   light3d(viewpoint.rel = F,
-          theta = 180, phi = 0,
-          specular = 'grey50',
-          ambient = 'grey50')
+          x = 130/2, y = 15, z = -100,
+          diffuse = 'grey80',
+          specular = 'grey80',
+          ambient = 'grey80')
 }
+
+
+# x = c(7*130, -6*130, 130/2) #light positions from testing
+# y = c(-1000, 1030, 15)
+# z = c(1000, 1000, -100)
 
 #### 3D Bar Chart ####
 # Bar3D <- function(samp, output_style = '3D', scale = 1096.935){
