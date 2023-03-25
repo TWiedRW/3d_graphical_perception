@@ -2,78 +2,72 @@
 title: "Stat 218 Recruitment"
 author: "Susan Vanderplas, Tyler Wiederich"
 format: pdf
+number-sections: true
 ---
 
 ## Stat 218 Project Description
 
 - Timing: Provided on Canvas at the start of the course or when the class project is introduced to the class
 
-- Prompt:    
-As part of Stat 218, you will be participating in a research study (Part I) and reflecting on what you are learning in Stat 218 (Part II). In Part II, you will examine and reflect on the experimental design from your experience as a study participant, as well as from the perspective of a researcher, and as a consumer of scientific information.
+- Document: Canvas-0-Project_Description.pdf
 
-We are interested both in the results from the study you are participating in as part of the class, and in how this experience influences your understanding of critical course content. 
+## Project Components
 
-Your reflections and responses will be collected both as part of Stat 218 and as part of this study, however, your instructor will assign an ID code to your responses at the end of the semester (before they are included in the study data) in order to guarantee that your written responses cannot be traced back to you. 
-Your instructor may grade the content of your responses as part of Stat 218, however, these numerical grades will not be included in the study data.
+### Informed Consent
 
-## Part I: Participating in an Experiment in Statistical Graphics
+- Timing: Completed on Canvas in the first 2 weeks of the semester (ideally) or before the project is introduced
 
-### Canvas Announcement
-
-- Timing: Completed after the initial reflection in Part II, ideally, about 3-5 weeks into the semester (but timing may vary based on class scheduling)
-
-- Announcement:    
-As part of our project, you will be asked to participate in an experiment in Statistical Graphics that will help you experience the process of scientific investigation in a new way. This experiment will require that you find a time to attend Stat 218 office hours, either on City campus or East campus. The experiment should take about 20 minutes to complete, but you can feel free to ask questions of a TA while you are there. At the end of the experiment, you will be given a completion code that you will submit as the assignment answer on Canvas.
-
-You must complete this assignment by <deadline>. If you cannot find a time to attend office hours during this time period, please contact your instructor to schedule an office hours appointment.
-
-### Experiment
-
-- Timing: To be read immediately before participating in the experiment
-
-- Instructions:    
-In this experiment, you will answer some questions relating to statistical charts.
-You will be asked to estimate some numerical quantities relating to the charts you are shown.
-Some of these charts will be shown in the web browser; for other questions, you may be asked to reference a specific color of 3D-printed chart.
-There should be a set of 3D-printed charts attached to this instruction sheet which will be used to complete the experiment.
-
-By participating in this experiment, you will help us understand how different types of statistical charts are read and understood.
-You will also help us replicate an experiment performed in the 1980s to see if the results still hold with modern graphics and technology.
-Your responses will be completely anonymous and there is no risk to you for participating. 
-You will not be paid for participating in this experiment.
-You will receive a code at the end of this study that you will enter into Canvas in order to get credit for participating in this experiment as part of Stat 218.
-
-The experiment will consist of 15 questions, plus some limited demographic information that we will use to describe the participants in our experiments. 
-We expect that it will take at most 20 minutes to complete.
-
-You can participate in this experiment by going to <url> on your laptop, or by using the laptop provided by the experimenters for this purpose. 
-
-## Part II Description
+- Document: Canvas-1-Informed_Consent.pdf
 
 ### Pre-Study Reflection
 
 - Timing: Completed on Canvas prior to participating in the graphics experiment.
 
-- Prompt:    
-In this class, you'll be learning about the process of scientific investigation. What do you think that process looks like, from the perspective of a researcher, compared to what it looks like from the perspective of someone in the general public who is a consumer of scientific results? Write a paragraph (at least 3-5 sentences) about how you think science happens. 
+- Document: Canvas-2-Pre_Experiment_Reflection.pdf
+
+### Graphics Experiment
+
+
+#### Canvas Announcement
+
+- Timing: Ideally, about 4 weeks into the semester (but timing may vary based on class scheduling)
+
+- Announcement:    
+
+> As part of our project, you will be asked to participate in an experiment in Statistical Graphics that will help you experience the process of scientific investigation in a new way. In order to complete the first part of the project, you must find a time to attend Stat 218 office hours, either on City campus or East campus. The statistical graphics task should take about 20 minutes to complete, but you can feel free to ask questions of a TA while you are there. At the end of the experiment, you will be given a completion code that you will submit as the assignment answer on Canvas. 
+
+> Note that your participation in the **research study** is voluntary - you do not have to allow your data to be recorded for this project. You do, however, have to complete the tasks that are part of the research study, because these tasks will give you a better understanding of the research process and will be important to complete the reflections throughout the rest of the project.
+
+> Once you have completed the tasks in the graphics experiment (whether you participate in the research study or not) you will be given a unique completion code that can be entered into the Canvas assignment to show that you have completed the experimental tasks.
+
+> You must complete this assignment by \<deadline\>. If you cannot find a time to attend office hours during this time period, please contact your instructor to schedule an in-person appointment.
+
+#### Experiment Instructions
+(provided on a printed sheet of paper)
+
+> The experiment will consist of 15 questions, plus some limited demographic information that we will use to describe the participants in our experiments. We expect that it will take at most 20 minutes to complete.
+
+> You need a bag of 3d-printed charts (provided by an instructor) to participate in this experiment.
+
+> You can participate in this experiment by going to \<url\> on your laptop, or by using the laptop provided by the experimenters, if it is not currently in use.
+
+#### Experiment Participation
+
+- Timing: Approximately 4-6 weeks into the semester
+
+- Document: Graphics-Experiment-Walkthrough.pdf
+
+#### Canvas Experiment Participation
+
+- Timing: Approximately 4-6 weeks into the semester
+
+- Document: Canvas-3-Experiment_Participation.pdf
 
 ### Post-Study Reflection - Graphics Experiment Purpose
 
-- Timing: Completed on Canvas after participating in the graphics experiment, ideally after the class has covered Chapter 4 of Introduction to Statistical Investigations, which introduces the concepts of randomization and experimental control.
+- Timing: Completed on Canvas after participating in the graphics experiment, ideally after the class has covered Chapter 4 of Introduction to Statistical Investigations, which introduces the concepts of randomization and experimental control. Ideally about 7 weeks into the semester.
 
-- Prompt:    
-Think about the experiment you participated in, and evaluate it based on what you are learning in Stat 218. As a participant in the experiment, what components of the design can you identify? Think about each of the following concepts and write 1-2 sentences about your experience as a participant and the insight you have into what the experimenter might have been thinking.
-
-  - What was the purpose of the experiment?
-  
-  - What hypotheses might the experimenter have been testing?
-  
-  - What sources of error are involved in this experiment?
-  
-  - What variables were examined? For each variable, can you identify whether it was quantitative or categorical?
-  
-  - What elements of experimental design, such as randomization or the use of a control group, do you think were present in the experiment? Why?
-  
+- Document: Canvas-4-Post_Experiment_Reflection.pdf
 
 ### Abstract Reflection - Reading Information in Scientific Contexts
 
@@ -81,9 +75,7 @@ Think about the experiment you participated in, and evaluate it based on what yo
 
 - Additional materials: Students will be provided with a 2-page extended abstract (example attached) discussing the experiment they participated in from a scientific perspective.
 
-- Prompt:    
-Read the two-page abstract (link). 
-What components of the experiment are clearer now than they were as a participant? What questions do you still have for the experimenter? Write 3-5 sentences reflecting on the abstract.
+- Document: Canvas-5-Abstract_Reflection.pdf
 
 ### Presentation Reflection - Consuming Scientific Information
 
@@ -91,12 +83,4 @@ What components of the experiment are clearer now than they were as a participan
 
 - Additional materials: A recording (or live presentation) of a 10-15 minute research talk describing the results of the study they participated in. 
 
-- Prompts: Write 2-3 sentences for each one.
-
-    - How did the information you gained from different components of this experiment (participation, post-study reflection, extended abstract, presentation) differ? 
-
-    - What components were emphasized in the presentation that weren't emphasized in the abstract?
-    
-    - What critiques do you have of this study and its design? What would have made the study better?
-    
-    - If you had to hear about this study using only the extended abstract or only the presentation, which one would you prefer? Which one would be better for determining whether the experiment was well designed?
+- Document: Canvas-6-Presentation_Reflection.pdf

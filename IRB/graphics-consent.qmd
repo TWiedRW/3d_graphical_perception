@@ -40,7 +40,7 @@ Quick Summary:
 
 - We will publish the dataset from this survey in full online to ensure that other researchers can see how we obtained our results.
 
-- Stat 218 students: You will be given a code at the end of the study to prove you completed the survey. You do not have to agree to allow your responses to be used for research purposes in order to get the code. This code will not be associated with your responses to this survey.
+- You will be given a code at the end of the study to prove you completed the survey. You do not have to agree to allow your responses to be used for research purposes in order to get the code. This code will not be associated with your responses to this survey. The code is only relevant if you are completing these tasks as part of a Stat 218 assignment.
 
 --------
 
@@ -48,6 +48,7 @@ Reasonable steps will be taken to protect the privacy and the confidentiality of
 
 Your responses to this experiment will be stored in de-identified form and will not be able to be traced back to you. 
 Because this data is anonymous, it will be stored and maintained in accordance with university policies for low-risk data.
+All study records will be maintained on UNL servers for at least 3 years after the completion of the study in accordance with UNL HRPP 2018 Policy #3.013 section 2.3.A. 
 
 **Data Sharing and Publication**
 
@@ -63,7 +64,7 @@ This will prevent your data from being *recorded* and used for research, but you
 
 
 You can decide not to be in this research study, or you can withdraw at any time before or during the study for any reason. 
-Deciding not to be in this research study or deciding to withdraw will not affect your relationship with the investigator, the University of Nebraska-Lincoln, or your Stat 218 instructor. 
+Deciding not to be in this research study or deciding to withdraw will not affect your relationship with the investigator, the University of Nebraska-Lincoln, or (if you are a Stat 218 student) your Stat 218 instructor. 
 You will not lose any benefits to which you are entitled.
 
 If you are taking this survey as part of Stat 218, you can decline to have your data recorded by selecting "I do not agree" and still obtain a participation code by completing the survey questions. 

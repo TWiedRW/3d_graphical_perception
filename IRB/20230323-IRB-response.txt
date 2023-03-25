@@ -1,0 +1,24 @@
+
+1. Please also revise section 8.3 to reflect the requirements in UNL HRPP 2018 Policy #3.013: Research Records Retention and Security, specifically section 2.3.A. which states that research records must be retained for at least three years beyond the closure of the study. This policy can be found on our website here: https://research.unl.edu/researchcompliance/policies-procedures/.
+
+> Revised to reference the specific policy.
+
+2. Please revise section 8.3 to remove the phrase (full data collected), as it seems to be referring to the de-identified data that will be stored indefinitely on the UNLDR.
+
+> Revised to remove all UNLDR references. There is no identifiable data that will be collected, so mentioning the UNLDR initially was intended to point out that all research records will be stored on the UNLDR and made indefinitely available. However, if this point is distracting, then it should be removed and we have done so.
+
+3. The purpose of the document (graphics-consent.pdf) is unclear. Was it meant to be used with the Phase 1 participants? As it refers to Stats 218, it wasnt clear.Please remove it or provide additional information about its use.
+
+> We have provided additional information about the graphics consent document in Section 3.5, Section 4.2a, Section 5.3, and Section 7.1. It will apply to both Phase 1 and 2 participants, but Phase 1 participants are all familiar with Stat 218 because they are members of the Stat department faculty or graduate students, and thus are unlikely to be confused by the conditional language. 
+
+4. Please upload a consent document for the Phase 1 participants. It would be simple to add some additional language to the Faculty-Grad_Recruitment_Script.txt from the template language found in the E-mail/Cover Letter Informed Consent on the IRB website at https://research.unl.edu/researchcompliance/templates-forms/
+
+> The consent document for Phase 1 participants is the same as the consent for the graphics portion of the study (e.g. graphics-consent.pdf). Language has been updated in Section 3.5, 4.2a, 5.3, and 7.1 to make this clear.
+
+5. Please review and revise the document (Canvas-1-Informed_Consent.pdf). This document appears to be aimed at the Stats 218 participants. Because of this, the document should be written to describe the participation in the assignments. Once a complete description of the assignments has been provided, then the document should address the request for consent to use the data as research.
+
+> We have revised the consent document to focus on consent to use Canvas responses to assignments as research data. We have removed mentions of the graphics experiment (beyond that it is part of the set of assignments), as consent is provided separately for that data. We have emphasized that students must still complete the reflections even if they do not consent, but that their data will not be shared with researchers. Hopefully this modified consent document will be clearer for students.
+
+6. Similarly, because students will have the option of not having their course work be a part of the research and participation in research cannot be a requirement of the class, please remove the statement (you will be participating in a research study) from the document (Stat218_Recruitment_Information.pdf) and provide a different description of the phase 1 portion of the study such as (you will answer some questions relating to statistical charts) to remove reference to research.
+
+> We have added language to the project description to indicate that students do not have to participate in the research study to get course credit. We have also removed redundant information from Stat218_Recruitment_Information.pdf and instead provided references to PDF printouts of the corresponding Canvas pages.
