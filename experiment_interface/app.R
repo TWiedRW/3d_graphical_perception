@@ -93,18 +93,33 @@ dbDisconnect(con)
 
 # Pages -------------------------------------------------------------------
 
-consent_form <- {fluidPage(
-  fluidRow(
-    column(
-      width = 8, offset = 2,
-      includeMarkdown("graphics-consent.qmd"),
-      radioButtons("consent", label = "I have read the informed consent document and agree to participate in this experiment", 
-                   choiceNames = c("I agree. You may save my data.", "I do not agree. Please do not save my data."), choiceValues = c(TRUE, FALSE), width = "100%"),
-      
-      actionButton("toDemographics", "Next")
+consent_form <- {
+  fluidPage(
+    fluidRow(
+      column(
+        width = 8, offset = 2,
+        selectInput("stat218student",
+          label = "Are you currently a student in Stat 218?",
+          choices = c(
+            "Please pick one of the following" = "",
+            "Yes, I am a Stat 218 student" = "TRUE",
+            "No, I am not a Stat 218 student" = "FALSE"
+          )
+        ),
+        conditionalPanel('input.stat218student=="TRUE"', includeMarkdown('graphics-consent-218.qmd')),
+        conditionalPanel('input.stat218student=="FALSE"', includeMarkdown('graphics-consent-dept.qmd')),
+        conditionalPanel(
+          'input.stat218student!=""', 
+          radioButtons("consent", label = "I have read the informed consent document and agree to participate in this experiment", 
+                       choiceNames = c("I agree. You may save my data.", "I do not agree. Please do not save my data."), 
+                       choiceValues = c(TRUE, FALSE), width = "100%"),
+          
+          actionButton("toDemographics", "Next")
+        )
+      )
     )
   )
-)}
+}
 
 demographicsUI <- {fluidPage(
   tags$head(
