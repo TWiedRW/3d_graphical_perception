@@ -217,7 +217,7 @@ practiceUI <- {fluidPage(
              plotOutput('prac2'),
              selectizeInput('dummy5', 'Which bar is smaller?',
                             choices = c('', 'Circle (●)', 'Triangle (▲)'),
-                            selected = 'Triangle (▲)'),
+                            selected = 'Circle (●)'),
              sliderInput('dummy2', label = 'What size is the smaller bar in comparison to the larger bar?',
                          min = 0, max = 100, value = 66,
                          step = 0.1, ticks = F),
@@ -251,10 +251,12 @@ practiceUI <- {fluidPage(
       )
 
     ),
-    fluidRow(align = 'center',
-             helpText("These plots are for practice. Your responses will not be saved."),
-             actionButton(inputId = 'toInstructions', label = 'Continue'),
-             br()
+    fluidRow(
+      align = 'center',
+      helpText("These plots are for practice. Your responses will not be saved."),
+      actionButton(inputId = 'toInstructions', label = 'Continue'),
+      br(),
+      br()
     )
   )
 )}
