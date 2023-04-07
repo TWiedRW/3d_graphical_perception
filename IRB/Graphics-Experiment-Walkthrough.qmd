@@ -1,65 +1,250 @@
 ---
 title: "Graphics Experiment Walkthrough"
-author: "Susan Vanderplas"
-format: pdf
+format: 
+  pdf:
+    include-in-header: 
+      text: |
+        \usepackage{fullpage}
+        \usepackage{placeins}
 ---
 
-![](App-Screenshots/01-Consent.png)
+# Consent
 
-![](App-Screenshots/02-Demographics-1.png)
+![Participants must first indicate which group they belong to - Stat 218, or Others (Department)](App-Screenshots/00-population.png)
 
-![](App-Screenshots/02-Demographics-2.png)
+![Consent screen for Stat 218 participants](App-Screenshots/01-218-Consent.png)
 
-![](App-Screenshots/02-Demographics-3.png)
+![Consent screen for Department participants](App-Screenshots/01-dept-Consent.png)
 
-![](App-Screenshots/03-Practice-1.png)
+\FloatBarrier
+\clearpage
 
-![](App-Screenshots/03-Practice-2.png)
+# Demographics
 
-![](App-Screenshots/04-Instructions.png)
+::: {layout="[[100],[100]]"}
 
-![](App-Screenshots/04-Instructions-Kit-Ex.jpg)
+![Participants provide demographic information](App-Screenshots/02-Demographics-1.png)
 
-![](App-Screenshots/05-Experiment-01-filled-in.png)
-![](App-Screenshots/05-Experiment-02.png)
-![](App-Screenshots/05-Experiment-02-filled-in.png)
-![](App-Screenshots/05-Experiment-03.png)
-![](App-Screenshots/05-Experiment-03-filled-in.png)
+![Once demographic information is filled in, participants can proceed to the next screen](App-Screenshots/02-Demographics-2.png)
 
-![](App-Screenshots/05-Experiment-04-filled-in.png)
-![](App-Screenshots/05-Experiment-05.png)
-![](App-Screenshots/05-Experiment-05-filled-in.png)
-![](App-Screenshots/05-Experiment-06.png)
-![](App-Screenshots/05-Experiment-06-filled-in.png)
-![](App-Screenshots/05-Experiment-06-3dPlot-1.jpg)
-![](App-Screenshots/05-Experiment-06-3dPlot-2.jpg)
+:::
 
-![](App-Screenshots/05-Experiment-07.png)
-![](App-Screenshots/05-Experiment-07-filled-in.png)
+\FloatBarrier
+\clearpage
 
-![](App-Screenshots/05-Experiment-08-filled-in.png)
-![](App-Screenshots/05-Experiment-08-3dPlot-1.jpg)
-![](App-Screenshots/05-Experiment-08-3dPlot-2.jpg)
+# Practice
 
-![](App-Screenshots/05-Experiment-09.png)
+![Practice Introductory Text](App-Screenshots/03-Practice-1.png)
 
-![](App-Screenshots/05-Experiment-10-filled-in.png)
-![](App-Screenshots/05-Experiment-11.png)
-![](App-Screenshots/05-Experiment-11-filled-in.png)
+![Practice Graphs with correct answers shown in grey below the sliders](App-Screenshots/03-Practice-2.png)
 
-![](App-Screenshots/05-Experiment-12.png)
-![](App-Screenshots/05-Experiment-12-filled-in.png)
-![](App-Screenshots/05-Experiment-13.png)
-![](App-Screenshots/05-Experiment-13-filled-in.png)
-![](App-Screenshots/05-Experiment-13-3dPlot-1.jpg)
-![](App-Screenshots/05-Experiment-13-3dPlot-2.jpg)
+\FloatBarrier
 
-![](App-Screenshots/05-Experiment-14-filled-in.png)
-![](App-Screenshots/05-Experiment-14-3dPlot-1.jpg)
-![](App-Screenshots/05-Experiment-14-3dPlot-2.jpg)
+# Instructions
+::: {layout="[[100],[-30, 40, -30], [100]]"}
+![Instructions. Participants provide a kit ID before continuing.](App-Screenshots/04-Instructions.png)
 
-![](App-Screenshots/05-Experiment-13.png)
-![](App-Screenshots/05-Experiment-15-3dPlot-1.jpg)
-![](App-Screenshots/05-Experiment-15-3dPlot-2.jpg)
+![Each kit contains five charts.](App-Screenshots/04-Instructions-Kit-Ex.jpg){width="50%" fig-align="center"}
 
-![](App-Screenshots/06-FinishingUp.png)
+![Completed Instructions screen](App-Screenshots/04-Instructions-2.png)
+
+:::
+
+\FloatBarrier
+
+# Experiment
+
+## Q1
+
+::: {layout="[[100], [40,-20,40], [100]]"}
+
+![3D chart question](App-Screenshots/05-Experiment-01.png)
+
+![3D printed chart](App-Screenshots/05-Experiment-06-3dPlot-1.jpg)
+
+![ID codes engraved in the bottom](App-Screenshots/05-Experiment-06-3dPlot-2.jpg)
+
+![3D chart question, filled in](App-Screenshots/05-Experiment-01-filled-in.png)
+:::
+
+\FloatBarrier
+\clearpage
+
+## Q2
+
+![3D render question](App-Screenshots/05-Experiment-02.png)
+
+![3D render question, filled in](App-Screenshots/05-Experiment-02-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+## Q3
+
+![2D chart question](App-Screenshots/05-Experiment-03.png)
+
+![2D chart question, filled in](App-Screenshots/05-Experiment-03-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+
+## Q4
+
+![3D render question](App-Screenshots/05-Experiment-04.png)
+
+![3D render question, filled in](App-Screenshots/05-Experiment-04-filled-in.png)
+
+
+\FloatBarrier
+\clearpage
+
+
+## Q5
+
+![3D render question](App-Screenshots/05-Experiment-05.png)
+
+![3D render question, filled in](App-Screenshots/05-Experiment-05-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+
+
+## Q6
+
+![2D chart question](App-Screenshots/05-Experiment-06.png)
+
+![2D chart question, filled in](App-Screenshots/05-Experiment-06-filled-in.png)
+
+
+\FloatBarrier
+\clearpage
+
+
+## Q7
+
+![3D render question](App-Screenshots/05-Experiment-07.png)
+
+![3D render question, filled in](App-Screenshots/05-Experiment-07-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+
+## Q8
+
+![3D render question](App-Screenshots/05-Experiment-08.png)
+
+![3D render question, filled in](App-Screenshots/05-Experiment-08-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+
+
+## Q9
+
+::: {layout="[[100], [40,-20,40], [100]]"}
+![3D chart question](App-Screenshots/05-Experiment-09.png)
+
+![3D printed chart](App-Screenshots/05-Experiment-08-3dPlot-1.jpg)
+
+![ID codes engraved in the bottom](App-Screenshots/05-Experiment-08-3dPlot-2.jpg)
+
+![3D chart question, filled in](App-Screenshots/05-Experiment-09-filled-in.png)
+
+:::
+
+\FloatBarrier
+\clearpage
+
+## Q10
+
+::: {layout="[[100], [40,-20,40]]"}
+
+![3D chart question](App-Screenshots/05-Experiment-10.png)
+
+![3D printed chart](App-Screenshots/05-Experiment-13-3dPlot-1.jpg)
+
+![ID codes engraved in the bottom](App-Screenshots/05-Experiment-13-3dPlot-2.jpg)
+
+:::
+
+
+\FloatBarrier
+\clearpage
+
+
+
+## Q11
+
+
+::: {layout="[[100], [40,-20,40], [100]]"}
+
+![3D chart question](App-Screenshots/05-Experiment-11.png)
+
+![3D printed chart](App-Screenshots/05-Experiment-14-3dPlot-2.jpg)
+
+![ID codes engraved in the bottom](App-Screenshots/05-Experiment-14-3dPlot-1.jpg)
+
+![3D chart question, filled in](App-Screenshots/05-Experiment-11-filled-in.png)
+
+:::
+
+
+\FloatBarrier
+\clearpage
+
+## Q12
+
+![2D chart question](App-Screenshots/05-Experiment-12.png)
+
+![2D chart question, filled in](App-Screenshots/05-Experiment-12-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+
+## Q13
+
+
+::: {layout="[[100], [40,-20,40], [100]]"}
+
+![3D chart question](App-Screenshots/05-Experiment-13.png)
+
+![3D printed chart](App-Screenshots/05-Experiment-15-3dPlot-2.jpg)
+
+![ID codes engraved in the bottom](App-Screenshots/05-Experiment-15-3dPlot-1.jpg)
+
+![3D chart question, filled in](App-Screenshots/05-Experiment-13-filled-in.png)
+:::
+
+
+\FloatBarrier
+\clearpage
+
+
+## Q14
+
+![2D chart question](App-Screenshots/05-Experiment-14.png)
+
+\FloatBarrier
+
+## Q15
+
+![2D chart question](App-Screenshots/05-Experiment-15.png)
+
+
+![2D chart question, filled in](App-Screenshots/05-Experiment-15-filled-in.png)
+
+\FloatBarrier
+\clearpage
+
+
+# Finishing Up
+
+![Final Screen for Stat 218 students](App-Screenshots/06-FinishingUp-218.png)
+
+
+![Final Screen for non-Stat 218 students](App-Screenshots/06-FinishingUp-dept.png)
