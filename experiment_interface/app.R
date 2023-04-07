@@ -106,8 +106,8 @@ consent_form <- {
             "No, I am not a Stat 218 student" = "FALSE"
           )
         ),
-        conditionalPanel('input.stat218student=="TRUE"', includeMarkdown('graphics-consent-218.qmd')),
-        conditionalPanel('input.stat218student=="FALSE"', includeMarkdown('graphics-consent-dept.qmd')),
+        conditionalPanel('input.stat218student=="TRUE"', includeHTML('graphics-consent-218.html')),
+        conditionalPanel('input.stat218student=="FALSE"', includeHTML('graphics-consent-dept.html')),
         conditionalPanel(
           'input.stat218student!=""', 
           radioButtons("consent", label = "I have read the informed consent document and agree to participate in this experiment", 

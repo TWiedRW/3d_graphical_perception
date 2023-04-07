@@ -8,7 +8,7 @@ format:
   pdf:
     number-sections: false
   html:
-    code-fold: true
+    number-sections: false
 ---
 
 ## Study Information
@@ -78,4 +78,8 @@ You will not lose any benefits to which you are entitled.
 
 You are voluntarily making a decision whether or not to participate in this research study. 
 By clicking on the I Agree button below, your consent to participate is implied. 
-You should print or save a copy of this page for your records. [Link to PDF copy of the consent form](external.ink?to=graphics-consent-218.pdf)
+You should print or save a copy of this page for your records. 
+
+::: {.content-visible unless-format="pdf"}
+<a href="https://github.com/TWiedRW/3d_graphical_perception/raw/main/experiment_interface/www/graphics-consent-218.pdf" target="_blank">Link to PDF copy of the consent form</a>
+:::
