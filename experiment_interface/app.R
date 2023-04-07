@@ -143,8 +143,8 @@ demographicsUI <- {fluidPage(
     column(
       width = 8, offset = 2,
       h2('Participant Identifier'),
-      p('To ensure that we have a unique identifier for your responses, you will need to provide an answer to the following question.',
-        'Your response for this question will not be used with your survey responses and will not be used to attempt to identify you.'),
+      p('To ensure that we have a unique identifier for your responses, please provide an answer to the following question.',
+        'Your response for this question will not be stored with your survey responses and will not be used to attempt to identify you.'),
       textInput('participantUnique', 'What is your favorite zoo animal?'),
       # textInput("nickname", "Please enter a nickname to be used as your identifier: "),
       br(),
@@ -330,7 +330,8 @@ exitUI <- {fluidPage(
            conditionalPanel(
              'input.stat218student=="TRUE"',
              p('Please return the graphs to the kit bag and reload the page to reset the application for the next user.'),
-             h5("Completion code"),
+             br(),
+             h4("Completion code"),
              textOutput("completion_code"),
              helpText("Save this code and submit it to Canvas to complete your Stat 218 assignment."),
            ),
@@ -422,15 +423,16 @@ server <- function(input, output) {
         #Demographic dataset
         demographics <- data.frame(
           stat218 = input$stat218student,
-          userAppStartTime = timing$startExp,
+          userAppStartTime = isolate(timing$startExp),
           consent = input$consent,
-          nickname = input$fingerprint,
+          nickname = ifelse(is.null(input$fingerprint), "", input$fingerprint),
           participantUnique = input$participantUnique,
           age = input$age,
           gender = input$gender,
           education = input$education
         )
         
+        message(paste0(demographics, collapse = "\t"))
         dbWriteTable(con, 'user', demographics, append = T)
         dbDisconnect(con)
       }
