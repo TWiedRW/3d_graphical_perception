@@ -1,0 +1,40 @@
+
+The IRB Expedited reviewer has completed the review of this form. Based upon this review, the following clarifications and revisions will have to be made to the protocol before it can be given final approval.
+
+1. The document graphics-consent.qmd seems to have replaced the graphics-consent.pdf document in the attachments (which is in the deleted files area).
+a. Please be sure the graphics-consent.pdf is restored to the files. (done - there are now two files: graphics-consent-218.pdf and graphics-consent-dept.pdf)
+
+2. The expedited reviewer asked that the investigator provide a consent document specific to the faculty/grad participation so that there is no confusion about the procedures and also asked that
+a. The consent should specifically address the necessity of being age 19 or older to participate. (done)
+b. Please also revise section 5.3 that says (The same consent form will be used for both Stage I and Stage II, as consent will be provided as part of the survey. (graphics-consent.pdf)) (done)
+
+3. More information also needs to be provided about the process how the partner/spouse/roommate will be consented. Please revise section 7.1 to include this information. (done)
+
+4. The faculty/grad recruitment script is confusing because it says (You should have been given a set of 3D-printed charts for this purpose. ) but also provides a URL to participate please revise as appropriate. Please revise the document and clarify the recruitment methods in section 6.2 of the protocol.
+    - The connection between the kit and the URL is now explained in more detail in Section 6.2
+
+5. The faculty/grad recruitment script Also says (Your responses will be anonymous), but they appear to have received a hand-delivered kit to participate and the study appears to maintain some kind of contact information, so it may be more accurate to say that responses would be kept confidential. Please revise as appropriate, and/or provide additional information.
+    - This has been addressed via email and more detail has been provided in Section 6.2. 
+
+NOTE: When you have completed all revisions throughout the form and before officially clicking submit revisions, please include a summarized response within the comments box or upload a Word document within the files that details how each revision requested was addressed.
+
+Once you have addressed the outlined concerns, please resubmit your protocol. Please note, revisions are required to be submitted via NUgrant by 4/19/2023. If the revisions have not been submitted, the form will be set to a Preparation status. You will then have 30 days to complete the revisions or the form will be administratively closed.
+
+
+
+Description of modifications:
+
+- The application now asks whether the participant is a Stat 218 student - if they are, the Stat 218 consent document is shown; otherwise, the Department consent document is shown. 
+- There are now two consent forms (graphics-consent-218.pdf and graphics-consent-dept.pdf). 
+- The department consent form now indicates that individuals may only participate if they are at least 19 years of age.
+- Section 5.3 has been revised to discuss the separate consent forms.
+
+- Section 7.1 has been revised to provide additional details about recruitment of spouses and roommates in Stage I.
+- Department recruitment scripts (dept-recruitment-full.html, dept-recruitment.pdf) have been provided. The PDF file will be printed out and included with all of the kits during Stage I of the experiment. The HTML file provides additional details which may be given verbally or by email during participant recruitment.
+
+
+- Section 6.2 has been revised to provide additional details about the relationship between the kit of 3D printed graphics and the URL used for data collection, as well as the fact that this ensures that participant data is collected anonymously even though the researchers must physically hand off the kit of 3D printed charts. An email is attached (RE_IRB New Project Form - Revisions Requested by the IRB Office.eml) indicating that the IRB reviewer agrees that the data is collected anonymously, instead of being kept confidential.
+
+Additional modifications:
+- The Graphics-Experiment-Walkthrough pdf file has been updated with current screenshots.
+- If the participant is a Stat218 student, they will be provided with a participation code. Otherwise, the participation code is omitted. This change is shown in the Graphics-Experiment-Walkthrough pdf file but can also be viewed in the data collection application.

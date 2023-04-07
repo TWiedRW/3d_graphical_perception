@@ -18,11 +18,12 @@ modified <- names(tmp) == "modified"
 modified <- unlist(tmp[modified])
 
 # If db has been modified
-if (stringr::str_detect(modified, "experiment_interface/.*\\.db")) {
+if (any(stringr::str_detect(modified, "(experiment_interface/.*\\.db)|(experiment_interface/codes.txt)"))) {
 
   # Add changed db to commit and commit
   git2r::add(repo = '.', "experiment_interface/*.db")
-  try(git2r::commit(message = "Update data"))
+  git2r::add(repo = '.', "experiment_interface/codes.txt")
+  try(git2r::commit(message = "Update data and codes"))
 
   # Update
   git2r::pull(repo = repo, credentials = cred)
