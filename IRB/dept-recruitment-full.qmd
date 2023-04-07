@@ -1,0 +1,24 @@
+---
+title: "Perceptual Judgements Experiment"
+format: html
+---
+
+## Context-specific Inclusions
+
+### Pre Presentation Participation
+
+Description of the presentation and the experiment's relationship to the presentation
+
+### Faculty/Grad-student Mailing List
+
+We are currently conducting an experiment which is designed to examine how we perceive and read information from statistical charts represented in different ways. This experiment is designed to replicate and extend a foundational experiment from the 1980s that was conducted on faculty and graduate students and their spouses in an academic department. We will provide one to two bags of 3D charts - one for you, and one for a roommate/spouse/partner. We ask that you participate in this experiment to help us replicate the population used in the 1980s study as precisely as possible in the modern day.
+
+### Faculty Meeting Announcement
+
+(Read Verbally) We are currently conducting an experiment which is designed to examine how we perceive and read information from statistical charts represented in different ways. This experiment is designed to replicate and extend a foundational experiment from the 1980s that was conducted on faculty and graduate students and their spouses in an academic department. We will provide one to two bags of 3D charts - one for you, and one for a roommate/spouse/partner. We ask that you participate in this experiment to help us replicate the population used in the 1980s study as precisely as possible in the modern day.
+
+---------
+
+
+
+{{< include dept-recruitment-base.qmd >}}

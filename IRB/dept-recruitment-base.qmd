@@ -1,0 +1,27 @@
+
+# Motivation
+
+In the 1980s, Cleveland & McGill conducted a series of graphical assessment studies that have been used ever since to inform guidelines for creating statistical charts. In some of the experiments, they recruited members of the department "and their wives" to achieve gender balance.
+
+We want to replicate and extend this study, but the composition of an academic department has changed considerably since the 1980s. As a result, we are attempting to replicate the original study participants as closely as possible, by recruiting members of our department and their adult (>19) roommates.
+
+---
+
+# Study Information
+
+In this experiment, you will answer some questions relating to statistical charts.
+You will be asked to estimate some numerical quantites relating to the charts you are shown.
+Some of these charts will be shown in the web browser; for other questions, you may be asked to select a 3D-printed chart and answer the questions using that chart.
+You will be given a set of 3D-printed charts for this purpose.
+
+By participating in this experiment, you will help us understand how different types of statistical charts are read and understood.
+You will also help us replicate an experiment performed in the 1980s to see if the results still hold with modern graphics and technology.
+Your responses will be anonymous and there is no risk to you for participating. You will not be paid for participating in this experiment.
+
+The experiment will consist of 15 questions, plus a few demographic questions that we will use to describe the participants in our experiments. We expect that it will take at most 20 minutes to complete.
+
+You can participate in this experiment by going to https://shiny.srvanderplas.com/3d-graphics/. Make sure you have the 3d printed charts accessible.
+
+
+Thank you for your help!
+
