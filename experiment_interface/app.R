@@ -325,11 +325,20 @@ exitUI <- {fluidPage(
   fluidRow(
     column(8, offset = 2, align = 'center',
            h3('Thank You'),
-           p('Your response has been submitted. 
-             Please return the graphs to the kit bag and reload the page to reset the application for the next user.'),
-           h5("Completion code"),
-           textOutput("completion_code"),
-           helpText("If you are a Stat 218 student, save this code and submit it to Canvas to complete your Stat 218 assignment."),
+           p('Your response has been submitted.'),
+           br(),
+           conditionalPanel(
+             'input.stat218student=="TRUE"',
+             p('Please return the graphs to the kit bag and reload the page to reset the application for the next user.'),
+             h5("Completion code"),
+             textOutput("completion_code"),
+             helpText("Save this code and submit it to Canvas to complete your Stat 218 assignment."),
+           ),
+           conditionalPanel(
+             'input.stat218student=="FALSE"',
+             p('Please return the graphs to the kit bag.'),
+             p('Thank you very much for helping us with this study!')
+           ),
            br(),
            actionButton('reset', 'New Submission')
     )
@@ -412,6 +421,7 @@ server <- function(input, output) {
         
         #Demographic dataset
         demographics <- data.frame(
+          stat218 = input$stat218student,
           userAppStartTime = timing$startExp,
           consent = input$consent,
           nickname = input$fingerprint,
