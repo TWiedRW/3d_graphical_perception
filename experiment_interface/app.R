@@ -43,7 +43,7 @@ shinyjs.enableTab = function(param) {
 "
 
 set85id_colors <- tibble(set85id = c(1, 2, 3, 4, 5, 6, 9), 
-                         print_color = c("Cyan", "Green", "Red", "Yellow", "Blue", "Orange", "Purple"))
+                         print_color = c("#1B90A9", "#0A5447", "#DD1F31", "#F9E000", "#1883C5", "#F98F00", "#6F4D89"))
 
 stl_files <- list.files('stl_files', pattern = '.stl$')
 
@@ -428,7 +428,8 @@ server <- function(input, output, session) {
           userAppStartTime = isolate(timing$startExp),
           consent = input$consent,
           nickname = ifelse(is.null(input$fingerprint), "", input$fingerprint),
-          participantUnique = input$participantUnique,
+          participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
+          
           age = input$age,
           gender = input$gender,
           education = input$education
@@ -667,9 +668,9 @@ server <- function(input, output, session) {
     switch(
       as.character(trial_data$info$plot),
       'refresh' = plotOutput('refresh'),
-      '2dDigital' = plotOutput('bar2d', width = '70%'),
-      '3dPrint' = plotOutput('print3d', width = '70%'),
-      '3dDigital' = rglwidgetOutput('bar3d', width = '100%')
+      '2dDigital' = plotOutput('bar2d', width = '400px'),
+      '3dPrint' = plotOutput('print3d', width = '400px'),
+      '3dDigital' = rglwidgetOutput('bar3d', width = '400px')
     )}
   })
   
@@ -692,7 +693,9 @@ server <- function(input, output, session) {
       userMatrixSave <- trial_data$info %>% 
         #select(-trial) %>%
         mutate(nickname = input$fingerprint,
+               participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
                click = trial_data$plot3dClicks,
+               clickTime = Sys.time(),
                dummy = 1
         ) %>% 
         full_join(data.frame(dummy = 1, trial_data$curUserMatrix),
@@ -733,6 +736,7 @@ server <- function(input, output, session) {
       results <- trial_data$info %>% 
         select(-trial) %>%
         mutate(nickname = input$fingerprint,
+               participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
                appStartTime = timing$startExp,
                plotStartTime = trial_data$startTime,
                plotEndTime = trial_data$endTime,
