@@ -9,7 +9,7 @@ library(markdown)
 library(reactlog)
 
 #Current database to work with
-currentDB <- "testing.db"
+currentDB <- "department.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -43,7 +43,7 @@ shinyjs.enableTab = function(param) {
 "
 
 set85id_colors <- tibble(set85id = c(1, 2, 3, 4, 5, 6, 9), 
-                         print_color = c("Cyan", "Green", "Red", "Yellow", "Blue", "Orange", "Purple"))
+                         print_color = c("#1B90A9", "#0A5447", "#DD1F31", "#F9E000", "#1883C5", "#F98F00", "#6F4D89"))
 
 stl_files <- list.files('stl_files', pattern = '.stl$')
 
@@ -369,7 +369,7 @@ ui <- navbarPage(
 
 
 # Server ------------------------------------------------------------------
-server <- function(input, output) {
+server <- function(input, output, session) {
   # disable tabs on page load
   shinyjs::disable(selector = '.navbar-nav a[data-value="Demographics"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Practice"]')
@@ -428,7 +428,8 @@ server <- function(input, output) {
           userAppStartTime = isolate(timing$startExp),
           consent = input$consent,
           nickname = ifelse(is.null(input$fingerprint), "", input$fingerprint),
-          participantUnique = input$participantUnique,
+          participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
+          
           age = input$age,
           gender = input$gender,
           education = input$education
@@ -537,7 +538,9 @@ server <- function(input, output) {
     startTime = NULL,
     endTime = NULL,
     whichIsSmaller = NULL,
-    byHowMuch = NULL
+    byHowMuch = NULL,
+    plot3dClicks = 0,
+    curUserMatrix = data.frame()
   )
   
   is3dtrial <- reactive({ # Define a reactive variable that is just is it a 3d plot
@@ -665,14 +668,57 @@ server <- function(input, output) {
     switch(
       as.character(trial_data$info$plot),
       'refresh' = plotOutput('refresh'),
-      '2dDigital' = plotOutput('bar2d', width = '70%'),
-      '3dPrint' = plotOutput('print3d', width = '70%'),
-      '3dDigital' = rglwidgetOutput('bar3d', width = '100%')
+      '2dDigital' = plotOutput('bar2d', width = '400px'),
+      '3dPrint' = plotOutput('print3d', width = '400px'),
+      '3dDigital' = rglwidgetOutput('bar3d', width = '400px')
     )}
   })
   
+  onclick('bar3d', {
+    
+    #Collect information from 3d digital plot
+    trial_data$plot3dClicks <- trial_data$plot3dClicks + 1
+    shinyGetPar3d('userMatrix', session)
+    trial_data$curUserMatrix <- input$par3d$userMatrix
+    
+    # Write data to database
+    if (input$consent == "TRUE") {
+      con <- dbConnect(SQLite(), currentDB)
+      
+      message("Results written to database")
+      
+      #Save data
+      validate(need(nrow(trial_data$curUserMatrix) >= 1,
+                    'User matrix not valid'))
+      userMatrixSave <- trial_data$info %>% 
+        #select(-trial) %>%
+        mutate(nickname = input$fingerprint,
+               participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
+               click = trial_data$plot3dClicks,
+               clickTime = Sys.time(),
+               dummy = 1
+        ) %>% 
+        full_join(data.frame(dummy = 1, trial_data$curUserMatrix),
+                  by = 'dummy') %>% 
+        select(-dummy)
+
+      dbWriteTable(con, 'userMatrix', userMatrixSave, append = T)
+      dbDisconnect(con)
+    } else {
+      message("Results not written to database - no consent")
+    }
+    
+  })
 
 
+  
+  
+  
+  
+  
+  
+  
+  
   observeEvent(input$expNext, {
     
     # Update data values
@@ -690,9 +736,11 @@ server <- function(input, output) {
       results <- trial_data$info %>% 
         select(-trial) %>%
         mutate(nickname = input$fingerprint,
+               participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
                appStartTime = timing$startExp,
                plotStartTime = trial_data$startTime,
                plotEndTime = trial_data$endTime,
+               plot3dClicks = trial_data$plot3dClicks,
                whichIsSmaller = trial_data$whichIsSmaller,
                byHowMuch = trial_data$byHowMuch,
                file = ifelse(is.na(file), input$`plotID3d`, file),
@@ -715,6 +763,8 @@ server <- function(input, output) {
     # set trial ID
     trial_data$trialID <- trial_data$trialID + 1
     trial_data$full_info <- FALSE
+    trial_data$plot3dClicks <- 0
+    trial_data$curUserMatrix <- data.frame()
     
     #Reset plot information
     updateTextInput(inputId = 'incorrectGraph', value = NA)
