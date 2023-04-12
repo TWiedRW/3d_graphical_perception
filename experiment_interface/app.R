@@ -9,7 +9,7 @@ library(markdown)
 library(reactlog)
 
 #Current database to work with
-currentDB <- "test1.db"
+currentDB <- "department.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
