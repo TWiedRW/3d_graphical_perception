@@ -19,6 +19,9 @@ modified <- unlist(tmp[modified])
 
 # If db has been modified
 if (any(stringr::str_detect(modified, "(experiment_interface/.*\\.db)|(experiment_interface/codes.txt)"))) {
+  
+  # Copy database/codes to one drive
+  file.copy(modified, file.path("/btrstorage", "OneDrive", "Data", "2022-Tyler-3D_Graphical_Perception"), overwrite = T)
 
   # Add changed db to commit and commit
   git2r::add(repo = '.', "experiment_interface/*.db")
