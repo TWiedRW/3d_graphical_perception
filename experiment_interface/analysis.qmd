@@ -200,30 +200,8 @@ res %>%
 
 
 
-```{python}
 
-import pandas 
-import saspy
-sas = saspy.SASsession()
 
-```
 
-```{python}
-resPy = r.res
-```
 
-```{python}
-resSAS = sas.dataframe2sasdata(resPy)
-```
-
-```{python}
-
-sas.submitLST("""
-
-  proc print data=resSAS;
-  run;
-
-""")
-
-```
 
