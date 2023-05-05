@@ -1,0 +1,207 @@
+---
+title: "Analysis of Results"
+format: html
+---
+
+## Exploratory analysis
+
+```{r db-connect, echo=FALSE}
+library(RSQLite)
+con = dbConnect(SQLite(), 'department.db')
+#dbListTables(con)
+results = dbReadTable(con, 'results')
+users = dbReadTable(con, 'user')
+userMatrix = dbReadTable(con, 'userMatrix')
+dbDisconnect(con)
+```
+
+
+
+```{r gather-responses, echo=FALSE, message=FALSE, warning=FALSE}
+
+#Setting up responses
+library(ggplot2)
+library(dplyr)
+
+#Fill in correct values for incorrect 3d graph kits
+# 1 result, need to fill in fileID, graphtype, and plot
+results = results %>% 
+  mutate(fileID = ifelse(graphCorrecter %in% 'id-01/Type1-Rep01', 1, fileID),
+         graphtype = ifelse(graphCorrecter %in% 'id-01/Type1-Rep01', 'Type1', graphtype),
+         plot = ifelse(graphCorrecter %in% 'id-01/Type1-Rep01', '3dPrint', plot))
+
+
+
+load('data/set85data.Rdata')
+load('data/kits.Rdata')
+
+library(purrr)
+library(tidyr)
+trueRatios = datasets %>% 
+  mutate(ratio.df = map(data, function(x)(x[!is.na(x[,'IDchr']),4])),
+         trueRatio = map(ratio.df, function(x)(x[1,'Height'] / x[2,'Height']))) %>% 
+  unnest(trueRatio) %>% 
+  filter(fileID != 15) %>% 
+  #mutate(Height = Height * 100) %>% 
+  select(fileID, Height)
+
+res = results %>% 
+  left_join(trueRatios, by = 'fileID') %>% 
+  mutate(response = log2(abs(byHowMuch - Height*100) + 1/8),
+         subject = paste0(nickname, participantUnique, appStartTime),
+         ratioLabel = round(100*Height, 1)) %>% 
+  arrange(appStartTime)
+
+```
+
+Summary of responses
+
+```{r}
+#Count of results
+table(res$whichIsSmaller)
+
+#Count of times kit was used
+round(table(res$kit)/15,2)
+
+#Number of participants
+length(unique(res$subject))
+```
+
+
+16 responses were incorrect
+
+```{r}
+res %>% 
+  filter(whichIsSmaller == 'Circle (●)') %>% 
+  group_by(subject
+           # , ratioLabel
+           ) %>% 
+  summarize(count = n())
+
+```
+
+
+
+
+```{r}
+ggplot(res, mapping = aes(x = byHowMuch, fill = whichIsSmaller)) +
+  geom_histogram() + 
+  facet_grid(graphtype ~ plot)
+```
+```{r}
+ggplot(res, mapping = aes(x = byHowMuch, fill = whichIsSmaller)) +
+  geom_histogram() + 
+  labs(title = 'Count of responses by file id') +
+  facet_wrap(~fileID)
+```
+
+```{r}
+ggplot(res, mapping = aes(x = byHowMuch, fill = whichIsSmaller)) +
+  geom_histogram() + 
+  facet_grid(graphtype ~ ratioLabel)
+```
+
+
+
+
+```{r}
+
+midmean = function(x){
+  q = as.numeric(quantile(x, c(0.25, 0.75)))
+  inIQR = x >= q[1] & x <= q[2]
+  return(mean(x[inIQR], na.rm = T))
+  
+}
+
+res %>% 
+  ggplot(mapping = aes(x = plot, y = response)) +
+  geom_bar(stat = 'summary',
+           fun = 'mean') +
+  facet_grid(graphtype ~ ratioLabel) +
+  theme_bw() + theme(axis.text.x = element_text(hjust = 1, angle = 30)) +
+  labs(title = '',
+       y = 'Mean of -2log(|error|+1/8)')
+
+res %>% 
+  ggplot(mapping = aes(x = plot, y = response)) +
+  geom_bar(stat = 'summary',
+           fun = 'midmean') +
+  facet_grid(graphtype ~ ratioLabel) +
+  theme_bw() + theme(axis.text.x = element_text(hjust = 1, angle = 30)) +
+  labs(title = '',
+       y = 'Mean of -2log(|error|+1/8)')
+
+```
+
+
+
+
+
+
+
+```{r}
+library(lme4)
+library(lmerTest)
+
+#model: response = subject + graph type + ratio + type
+
+mod = lmer(response ~  (1|subject) + plot+type+Height,
+     data = res)
+summary(mod)
+
+mod = lmer(response ~ (1|subject) + plot + Height + type,
+           data = res)
+summary(mod)
+
+library(emmeans)
+m = emmeans(mod, specs = ~plot)
+confint(m)
+plot(m)
+c = confint(contrast(object = m, interaction = list("pairwise")))
+plot(c) + geom_vline(xintercept = 0, color = 'red')
+```
+
+
+## Replication of Cleveland and McGill Graphs
+
+```{r}
+res %>% 
+  ggplot(mapping = aes(x = graphtype, y = response)) +
+  geom_point(stat = 'summary',
+             fun = 'mean') +
+  facet_grid(plot ~ ratioLabel) + 
+  theme_bw() +
+  labs(title = 'Replication of Figure 11')
+```
+
+```{r}
+res %>% 
+  ggplot(mapping = aes(x = ratioLabel, y = response)) +
+  geom_point(stat = 'summary',
+             fun = 'mean') +
+  geom_smooth(se = F, alpha = 1/8) +
+  facet_grid(plot ~ graphtype) + 
+  theme_bw() +
+  labs(title = 'Replication of Figure 13')
+```
+
+
+```{r}
+res %>% 
+  ggplot(mapping = aes(x = response, y = graphtype)) +
+  geom_violin() +
+  facet_grid(plot ~ .) + 
+  theme_bw() +
+  labs(title = '"Replication" of Figure 16',
+       caption = 'Replace with 95% CIs when available')
+  
+```
+
+
+
+
+
+
+
+
+
