@@ -1,0 +1,211 @@
+
+/*-- scss:defaults --*/
+$primary: #D00000;
+$secondary: #FEFDFA;
+$navbar-dark-color: rgba($primary, .75) !important;
+$navbar-dark-hover-color: $primary !important;
+$theme-colors: (
+  "primary": #D00000,
+  "secondary": #FEFDFA,
+  "success": #008A2C,
+  "info": #249ab5,
+  "warning": #D4440B,
+  "danger": #a5228d,
+  "dark": #001226,
+  "link": #249ab5
+);
+
+/* css styles */
+
+.reveal section {
+  background-position: left 10px bottom 10px;
+  background-size: 10%;
+	font-size: 20px;
+}
+
+.reveal section h1, h2, h3, h4 {
+    font-weight: 500;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+
+.reveal section h1 {
+	color: #d00000!important;
+  font-size: 3.5em!important;
+  font-family: 'Roboto', sans-serif!important;
+  /*background: rgba(.9961, .9922, .9804, .3);*/
+  padding:20px!important;
+	text-shadow: 1px 1px #fff;
+}
+
+.reveal section h2 {
+	color: #001226;
+  font-size: 2.5em;
+  font-family: 'Roboto', sans-serif;
+	text-shadow: 1px 1px #fff;
+}
+
+.reveal section h3 {
+	color: #249ab5;
+	text-shadow: 1px 1px #fff;
+  font-size: 1.5em;
+  font-family: 'Montserrat', sans-serif;
+}
+.reveal section h4 {
+  font-size: 1.25em;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.reveal section body{
+  left: 12%;
+  font-size: 1em;
+  font-weight:400;
+}
+
+
+.reveal section#title-slide {
+	data-background-color: #fefdfa;
+  data-background-image:  url(../images/UNL.svg), url(../images/N.svg);
+	data-background-position: 10px 10px, right 10px 10px;
+	data-background-size: 25%, 10%;
+}
+
+.reveal section#title-slide h1 {
+	color: #d00000 !important;
+	margin-top: -130px;
+}
+
+.reveal section#title-slide .subtitle {
+  font-family: 'Roboto';
+	color: #001226 !important;
+  font-size: 150%;
+}
+
+.reveal section#title-slide .quarto-title-author-name{
+  font-family: 'Handlee', cursive;
+	color: #249ab5 !important;
+  font-size: 130%;
+}
+
+
+.reveal section#title-slide .date{
+	color: #001226;
+  font-size: 130%;
+  font-family: 'Handlee', cursive;
+}
+
+.reveal section .inverse {
+  background-color: #001226 !important;
+  border-bottom: 0;
+  color: #fefdfa;
+}
+
+
+.reveal section .inverse h2 {
+	color: #fefdfa!important;
+}
+
+.reveal section .inverse h3 {
+	color: #d00000!important;	
+	text-shadow: 1px 1px #fff;
+}
+
+/* Other font formatting stuff */
+.reveal section .emph { font-family: 'Handlee', cursive; }
+.reveal section .cerulean { color: #249ab5 !important; }
+.reveal section .red { color: #d00000 !important;}
+.reveal section .navy { color: #001226 !important;}
+.reveal section .gray { color: #c7c8ca !important;}
+
+.reveal section .center {
+  text-align: center;
+}
+
+/* Slide Number */
+/*.remark-slide-number {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 14px;
+	color: #c7c8ca;
+}
+.title-slide .remark-slide-number { display: none;}*/
+
+/* add a simple bottom border */
+/*div.remark-slide {
+  border-bottom: 3px solid  #C8102E;
+  box-shadow:  0 5px 0 #7C2529 ;
+}*/
+
+/* other handy classes */
+.pull-left{
+  float: left;
+  width: 47%;
+}
+.pull-right{
+  float: right;
+  width: 47%;
+}
+
+.huge {font-size: 150%}
+.large {font-size: 130%}
+.largish{font-size:110%;}
+.reg{font-size:100%;}
+.slightly-small {font-size: 80%}
+.smaller {font-size: 75%}
+.small {font-size: 70%}
+.tiny {font-size: 50%}
+
+
+
+.underline {
+  border-bottom:1px solid black;display:inline-block;
+}
+
+.hidden{
+  visibility:hidden;
+}
+
+.move-up { margin-top:-50px !important;}
+.nudge-up { margin-top:-20px !important;}
+
+.move-left { margin-left:-50px !important;}
+.nudge-left { margin-left:-20px !important;}
+
+.move-right { margin-left:50px !important;}
+.nudge-right { margin-left:20px !important;}
+
+.move-down {margin-top:50px !important;}
+.nudge-down { margin-top:20px !important;}
+
+
+.toprightfig{
+  position:absolute;
+  top:-10px;
+  right: 10px;
+  max-height: 150px;
+  max-width: 150px;
+  height:auto;
+  width: auto;
+}
+
+.topleftfig{
+  position:absolute;
+  top:0;
+  left: 0;
+  max-height: 100%;
+  max-width: 50%;
+  height:auto;
+  width: auto;
+}
+
+.bottom {
+  left: 12%;
+  position: absolute;
+  bottom: 5px;
+  font-size: 50%;
+  /*width: 100%;*/
+}
+
+.cover{
+  width:100%;
+  height:100%;
+}
