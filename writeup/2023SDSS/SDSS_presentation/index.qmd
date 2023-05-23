@@ -146,6 +146,10 @@ Since then, studies have shown that 3D graphics are less effective at conveying 
 
 ## Background on 3D graphics
 
+:::: {.columns}
+
+::: {.column width='45%'}
+
 When to use 3D graphics
 
   - Relationship between multiple variables
@@ -159,22 +163,14 @@ When to NOT use 3D graphics
   
   - Lack of interactivity
   
-```{r, fig.align='center'}
-library(plotly)
-set.seed(3910)
+:::
+  
+::: {.column width='45%'}
+  
+![](images/rotations3d.png)
+:::
 
-dat = data.frame(
-  x = rnorm(20),
-  y = rnorm(20),
-  z = rnorm(20),
-  cols = letters[1:4]
-)
-
-plot_ly(dat, x = ~x, y = ~y, z = ~z) %>% 
-  add_markers(color = ~cols)
-
-```
-
+::::
 
 # A Study on 3D Printed Graphics
 
@@ -185,7 +181,7 @@ plot_ly(dat, x = ~x, y = ~y, z = ~z) %>%
   1) How do 3D printed charts compare to 2D and 3D digital charts?
   2) Can we replicate the findings from Cleveland and McGill?
 
-![](images/chart_types.png){fig-height='50%'}
+![](images/chart_types.png)
 
 
 ## Replicating Cleveland and McGill
@@ -264,10 +260,7 @@ New treatment combinations can all be accounted for if separated into 21 kits
 :::
 
 
-::: {.notes}
 
-
-:::
 
 ---
 
@@ -278,9 +271,11 @@ New treatment combinations can all be accounted for if separated into 21 kits
 
 ## Study Design
 
+
+
 Each subject receives a bag of 3D printed kits with instructions that direct users to a Shiny app
 
-*Picture of kit here*
+![](images/kit18.jpg){fig-align='center'}
 
 
 ## Shiny App
@@ -326,9 +321,6 @@ where
 
 - $\epsilon_{ijklm}\sim N(0,\sigma^2_\epsilon)$ is the random error
 
-
-
-# Results
 
 ## Results
 
@@ -467,7 +459,116 @@ ggplot(mapping = aes(x = mean, y = ratioLabel)) +
 ```
 
 
+## A Contemporary Approach with GLMMs
 
+The responses from the previous analysis used the log errors, but Generalized Linear Mixed Models are a modern option to analyze the data. Adjusting for the ratios as covariates, a beta regression model with unequal slopes is fit below: 
+
+$$\eta_{ijkl}=S_i+\beta_j R_{jk}+G_k+T_l$$
+
+- $\eta_{ijkl}$ is the participant response
+
+- $S_i\sim N(0,\sigma^2_S)$ is the effect of the $i^{th}$ subject
+
+- $\beta_j$ is the effect of the $j^{th}$ true ratio
+
+- $R_{jk}$ is the $j^{th}$ ratio for the $k^{th}$ graph type
+
+- $T_l$ is the effect of the $l^{th}$ comparison type
+
+- $y_i|S_i\sim Beta(\mu_{ijkl}, \phi)$
+
+- Link function: $\eta_{ijkl}=\log[\mu_{ijkl}/(1-\mu_{ijkl})]$
+
+## GLMM Results
+
+| plot      | _plot     | Estimate | Standard Error | DF  | t-Value | Adj P  | Odds Ratio | Adj Lower Odds Ratio | Adj Upper Odds Ratio |
+|:---------:|:---------:|:--------:|:--------------:|:---:|:-------:|:------:|:----------:|:--------------------:|:--------------------:|
+| 2dDigital | 3dDigital | 0.21     | 0.06263        | 491 | 3.35    | 0.0025 | 1.234      | 1.065                | 1.429                |
+| 2dDigital | 3dPrint   | 0.07093  | 0.06164        | 491 | 1.15    | 0.4834 | 1.074      | 0.929                | 1.241                |
+| 3dDigital | 3dPrint   | -0.1391  | 0.06185        | 491 | -2.25   | 0.0642 | 0.87       | 0.752                | 1.006                |
+
+
+Beta regression does not have easily interpretable results.
+
+$\frac{\mu_{ij1l}/(1-\mu_{ij1l})]}{\mu_{ij3l}/(1-\mu_{ij3l})]}$
+
+![](images/lsmeans-glmm.png){fig-align='center'}
+
+
+---
+
+
+```{r}
+x = sort(unique(res$Height))
+
+pred = function(x, plot = c('2d', '3dd', '3dp'), graphtype = c('Type 1','Type 3')){
+  eta = -2.8845*(plot=='2d') -2.9137*(plot=='3dd') -2.5847*(plot=='3dp') -
+    0.03338*(graphtype=='Type 1') +
+    5.4811*(plot=='2d')*x + 5.1007*(plot=='3dd')*x  + 4.7013*(plot=='3dp')*x
+  
+  return(exp(eta)/(1+exp(eta)))
+}
+
+
+vals = expand.grid(x = x, plot = c('2d','3dp', '3dd' ), graphtype = c('Type 1','Type 3'))
+vals$pred = pmap_dbl(vals, pred)
+
+p.glmm.mod.vals = vals %>% 
+  mutate(x = round(x, 3),
+         xlabel = as.character(x)) %>% 
+ggplot() +
+  geom_point(mapping = aes(x = plot, y = pred, color = xlabel,
+                           shape = graphtype)) + 
+  geom_line(mapping = aes(x = plot, y = pred, color = xlabel,
+                          linetype = graphtype,
+                          group = interaction(graphtype, xlabel))) +
+  scale_shape_discrete(name = 'Graph Type', labels = c('Type 1', 'Type 3')) +
+  scale_linetype_discrete(name = 'Graph Type') +
+  scale_y_continuous(limits = c(0, 1), breaks = sort(round(x,3))) +
+  scale_x_discrete(labels = c('2D Digital', '3D Printed', '3D Digital')) +
+  theme_bw() +
+  scale_color_brewer(palette = 'Accent') +
+  labs(title = 'Predicted Responses for True Ratios',
+       x = 'Plot Type',
+       y = 'Predicted Response',
+       color = 'Ratio') +
+  theme(panel.grid.major.y = element_line(color = 'grey60', linetype = 'dashed'),
+        panel.grid.minor = element_blank())
+
+```
+
+
+```{r}
+
+p.glmm.dat.vals = res %>% 
+  mutate(x = ratioLabel/100,
+         xlabel = as.character(x)) %>% 
+  group_by(x, xlabel, plot, graphtype) %>% 
+  summarize(midmean = mean(byHowMuch, trim = 0.25, na.rm = T)/100,
+            .groups = 'keep') %>% 
+ggplot() +
+  geom_point(mapping = aes(x = plot, y = midmean, color = xlabel,
+                           shape = graphtype)) + 
+  geom_line(mapping = aes(x = plot, y = midmean, color = xlabel,
+                          linetype = graphtype,
+                          group = interaction(graphtype, xlabel))) +
+  scale_shape_discrete(name = 'Graph Type', labels = c('Type 1', 'Type 3')) +
+  scale_linetype_discrete(name = 'Graph Type', labels = c('Type 1', 'Type 3')) +
+  # scale_shape_discrete(name = 'Graph Type') +
+  scale_y_continuous(limits = c(0, 1), breaks = sort(round(x,3))) +
+  scale_x_discrete(labels = c('2D Digital', '3D Printed', '3D Digital')) +
+  theme_bw() +
+  scale_color_brewer(palette = 'Accent') +
+  labs(title = 'Midmeans of Participant Responses',
+       x = 'Plot Type',
+       y = 'Midmean of participant response',
+       color = 'Ratio') +
+  theme(panel.grid.major.y = element_line(color = 'grey60', linetype = 'dashed'),
+        panel.grid.minor = element_blank())
+
+p.glmm.dat.vals + p.glmm.mod.vals
+
+```
 
 # Future work
 
@@ -476,7 +577,6 @@ ggplot(mapping = aes(x = mean, y = ratioLabel)) +
 - Include static 3D charts (similar to Microsoft Excel)
 - Explore other types of visualizations, such as 3D printed heat maps
 
-*Some picture here*
 
 ## Integration with Introductory Statistics Course
 
@@ -494,7 +594,5 @@ Experiential learning with STAT 218 at University of Nebraska-Lincoln.
 
 
 # Questions?
-
-
 
 
