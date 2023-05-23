@@ -362,7 +362,7 @@ knitr::kable(tidy(anova(mod)),
 
 ```
 
-- Plot within ratio was not not statistically significant, nor was anything else
+- Plot within ratio was not statistically significant, nor was anything else
 
 --- 
 
