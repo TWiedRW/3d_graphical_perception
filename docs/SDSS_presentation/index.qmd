@@ -1,6 +1,5 @@
 ---
 title: "Evaluating Perceptual Judgements on 3D Printed Bar Charts"
-subtitle: "A case for new data visualizations"
 author: "Tyler Wiederich and Susan VanderPlas"
 date: "May 25, 2023"
 format: 
@@ -16,6 +15,7 @@ format:
     logo: images/N.svg
 editor_options: 
   chunk_output_type: console
+bibliography: "SDSS2023_Abstract.bib"
 ---
 
 ```{r setup}
@@ -44,7 +44,7 @@ library(tidyverse)
 library(RSQLite)
 library(lme4)
 
-con = dbConnect(SQLite(), '../../../experiment_interface/department.db')
+con = dbConnect(SQLite(), '../../experiment_interface/department.db')
 dbListTables(con)
 results = dbReadTable(con, 'results')
 users = dbReadTable(con, 'user')
@@ -63,8 +63,8 @@ results = results %>%
 
 
 
-load('../../../experiment_interface/data/set85data.Rdata')
-load('../../../experiment_interface/data/kits.Rdata')
+load('../../experiment_interface/data/set85data.Rdata')
+load('../../experiment_interface/data/kits.Rdata')
 
 
 trueRatios = datasets %>% 
@@ -127,7 +127,7 @@ p.fig16 = res %>%
 ```
 
 
-# Today's Topics
+# Overview
 
 - Background on 3D graphics
 - A study with 3D printed graphs
@@ -138,9 +138,11 @@ p.fig16 = res %>%
 
 ## Background on 3D graphics
 
-History is filled with data visualizations, but some of the earliest references to 3D visualizations were in 1874 by James Clerk Maxwell.
+In 1990, Microsoft Excel 3 introduced the ability to create 3D charts [@walkenbach_versions_2020]. Multiple studies have shown the downsides to unnecessarily using these types of charts.
 
-Since then, studies have shown that 3D graphics are less effective at conveying information when a 2D equivalent is available. As of now, most of those studies focus on 2D projections of 3D graphics.
+  - 2D graphs had more confident answers and novice participants were more accurate with 2D graphs than 3D graphs [@barfield_effects_1989]
+  
+  - Visual appeal for 2D and 3D graphs were approximately equal, and simple graphs were preferred for extracting information [@fisher_data_1997]
 
 ![](images/excel-3d.png){fig-align='center'}
 
@@ -150,18 +152,19 @@ Since then, studies have shown that 3D graphics are less effective at conveying 
 
 ::: {.column width='45%'}
 
-When to use 3D graphics
+Problems with 3D graphs
 
-  - Relationship between multiple variables
+  - When projected on a 2D surface, the data is distorted
   
-  - Display data over 3D objects
-
-
-When to NOT use 3D graphics
-
-  - Does not add any additional information
+  - When the third dimension includes data, the viewing angle can skew perception
   
-  - Lack of interactivity
+Appropriate uses for 3D graphs
+
+  - Viewing angle is not a concern when users can interact with the visualization
+  
+  - Mapping data onto 3D objects
+  
+[@wilke_fundamentals_nodate]
   
 :::
   
@@ -179,14 +182,22 @@ When to NOT use 3D graphics
 **Research questions:** 
 
   1) How do 3D printed charts compare to 2D and 3D digital charts?
-  2) Can we replicate the findings from Cleveland and McGill?
+  2) Can we extend on the findings from Cleveland and McGill's study on elementary perceptual tasks?
 
 ![](images/chart_types.png)
 
 
+::: {.notes}
+
+Elementary perceptual tasks are various elements from graphs that people use to extract information from graphs, such as length, angle, position, and area.
+
+:::
+
 ## Replicating Cleveland and McGill
 
-Our study draws influence from Cleveland and McGill's 1984 paper, specifically from their position-length experiment with graph types 1 and 3.
+Our study draws influence from Cleveland and McGill's 1984 paper, specifically from their position-length experiment with graph types 1 and 3 [@cleveland_graphical_1984].
+
+  - Overall goal was to establish which graphical elements are the most important for extracting information
 
 - Types 1-3 measure position, and types 4-5 measure length
 
@@ -194,17 +205,20 @@ Our study draws influence from Cleveland and McGill's 1984 paper, specifically f
 
 In their study, participants were asked which of the marked bars were smaller and by approximately how much.
 
+
 ## Replicating Cleveland and McGill
 
 Values involved in comparison judgments are 
   
   $$V_i=10\cdot10^{(i-1)/12}\quad i=1,\dots, 10$$
 
-To closely replicate values, we made two assumptions about the comparisons from Cleveland and McGill
+To closely replicate values, we made three assumptions about the comparisons from Cleveland and McGill
     
   1) Match the exact ratios that were used
     
   2) No value was used more than twice
+  
+  3) All other values are randomly generated
 
 ```{r, fig.align='center'}
 
@@ -234,14 +248,18 @@ vi + log.vi
 
 ## Study Design
 
+:::: {.columns}
+
+::: {.column width='50%'}
+
+We designed our study to be given to members of our statistics department and their adult roommates/partners.
+
 Treatment Design
 
   1) Seven unique ratios (17.8, 26.1, 38.3, 46.4, 56.2, 68.1, 82.5)
   2) Three graph types (2D digital, 3D digital, 3D printed)
   3) Two comparisons: Adjacent (Type 1) or separated (Type 3)
   
-
-
 There are 42 treatment combinations, too many for a busy subject!
 
 ::: {.incremental}
@@ -252,6 +270,33 @@ There are 42 treatment combinations, too many for a busy subject!
   - Now 15 treatment combinations per subject
 
 :::
+
+:::
+
+::: {.column width='50%'}
+
+```{r, fig.align='center'}
+val = 10*10^((1:10-1)/12)
+
+
+ggplot(mapping = aes(x = 1:10, y = val)) +
+  geom_bar(stat = 'identity', width = 1,
+           color = 'black',
+           fill = 'white') +
+  theme_bw() +
+  labs(title = 'Bars for comparison',
+       y = expression(V[i]),
+       x = 'i') +
+  scale_x_continuous(breaks = 1:10) +
+  theme(axis.text = element_text(size = 16),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size = 16))
+
+```
+
+:::
+
+::::
 
 ::: {.notes}
   
@@ -488,11 +533,12 @@ $$\eta_{ijkl}=S_i+\beta_j R_{jk}+G_k+T_l$$
 | 3dDigital | 3dPrint   | -0.1391  | 0.06185        | 491 | -2.25   | 0.0642 | 0.87       | 0.752                | 1.006                |
 
 
-Beta regression does not have easily interpretable results.
+Beta regression does not have easily interpretable results. These results are averaged over all ratios. Generally, the expected proportion responses follow that 2D digital > 3D printed > 3D digital
 
-$\frac{\mu_{ij1l}/(1-\mu_{ij1l})]}{\mu_{ij3l}/(1-\mu_{ij3l})]}$
 
-![](images/lsmeans-glmm.png){fig-align='center'}
+
+
+![Results averaged over ratio, holding the comparison type constant](images/lsmeans-glmm.png){fig-align='center'}
 
 
 ---
@@ -566,19 +612,16 @@ ggplot() +
   theme(panel.grid.major.y = element_line(color = 'grey60', linetype = 'dashed'),
         panel.grid.minor = element_blank())
 
-p.glmm.dat.vals + p.glmm.mod.vals
+p.glmm.mod.vals
 
 ```
 
 # Future work
 
-## Changes to Study Design
+## Future work
 
 - Include static 3D charts (similar to Microsoft Excel)
 - Explore other types of visualizations, such as 3D printed heat maps
-
-
-## Integration with Introductory Statistics Course
 
 No results were significant, but what if we could incorporate the study at a larger scale?
 
@@ -595,4 +638,4 @@ Experiential learning with STAT 218 at University of Nebraska-Lincoln.
 
 # Questions?
 
-
+# References
