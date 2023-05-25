@@ -288,7 +288,10 @@ ggplot(mapping = aes(x = 1:10, y = val)) +
        y = expression(V[i]),
        x = 'i') +
   scale_x_continuous(breaks = 1:10) +
-  theme(axis.text = element_text(size = 16),
+  scale_y_continuous(breaks = round(val,1), limits = c(0, 60)) +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 12),
+        panel.grid.minor = element_blank(),
         plot.title = element_text(size = 20),
         axis.title = element_text(size = 16))
 
@@ -636,6 +639,5 @@ Experiential learning with STAT 218 at University of Nebraska-Lincoln.
 :::
 
 
-# Questions?
 
 # References
