@@ -321,7 +321,7 @@ New treatment combinations can all be accounted for if separated into 21 kits
 
 
 
-Each subject receives a bag of 3D printed kits with instructions that direct users to a Shiny app
+Each subject receives a kit of 3D printed charts with instructions that direct users to a Shiny app
 
 ![](images/kit18.jpg){fig-align='center'}
 
