@@ -1,0 +1,643 @@
+---
+title: "Evaluating Perceptual Judgements on 3D Printed Bar Charts"
+author: "Tyler Wiederich and Susan VanderPlas"
+date: "May 25, 2023"
+format: 
+  revealjs:
+    self-contained: true
+    navigation-mode: vertical
+    includes:
+      in_header: |
+        <style>
+        </style>
+        @import url('https://fonts.googleapis.com/css2?family=Handlee&family=Montserrat:ital,wght@0,400;0,500;1,400;1,500&family=Roboto:ital,wght@0,500;1,500&display=swap');
+    theme: [styles.css, fonts.css, default]
+    logo: images/N.svg
+editor_options: 
+  chunk_output_type: console
+bibliography: "SDSS2023_Abstract.bib"
+---
+
+```{r setup}
+#| include: false
+options(htmltools.dir.version = FALSE)
+
+knitr::opts_chunk$set(
+  dpi = 300, 
+  echo = F, message = F, warning = F, 
+  cache = T)
+
+knitr::opts_chunk$set(
+  dev.args = list(bg = "transparent")
+)
+
+library(tidyverse)
+library(gridExtra)
+suppressPackageStartupMessages(library(nullabor))
+
+#source analysis files here?
+
+```
+
+```{r include=FALSE}
+library(tidyverse)
+library(RSQLite)
+library(lme4)
+
+con = dbConnect(SQLite(), '../../experiment_interface/department.db')
+dbListTables(con)
+results = dbReadTable(con, 'results')
+users = dbReadTable(con, 'user')
+userMatrix = dbReadTable(con, 'userMatrix')
+dbDisconnect(con)
+
+
+
+
+#Fill in correct values for incorrect 3d graph kits
+# 1 result, need to fill in fileID, graphtype, and plot
+results = results %>% 
+  mutate(fileID = ifelse(graphCorrecter %in% 'id-01/Type1-Rep01', 1, fileID),
+         graphtype = ifelse(graphCorrecter %in% 'id-01/Type1-Rep01', 'Type1', graphtype),
+         plot = ifelse(graphCorrecter %in% 'id-01/Type1-Rep01', '3dPrint', plot))
+
+
+
+load('../../experiment_interface/data/set85data.Rdata')
+load('../../experiment_interface/data/kits.Rdata')
+
+
+trueRatios = datasets %>% 
+  mutate(ratio.df = map(data, function(x)(x[!is.na(x[,'IDchr']),4])),
+         trueRatio = map(ratio.df, function(x)(x[1,'Height'] / x[2,'Height']))) %>% 
+  unnest(trueRatio) %>% 
+  filter(fileID != 15) %>% 
+  #mutate(Height = Height * 100) %>% 
+  select(fileID, Height)
+
+res = results %>% 
+  left_join(trueRatios, by = 'fileID') %>% 
+  mutate(response = log2(abs(byHowMuch - Height*100) + 1/8),
+         subject = paste0(nickname, participantUnique, appStartTime),
+         ratioLabel = round(100*Height, 1)) %>% 
+  arrange(appStartTime) %>% 
+  filter(whichIsSmaller == 'Triangle (▲)')
+
+
+
+
+
+
+
+
+
+
+p.fig11 = res %>% 
+  ggplot(mapping = aes(x = graphtype, y = response)) +
+  geom_point(stat = 'summary',
+             fun = 'mean') +
+  facet_grid(plot ~ ratioLabel) + 
+  theme_bw() +
+  labs(title = 'Replication of Figure 11',
+       x = 'Graph Type',
+       y = 'Log error')
+
+
+
+p.fig13 = res %>% 
+  ggplot(mapping = aes(x = ratioLabel, y = response)) +
+  geom_point(stat = 'summary',
+             fun = 'midmean') +
+  geom_smooth(se = F, alpha = 1/8) +
+  facet_grid(plot ~ graphtype) + 
+  theme_bw() +
+  labs(title = 'Replication of Figure 13',
+       x = 'Graph Type',
+       y = 'Log error')
+
+
+p.fig16 = res %>% 
+  ggplot(mapping = aes(x = response, y = graphtype)) +
+  geom_violin() +
+  facet_grid(plot ~ .) + 
+  theme_bw() +
+  labs(title = '"Replication" of Figure 16',
+       caption = 'Replace with 95% CIs when available')
+
+```
+
+
+# Overview
+
+- Background on 3D graphics
+- A study with 3D printed graphs
+- Experiential learning
+
+
+# Introduction
+
+## Background on 3D graphics
+
+In 1990, Microsoft Excel 3 introduced the ability to create 3D charts [@walkenbach_versions_2020]. Multiple studies have shown the downsides to unnecessarily using these types of charts.
+
+  - 2D graphs had more confident answers and novice participants were more accurate with 2D graphs than 3D graphs [@barfield_effects_1989]
+  
+  - Visual appeal for 2D and 3D graphs were approximately equal, and simple graphs were preferred for extracting information [@fisher_data_1997]
+
+![](images/excel-3d.png){fig-align='center'}
+
+## Background on 3D graphics
+
+:::: {.columns}
+
+::: {.column width='45%'}
+
+Problems with 3D graphs
+
+  - When projected on a 2D surface, the data is distorted
+  
+  - When the third dimension includes data, the viewing angle can skew perception
+  
+Appropriate uses for 3D graphs
+
+  - Viewing angle is not a concern when users can interact with the visualization
+  
+  - Mapping data onto 3D objects
+  
+[@wilke_fundamentals_nodate]
+  
+:::
+  
+::: {.column width='45%'}
+  
+![](images/rotations3d.png)
+:::
+
+::::
+
+# A Study on 3D Printed Graphics
+
+## Overview
+
+**Research questions:** 
+
+  1) How do 3D printed charts compare to 2D and 3D digital charts?
+  2) Can we extend on the findings from Cleveland and McGill's study on elementary perceptual tasks?
+
+![](images/chart_types.png)
+
+
+::: {.notes}
+
+Elementary perceptual tasks are various elements from graphs that people use to extract information from graphs, such as length, angle, position, and area.
+
+:::
+
+## Replicating Cleveland and McGill
+
+Our study draws influence from Cleveland and McGill's 1984 paper, specifically from their position-length experiment with graph types 1 and 3 [@cleveland_graphical_1984].
+
+  - Overall goal was to establish which graphical elements are the most important for extracting information
+
+- Types 1-3 measure position, and types 4-5 measure length
+
+![Graph types for position-length experiment from Cleveland and McGill](images/CM-Fig-4.png){fig-align='center'}
+
+In their study, participants were asked which of the marked bars were smaller and by approximately how much.
+
+
+## Replicating Cleveland and McGill
+
+Values involved in comparison judgments are 
+  
+  $$V_i=10\cdot10^{(i-1)/12}\quad i=1,\dots, 10$$
+
+To closely replicate values, we made three assumptions about the comparisons from Cleveland and McGill
+    
+  1) Match the exact ratios that were used
+    
+  2) No value was used more than twice
+  
+  3) All other values are randomly generated
+
+```{r, fig.align='center'}
+
+library(patchwork)
+vals = 10*10^((1:10-1)/12)
+
+vi = ggplot(mapping = aes(x = 1:10, y = vals)) +
+  geom_point() + 
+  scale_x_continuous(breaks = 1:10) +
+  labs(title = 'Values on Natural Scale',
+       x = 'i',
+       y = expression(V[i])) +
+  theme_bw()
+
+log.vi = ggplot(mapping = aes(x = 1:10, y = log2(vals))) +
+  geom_point() + 
+  scale_x_continuous(breaks = 1:10) +
+  labs(title = 'Values on Log Scale',
+       x = 'i',
+       y = expression(log2(V[i]))) +
+  theme_bw()
+
+vi + log.vi
+
+```
+
+
+## Study Design
+
+:::: {.columns}
+
+::: {.column width='50%'}
+
+We designed our study to be given to members of our statistics department and their adult roommates/partners.
+
+Treatment Design
+
+  1) Seven unique ratios (17.8, 26.1, 38.3, 46.4, 56.2, 68.1, 82.5)
+  2) Three graph types (2D digital, 3D digital, 3D printed)
+  3) Two comparisons: Adjacent (Type 1) or separated (Type 3)
+  
+There are 42 treatment combinations, too many for a busy subject!
+
+::: {.incremental}
+
+  - Each subject receives five of the seven unique ratios
+  - Within each ratio, all three graph types are used
+  - Each graph is then randomly assigned an adjacent or separated comparison
+  - Now 15 treatment combinations per subject
+
+:::
+
+:::
+
+::: {.column width='50%'}
+
+```{r, fig.align='center'}
+val = 10*10^((1:10-1)/12)
+
+
+ggplot(mapping = aes(x = 1:10, y = val)) +
+  geom_bar(stat = 'identity', width = 1,
+           color = 'black',
+           fill = 'white') +
+  theme_bw() +
+  labs(title = 'Bars for comparison',
+       y = expression(V[i]),
+       x = 'i') +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(breaks = round(val,1), limits = c(0, 60)) +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 12),
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size = 16))
+
+```
+
+:::
+
+::::
+
+::: {.notes}
+  
+New treatment combinations can all be accounted for if separated into 21 kits
+
+:::
+
+
+
+
+---
+
+![Design of each kit](images/kit-contents.png){fig-align='center'}
+
+
+
+
+## Study Design
+
+
+
+Each subject receives a kit of 3D printed charts with instructions that direct users to a Shiny app
+
+![](images/kit18.jpg){fig-align='center'}
+
+
+## Shiny App
+
+![](images/app-instructions.png)
+
+## Shiny App
+
+![](images/app-practice.png)
+
+## Shiny App
+
+![](images/app-kit-prompt.png)
+
+## Shiny App
+
+![](images/app-2d.png)
+
+## Shiny App
+
+![](images/app-3d.png)
+
+## Shiny App
+
+![](images/app-3d-prompt.png)
+
+
+## Model
+
+$$y_{ijklm}=\mu+S_i+R_j+G(R)_{(k)j}+T_l+\epsilon_{ijklm}$$
+
+where
+
+- $y_{ijklm}=\log_2(|\text{Judged Percent} - \text{True Percent}|+1/8)$
+
+- $S_i\sim N(0,\sigma^2_S)$ is the effect of the $i^{th}$ subject
+
+- $R_j$ is the effect of the $j^{th}$ ratio
+
+- $G(R)_{(k)j}$ is the effect of the $k^{th}$ graph type nested in the $j^{th}$ ratio
+
+- $T_l$ is the effect of the $l^{th}$ comparison type
+
+- $\epsilon_{ijklm}\sim N(0,\sigma^2_\epsilon)$ is the random error
+
+
+## Results
+
+- Few responses incorrectly identified the smaller bar and were removed from the data
+
+
+```{r}
+
+library(lme4)
+library(lmerTest)
+library(broom)
+
+mod = lmer(response ~ 1 + (1|subject) + ratio + ratio:plot + type,
+     data = res)
+# summary(mod)
+knitr::kable(tidy(anova(mod)),
+             digits = 3, col.names = c('Term', 'SS', 'MS', "Num DF", "Den DF", "F-value", "P-value"))
+# plot(fitted(mod), resid(mod))
+# qqnorm(resid(mod))
+# qqline(resid(mod))
+
+
+#Bootstrap sampling
+# subjects = unique(res$subject)
+# reps = 1000
+# bootstrap.samp = list()
+# 
+# for(i in 1:reps){
+#   bootstrap.samp[[i]] <- filter(res, subject %in% sample(subjects, size = length(subjects), replace = T))
+# }
+# 
+# tmp = map(bootstrap.samp, function(x)(
+#   x %>% 
+#     group_by(ratio, plot, type) %>% 
+#     summarize(midmean = mean(response, trim = 0.25))
+# ))
+
+
+
+```
+
+- Plot within ratio was not statistically significant, nor was anything else
+
+--- 
+
+
+```{r}
+p.fig11 +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+
+```
+
+- Cleveland and McGill showed an increase in error from Type 1 to Type 3
+
+## Bootstrap Confidence Intervals
+
+In Cleveland and McGill, confidence intervals were calculated using bootstrap sampling of subjects using the means of the midmeans. The same process is used here, although each subject did not receive each treatment combination.
+
+
+```{r, message=FALSE, fig.align='center'}
+# Bootstrap sampling
+subjects = unique(res$subject)
+reps = 1000
+bootstrap.samp = list()
+
+for(i in 1:reps){
+  bootstrap.samp[[i]] <- filter(res, subject %in% sample(subjects, size = length(subjects), replace = T))
+}
+
+midmeans.all = map(bootstrap.samp, function(x)(
+  x %>%
+    group_by(ratio, plot, type) %>%
+    summarize(midmean = mean(response, trim = 0.25),
+              .groups = 'keep')
+)) %>% bind_rows(.id = 'Sample')
+
+midmeans.plot = map(bootstrap.samp, function(x)(
+  x %>%
+    group_by(plot) %>%
+    summarize(midmean = mean(response, trim = 0.25),
+              .groups = 'keep')
+)) %>% bind_rows(.id = 'Sample')
+
+midmeans.ratio = map(bootstrap.samp, function(x)(
+  x %>%
+    group_by(ratio) %>%
+    summarize(midmean = mean(response, trim = 0.25),
+              .groups = 'keep')
+)) %>% bind_rows(.id = 'Sample')
+
+midmeans.ratio.plot = map(bootstrap.samp, function(x)(
+  x %>%
+    group_by(ratioLabel, plot) %>%
+    summarize(midmean = mean(response, trim = 0.25),
+              .groups = 'keep')
+)) %>% bind_rows(.id = 'Sample')
+
+
+midmeans.plot %>% 
+  group_by(plot) %>% 
+  summarize(mean = mean(midmean),
+            lower = quantile(midmean, 0.025),
+            upper = quantile(midmean, 0.975),
+            .groups = 'keep') %>% 
+ggplot(mapping = aes(x = mean, y = plot)) +
+  geom_point() +
+  geom_errorbar(aes(xmin = mean - lower,
+                    xmax = mean + upper),
+                width = 0.2) +
+  labs(title = '95% Confidence Intervals for Plot Type',
+       y = '',
+       x = 'Midmean') +
+  theme_bw()
+
+```
+
+---
+
+```{r}
+midmeans.ratio.plot %>% 
+  summarize(mean = mean(midmean),
+            lower = quantile(midmean, 0.025),
+            upper = quantile(midmean, 0.975),
+            .groups = 'keep') %>% 
+ggplot(mapping = aes(x = mean, y = ratioLabel)) +
+  geom_point() +
+  geom_errorbar(aes(xmin = mean - lower,
+                    xmax = mean + upper),
+                width = 3) +
+  scale_y_reverse(breaks = unique(res$ratioLabel)) +
+  labs(title = '95% Confidence Intervals for Plot Type',
+       y = 'Ratio',
+       x = 'Midmean') +
+  theme_bw() +
+  facet_wrap(~plot)
+```
+
+
+## A Contemporary Approach with GLMMs
+
+The responses from the previous analysis used the log errors, but Generalized Linear Mixed Models are a modern option to analyze the data. Adjusting for the ratios as covariates, a beta regression model with unequal slopes is fit below: 
+
+$$\eta_{ijkl}=S_i+\beta_j R_{jk}+G_k+T_l$$
+
+- $\eta_{ijkl}$ is the participant response
+
+- $S_i\sim N(0,\sigma^2_S)$ is the effect of the $i^{th}$ subject
+
+- $\beta_j$ is the effect of the $j^{th}$ true ratio
+
+- $R_{jk}$ is the $j^{th}$ ratio for the $k^{th}$ graph type
+
+- $T_l$ is the effect of the $l^{th}$ comparison type
+
+- $y_i|S_i\sim Beta(\mu_{ijkl}, \phi)$
+
+- Link function: $\eta_{ijkl}=\log[\mu_{ijkl}/(1-\mu_{ijkl})]$
+
+## GLMM Results
+
+| plot      | _plot     | Estimate | Standard Error | DF  | t-Value | Adj P  | Odds Ratio | Adj Lower Odds Ratio | Adj Upper Odds Ratio |
+|:---------:|:---------:|:--------:|:--------------:|:---:|:-------:|:------:|:----------:|:--------------------:|:--------------------:|
+| 2dDigital | 3dDigital | 0.21     | 0.06263        | 491 | 3.35    | 0.0025 | 1.234      | 1.065                | 1.429                |
+| 2dDigital | 3dPrint   | 0.07093  | 0.06164        | 491 | 1.15    | 0.4834 | 1.074      | 0.929                | 1.241                |
+| 3dDigital | 3dPrint   | -0.1391  | 0.06185        | 491 | -2.25   | 0.0642 | 0.87       | 0.752                | 1.006                |
+
+
+Beta regression does not have easily interpretable results. These results are averaged over all ratios. Generally, the expected proportion responses follow that 2D digital > 3D printed > 3D digital
+
+
+
+
+![Results averaged over ratio, holding the comparison type constant](images/lsmeans-glmm.png){fig-align='center'}
+
+
+---
+
+
+```{r}
+x = sort(unique(res$Height))
+
+pred = function(x, plot = c('2d', '3dd', '3dp'), graphtype = c('Type 1','Type 3')){
+  eta = -2.8845*(plot=='2d') -2.9137*(plot=='3dd') -2.5847*(plot=='3dp') -
+    0.03338*(graphtype=='Type 1') +
+    5.4811*(plot=='2d')*x + 5.1007*(plot=='3dd')*x  + 4.7013*(plot=='3dp')*x
+  
+  return(exp(eta)/(1+exp(eta)))
+}
+
+
+vals = expand.grid(x = x, plot = c('2d','3dp', '3dd' ), graphtype = c('Type 1','Type 3'))
+vals$pred = pmap_dbl(vals, pred)
+
+p.glmm.mod.vals = vals %>% 
+  mutate(x = round(x, 3),
+         xlabel = as.character(x)) %>% 
+ggplot() +
+  geom_point(mapping = aes(x = plot, y = pred, color = xlabel,
+                           shape = graphtype)) + 
+  geom_line(mapping = aes(x = plot, y = pred, color = xlabel,
+                          linetype = graphtype,
+                          group = interaction(graphtype, xlabel))) +
+  scale_shape_discrete(name = 'Graph Type', labels = c('Type 1', 'Type 3')) +
+  scale_linetype_discrete(name = 'Graph Type') +
+  scale_y_continuous(limits = c(0, 1), breaks = sort(round(x,3))) +
+  scale_x_discrete(labels = c('2D Digital', '3D Printed', '3D Digital')) +
+  theme_bw() +
+  scale_color_brewer(palette = 'Accent') +
+  labs(title = 'Predicted Responses for True Ratios',
+       x = 'Plot Type',
+       y = 'Predicted Response',
+       color = 'Ratio') +
+  theme(panel.grid.major.y = element_line(color = 'grey60', linetype = 'dashed'),
+        panel.grid.minor = element_blank())
+
+```
+
+
+```{r}
+
+p.glmm.dat.vals = res %>% 
+  mutate(x = ratioLabel/100,
+         xlabel = as.character(x)) %>% 
+  group_by(x, xlabel, plot, graphtype) %>% 
+  summarize(midmean = mean(byHowMuch, trim = 0.25, na.rm = T)/100,
+            .groups = 'keep') %>% 
+ggplot() +
+  geom_point(mapping = aes(x = plot, y = midmean, color = xlabel,
+                           shape = graphtype)) + 
+  geom_line(mapping = aes(x = plot, y = midmean, color = xlabel,
+                          linetype = graphtype,
+                          group = interaction(graphtype, xlabel))) +
+  scale_shape_discrete(name = 'Graph Type', labels = c('Type 1', 'Type 3')) +
+  scale_linetype_discrete(name = 'Graph Type', labels = c('Type 1', 'Type 3')) +
+  # scale_shape_discrete(name = 'Graph Type') +
+  scale_y_continuous(limits = c(0, 1), breaks = sort(round(x,3))) +
+  scale_x_discrete(labels = c('2D Digital', '3D Printed', '3D Digital')) +
+  theme_bw() +
+  scale_color_brewer(palette = 'Accent') +
+  labs(title = 'Midmeans of Participant Responses',
+       x = 'Plot Type',
+       y = 'Midmean of participant response',
+       color = 'Ratio') +
+  theme(panel.grid.major.y = element_line(color = 'grey60', linetype = 'dashed'),
+        panel.grid.minor = element_blank())
+
+p.glmm.mod.vals
+
+```
+
+# Future work
+
+## Future work
+
+- Include static 3D charts (similar to Microsoft Excel)
+- Explore other types of visualizations, such as 3D printed heat maps
+
+No results were significant, but what if we could incorporate the study at a larger scale?
+
+::: {.incremental}
+
+Experiential learning with STAT 218 at University of Nebraska-Lincoln.
+
+  1) Participate in the experiment
+  2) Reflect on the experimental design and how randomization occurred
+  3) Read a paper on the experiment from the perspective of the researchers and reflect
+
+:::
+
+
+
+# References
