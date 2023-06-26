@@ -9,7 +9,7 @@ library(markdown)
 library(reactlog)
 
 #Current database to work with
-currentDB <- "department.db"
+currentDB <- "218pilot2023b-1.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -144,7 +144,7 @@ demographicsUI <- {fluidPage(
       width = 8, offset = 2,
       h2('Participant Identifier'),
       p('To ensure that we have a unique identifier for your responses, please provide an answer to the following question.',
-        'Your response for this question will not be stored with your survey responses and will not be used to attempt to identify you.'),
+        'Your response for this question will not be used to attempt to identify you.'),
       textInput('participantUnique', 'What is your favorite zoo animal?'),
       # textInput("nickname", "Please enter a nickname to be used as your identifier: "),
       br(),
@@ -271,7 +271,7 @@ instructions <- {fluidPage(
   fluidRow(
     column(8, offset = 2, align = 'left',
            p('Thank you for participating in our experiment on perceptual judgments in different graphical mediums.',
-             'You will see a series of 15 charts in this experiment',
+             'You will see a series of 15-20 charts in this experiment.',
              'On each screen, you will see either a rendered chart (in 2D or 3D), or a prompt to choose a 3D printed chart from your kit.'),
            br(),
            p("Before you start, please enter your kit number so that we know what charts you have."),
@@ -282,15 +282,17 @@ instructions <- {fluidPage(
                             onInitialize = I('function() { this.setValue(""); }')
                           )),
            br(),
+           checkboxInput('onlineOnly', 'Please check this box if you do not have access to the 3D printed bar charts.'),
            
            h4("Chart Selection"),
            p("If you are instructed to use a 3D chart, you will pick one of the charts from your kit and select the ID code on the bottom of the chart. ",
              "Otherwise, use the graph which shows up on the screen."),
            h4("Interactivity"),
-           p("You will be able to use your mouse to interact with 3D plots shown on your screen."),
+           p("You will be able to use your mouse to interact with some of the 3D plots shown on your screen."),
            h4("Task Steps"),
            p("First, select which marked bar, circle or triangle, is smaller.", 
-             "Then, visually estimate how big the smaller bar is in comparison to the larger bar."),
+             "Then, visually estimate how big the smaller bar is in comparison to the larger bar.",
+             'That is, if the larger bar is 100%, estimate the percentage of space does the smaller bar occupy of the larger bar.'),
            br(),
            p("When you are ready, click 'Begin'")
            
@@ -428,7 +430,7 @@ server <- function(input, output, session) {
           userAppStartTime = isolate(timing$startExp),
           consent = input$consent,
           nickname = ifelse(is.null(input$fingerprint), "", input$fingerprint),
-          participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
+          participantUnique = input$participantUnique,
           
           age = input$age,
           gender = input$gender,
@@ -499,7 +501,9 @@ server <- function(input, output, session) {
       kitsWithData[[kitID_num]] %>% 
         bind_rows(.id = 'plot') %>% 
         mutate(file = paste0('data/pilot/Set85/', gsub('.csv', '', file)),
-               kit = kitID_num) %>%
+               kit = kitID_num,
+               removeForOnline = ifelse(input$onlineOnly & plot == '3dPrint', 1, 0)) %>%
+        filter(removeForOnline != 1) %>% 
         ungroup() %>%
         # Randomize order of kit
         sample_frac(1) %>%
@@ -528,7 +532,7 @@ server <- function(input, output, session) {
   # Initialize reactive values for trial information
   trial_data <- reactiveValues(
     trialID = NA,
-    max_trials = 15,
+    max_trials = 20,
     plots_3d_options = NULL,
     plots_3d_used = NULL,
     remaining_3d = NULL,
@@ -643,6 +647,13 @@ server <- function(input, output, session) {
     rglwidget()
   })
   
+  output$bar3s <- renderImage({
+    validate(need(trial_data$info$plot == '3dStatic', ''))
+    list(src = paste0('data/static3d/static3d-', plots_in_kit()$fileID[trial_data$trialID],'png.png'),
+         width = '400px',
+         alt = '3d static plot')
+  }, deleteFile = FALSE)
+  
   # output$expPlot <- renderUI({
   #   validate(need(!is.na(as.numeric(input$kitID)), "Please provide kit ID to continue"))
   #   
@@ -670,6 +681,7 @@ server <- function(input, output, session) {
       'refresh' = plotOutput('refresh'),
       '2dDigital' = plotOutput('bar2d', width = '400px'),
       '3dPrint' = plotOutput('print3d', width = '400px'),
+      '3dStatic' = imageOutput('bar3s', width = '400px'),
       '3dDigital' = rglwidgetOutput('bar3d', width = '400px')
     )}
   })
@@ -693,7 +705,8 @@ server <- function(input, output, session) {
       userMatrixSave <- trial_data$info %>% 
         #select(-trial) %>%
         mutate(nickname = input$fingerprint,
-               participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
+               onlineOnly = input$onlineOnly,
+               participantUnique = input$participantUnique,
                click = trial_data$plot3dClicks,
                clickTime = Sys.time(),
                dummy = 1
@@ -736,7 +749,7 @@ server <- function(input, output, session) {
       results <- trial_data$info %>% 
         select(-trial) %>%
         mutate(nickname = input$fingerprint,
-               participantUnique = paste0(match(tolower(unlist(strsplit(input$participantUnique, '')))[unlist(strsplit(input$participantUnique, '')) %in% letters], letters), collapse = ''),
+               participantUnique = input$participantUnique,
                appStartTime = timing$startExp,
                plotStartTime = trial_data$startTime,
                plotEndTime = trial_data$endTime,
