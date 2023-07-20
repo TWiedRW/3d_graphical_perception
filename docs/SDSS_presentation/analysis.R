@@ -40,14 +40,17 @@ res = results %>%
          subject = paste0(nickname, participantUnique, appStartTime),
          ratioLabel = round(100*Height, 1)) %>% 
   arrange(appStartTime) %>% 
-  filter(whichIsSmaller == 'Triangle (▲)')
+  filter(whichIsSmaller == 'Triangle (▲)',
+         as.Date.POSIXct(appStartTime) <= '2023-05-22') #Only verified results from before the start of SDSS
 
 
 
 
 
-
-
+library(lme4)
+mod = lmer(response ~ (1|subject) + ratio + type + ratio:plot,
+     data = res)
+anova(mod)
 
 
 
