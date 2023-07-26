@@ -1,0 +1,23 @@
+\begin{thebibliography}{3}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Barfield and Robless(1989)}]{barfield_effects_1989}
+Barfield W, Robless R (1989).
+\newblock The effects of two- or three-dimensional graphics on the
+  problem-solving performance of experienced and novice decision makers.
+\newblock \emph{Behaviour \& Information Technology}, 8(5): 369--385.
+
+\bibitem[{Cleveland and McGill(1984)}]{cleveland_graphical_1984}
+Cleveland WS, McGill R (1984).
+\newblock Graphical {Perception}: {Theory}, {Experimentation}, and
+  {Application} to the {Development} of {Graphical} {Methods}.
+\newblock \emph{Journal of the American Statistical Association}, 79(387):
+  531--554.
+
+\bibitem[{Fisher et~al.(1997)Fisher, Dempsey, and Marousky}]{fisher_data_1997}
+Fisher SH, Dempsey JV, Marousky RT (1997).
+\newblock Data {Visualization}: {Preference} and {Use} of {Two}-{Dimensional}
+  and {Three}-{Dimensional} {Graphs}.
+\newblock \emph{Social Science Computer Review}, 15(3): 256--263.
+
+\end{thebibliography}
