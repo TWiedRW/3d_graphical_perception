@@ -35,7 +35,7 @@ preamble: >
   \usepackage{booktabs}
   \usepackage{lipsum}
 abstract: >
-  The use of 3D data visualizations has limitations when the third dimension does not convey any additional information to the viewer. Numerous studies advocate to avoid these types of graphs whenever possible, but these studies are almost entirely focused on the 2D projections of the 3D graphs. This paper describes the partial replication of a well-known paper in data visualization and its adaptation to focus on 3D printed bar charts. While current results from our study do not show differences between 2D and 3D graphs, we will use this research process to provide students of introductory statistics courses the opportunity to experience research from the views of a participant and a researcher while also collecting more data.
+  The use of 3D data visualizations has limitations when the third dimension does not convey any additional information to the viewer. Numerous studies advocate to avoid these types of graphs whenever possible, but these studies are almost entirely focused on the 2D projections of the 3D graphs. This paper describes the partial replication of a well-known paper in data visualization and its adaptation to focus on 3D printed bar charts. While current results from our study do not show differences between 2D and 3D graphs, we will use this study to provide students of a introductory statistics hands-on experience with the research process.
 keywords:
 # alphabetical; excluding anything in the title already; lower case
   - graphics
@@ -51,9 +51,18 @@ output: jds.rmd::pdf_article
 
 \citet{cleveland_graphical_1984} published a paper that sets up the foundation for how accurately people extract quantitative information using elementary perceptual tasks (EPTs). These EPTs include graphical elements such as position along a common scale, length, angle, and volume. While the two experiments in their paper highlighted the accuracy for position, length, and angle EPTs, they theorized that the accuracy of judgements using volume was worse than that for judgments using position along a common scale. 
 
-Further studies have shown that 3D graphs are less accurate at portraying numeric information that 2D graphs \citep{barfield_effects_1989,fisher_data_1997}. In certain contexts and conditions, there is some research suggesting that 3D graphs may better encode information \citep{brath_3d_2014}.
+**OLD: Further studies have shown that 3D graphs are less accurate at portraying numeric information that 2D graphs \citep{barfield_effects_1989,fisher_data_1997}. In certain contexts and conditions, there is some research suggesting that 3D graphs may better encode information \citep{brath_3d_2014}.**
+
+The use of 3D graphics have been explored in multiple studies. 
+\citet{fisher_data_1997} explored the preference of using either 2D or 3D graphs and found that subjects tended to use simpler 2D graphs when tasked with extracting information. \citet{barfield_effects_1989} compared 2D and 3D graphs presented on paper and on computers.
+Their results showed that the accuracy of subject answers depended on their skill level. 
+Novice subjects were more accurate with 2D paper graphs and experienced managers were more accurate with 3D computer graphs. 
+For both experience levels, participants were more confident in their answers using 2D graphs over other presentations of data. 
+There are instances where 2D graphs perform better than 3D graphs, but there are times where 3D graphs may better encode information.
+\citet{brath_3d_2014} highlights the intrinsic attributes of 3D graphs and its benefits when used appropriately with other 3D elements such as lighting and correct portrayal of data attributes.
 
 Here, we provide the process of replication and modernization of testing perceptual judgments to 2D graphs, 3D graphs projected in 2D environments, and 3D printed bar graphs.
+
 
 
 ## Selected Components from Cleveland and McGill

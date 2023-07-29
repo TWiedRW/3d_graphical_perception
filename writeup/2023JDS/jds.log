@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.8.24)  28 JUL 2023 01:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.8.24)  29 JUL 2023 11:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -543,31 +543,35 @@ LaTeX Font Warning: Font shape `T1/cmr/m/scsl' undefined
 Package natbib Warning: Citation `brath_3d_2014' on page 1 undefined on input l
 ine 92.
 
+
+Package natbib Warning: Citation `brath_3d_2014' on page 1 undefined on input l
+ine 100.
+
 [1{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ] [2] [3] [4] [5]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
-24.
+32.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Trying to load font information for T1+cmss on input line 2
-44.
+52.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 251.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 259.
 LaTeX Font Info:    Font shape `T1/cmtt/bx/it' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/it' tried instead on input line 251.
+(Font)              Font shape `T1/cmtt/m/it' tried instead on input line 259.
 [6]
 
 Package natbib Warning: Citation `KoenkerBassett1978' on page 7 undefined on in
-put line 318.
+put line 326.
 
 
 Package natbib Warning: Citation `Kotz2001' on page 7 undefined on input line 3
-20.
+28.
 
 (./jds.bbl) 
 AED: lastpage setting LastPage
@@ -582,11 +586,11 @@ Package rerunfilecheck Info: File `jds.out' has not changed.
 Here is how much of TeX's memory you used:
  12973 strings out of 478994
  186801 string characters out of 5858184
- 676024 words of memory out of 5000000
+ 677024 words of memory out of 5000000
  30164 multiletter control sequences out of 15000+600000
  431060 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 98i,12n,102p,887b,463s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 98i,12n,102p,850b,463s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<
 /usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
@@ -611,10 +615,10 @@ fonts/type1/public/cm-super/sfsl1000.pfb></usr/local/texlive/2021/texmf-dist/fo
 nts/type1/public/cm-super/sfss1095.pfb></usr/local/texlive/2021/texmf-dist/font
 s/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2021/texmf-dist/fonts/
 type1/public/cm-super/sftt1095.pfb>
-Output written on jds.pdf (7 pages, 344844 bytes).
+Output written on jds.pdf (7 pages, 351953 bytes).
 PDF statistics:
- 237 PDF objects out of 1000 (max. 8388607)
- 203 compressed objects within 3 object streams
+ 241 PDF objects out of 1000 (max. 8388607)
+ 207 compressed objects within 3 object streams
  45 named destinations out of 1000 (max. 500000)
  121 words of extra memory for PDF output out of 10000 (max. 10000000)
 
