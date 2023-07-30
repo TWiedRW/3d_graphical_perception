@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.8.24)  29 JUL 2023 11:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.8.24)  30 JUL 2023 01:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -539,56 +539,71 @@ LaTeX Font Warning: Font shape `T1/cmr/m/scsl' undefined
 (Font)              using `T1/cmr/m/sl' instead on input line 85.
 
 \saveboxdepth=\dimen187
-
-Package natbib Warning: Citation `brath_3d_2014' on page 1 undefined on input l
-ine 92.
-
-
-Package natbib Warning: Citation `brath_3d_2014' on page 1 undefined on input l
-ine 100.
-
 [1{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
-] [2] [3] [4] [5]
+]
+<plot-types.png, id=110, 934.473pt x 206.736pt>
+File: plot-types.png Graphic file (type png)
+<use plot-types.png>
+Package pdftex.def Info: plot-types.png  used on input line 145.
+(pdftex.def)             Requested size: 225.83232pt x 636.12103pt.
+[2]
+Overfull \vbox (0.14592pt too high) has occurred while \output is active []
+
+[3 <./plot-types.png>]
+<study-design.png, id=130, 1445.4pt x 813.0375pt>
+File: study-design.png Graphic file (type png)
+<use study-design.png>
+Package pdftex.def Info: study-design.png  used on input line 170.
+(pdftex.def)             Requested size: 1445.39648pt x 813.03552pt.
+
+Overfull \hbox (1011.87212pt too wide) in paragraph at lines 170--171
+[][] 
+ []
+
+[4]
+Overfull \vbox (177.06041pt too high) has occurred while \output is active []
+
+[5 <./study-design.png>] [6] [7] [8]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
-32.
+38.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Trying to load font information for T1+cmss on input line 2
-52.
+58.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 259.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 265.
 LaTeX Font Info:    Font shape `T1/cmtt/bx/it' in size <10.95> not available
-(Font)              Font shape `T1/cmtt/m/it' tried instead on input line 259.
-[6]
+(Font)              Font shape `T1/cmtt/m/it' tried instead on input line 265.
+[9]
 
-Package natbib Warning: Citation `KoenkerBassett1978' on page 7 undefined on in
-put line 326.
+Package natbib Warning: Citation `KoenkerBassett1978' on page 10 undefined on i
+nput line 332.
 
 
-Package natbib Warning: Citation `Kotz2001' on page 7 undefined on input line 3
-28.
+Package natbib Warning: Citation `Kotz2001' on page 10 undefined on input line 
+334.
 
 (./jds.bbl) 
 AED: lastpage setting LastPage
-[7]
+[10]
 
 Package natbib Warning: There were undefined citations.
 
 (./jds.aux)
 Package rerunfilecheck Info: File `jds.out' has not changed.
-(rerunfilecheck)             Checksum: 9070EF224BAFC54E803919BEABA6514C;2032.
+(rerunfilecheck)             Checksum: 49CC0A9E6302B96048AD4691A8DFF641;2141.
  ) 
 Here is how much of TeX's memory you used:
- 12973 strings out of 478994
- 186801 string characters out of 5858184
+ 12986 strings out of 478994
+ 187076 string characters out of 5858184
  677024 words of memory out of 5000000
- 30164 multiletter control sequences out of 15000+600000
- 431060 words of font info for 94 fonts, out of 8000000 for 9000
+ 30172 multiletter control sequences out of 15000+600000
+ 430383 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  98i,12n,102p,850b,463s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
@@ -606,19 +621,18 @@ e/2021/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/
 2021/texmf-dist/fonts/type1/public/cm-super/sfcc0900.pfb></usr/local/texlive/20
 21/texmf-dist/fonts/type1/public/cm-super/sfcc1095.pfb></usr/local/texlive/2021
 /texmf-dist/fonts/type1/public/cm-super/sfit1095.pfb></usr/local/texlive/2021/t
-exmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb></usr/local/texlive/2021/tex
-mf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/texmf
--dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf-d
-ist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2021/texmf-dis
-t/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2021/texmf-dist/
-fonts/type1/public/cm-super/sfsl1000.pfb></usr/local/texlive/2021/texmf-dist/fo
-nts/type1/public/cm-super/sfss1095.pfb></usr/local/texlive/2021/texmf-dist/font
-s/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2021/texmf-dist/fonts/
-type1/public/cm-super/sftt1095.pfb>
-Output written on jds.pdf (7 pages, 351953 bytes).
+exmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/tex
+mf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2021/texmf
+-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2021/texmf-d
+ist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2021/texmf-dis
+t/fonts/type1/public/cm-super/sfsl1000.pfb></usr/local/texlive/2021/texmf-dist/
+fonts/type1/public/cm-super/sfss1095.pfb></usr/local/texlive/2021/texmf-dist/fo
+nts/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2021/texmf-dist/font
+s/type1/public/cm-super/sftt1095.pfb>
+Output written on jds.pdf (10 pages, 3419153 bytes).
 PDF statistics:
- 241 PDF objects out of 1000 (max. 8388607)
- 207 compressed objects within 3 object streams
- 45 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 261 PDF objects out of 1000 (max. 8388607)
+ 221 compressed objects within 3 object streams
+ 49 named destinations out of 1000 (max. 500000)
+ 131 words of extra memory for PDF output out of 10000 (max. 10000000)
 

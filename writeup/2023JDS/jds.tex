@@ -68,14 +68,14 @@
 \author[1]{
   \inits{R.}
   \fnms{Susan}
-  \snm{VanderPlas}  \thanksref{2}}
+  \snm{VanderPlas}  \thanksref{2}  \ead{susan.vanderplas@unl.edu}}
 
-\thankstext[type=corresp,id=1]{Tyler Wiederich}\thankstext[id=2]{Susan VanderPlas}
+\thankstext[type=corresp,id=1]{Tyler Wiederich}\thankstext[type=corresp,id=2]{Susan VanderPlas}
 \address[1]{Department of Statistics, 
-  \institution{University of Nebraska-Lincoln}, \cny{Country A}}
+  \institution{University of Nebraska-Lincoln}, \cny{United States of America}}
 
 \begin{abstract}
-The use of 3D data visualizations has limitations when the third dimension does not convey any additional information to the viewer. Numerous studies advocate to avoid these types of graphs whenever possible, but these studies are almost entirely focused on the 2D projections of the 3D graphs. This paper describes the partial replication of a well-known paper in data visualization and its adaptation to focus on 3D printed bar charts. While current results from our study do not show differences between 2D and 3D graphs, we will use this study to provide students of a introductory statistics hands-on experience with the research process.
+The use of 3D data visualizations has limitations when the third dimension does not convey any additional information to the viewer. Numerous studies advocate to avoid these types of graphs whenever possible, but these studies are almost entirely focused on the 2D projections of the 3D graphs. This paper describes the partial replication of a well-known paper in data visualization and its adaptation to focus on 3D printed bar charts. While current results from our study do not show differences between 2D and 3D graphs, we will use this study to provide students of a introductory statistics course hands-on experience with the research process.
 \end{abstract}
 
 \begin{keywords}
@@ -111,7 +111,7 @@ Each chart had two bars used for comparison and participants were asked to deter
 The two grouped bar charts are for the perceptual element of position along a common scale, where one has zero distance between bars and the other has a fixed distance between bars.
 These grouped bar charts will be referenced as adjacent and separated graph types in this paper, respectively.
 
-Our study replicates the procedure for the comparisons of the two grouped bar charts, but with an objective of detecting differences between 2D graphs, 3D digital graphs, and 3D printed graphs.
+Our study replicates the procedure for the comparisons of the two grouped bar charts, but with an objective of detecting differences in accuracy between 2D graphs, 3D digital graphs, and 3D printed graphs.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
@@ -122,27 +122,27 @@ In this section, we will discuss the replication process and the design of our m
 \hypertarget{replicating-cleveland-and-mcgill}{%
 \subsection{Replicating Cleveland and McGill}\label{replicating-cleveland-and-mcgill}}
 
-The first step of replicating the position-length experiment was to determine the heights of the bars that are used for participants to use for comparisons.
+The first step of replicating the position-length experiment was to determine the heights of the bars that participants use for comparisons.
 These values for the bar heights are linear on a log scale and are given by
 
-\[s_i=10\cdot 10^{(i-1)/12}, i=1,...,10\]
+\[s_i=10\cdot 10^{(i-1)/12}, \qquad i=1,...,10\]
 
-The ratio of heights between the bars that were compared by Cleveland and McGill were 17.8, 26.1, 38.3, 46.4 (twice), 56.2, 68.1 (twice), and 82.5 (twice).
+\textbf{OLD: The ratio of heights between the bars that were compared by Cleveland and McGill were 17.8, 26.1, 38.3, 46.4 (twice), 56.2, 68.1 (twice), and 82.5 (twice).}
+\emph{NEW: Each graph presents two bars from the values given above where the participants are asked to judge the ratio of the smaller bar to the larger bar. The ratio of bars used by Cleveland and McGill were 17.8, 26.1, 38.3, 46.4 (twice), 56.2, 68.1 (twice), and 82.5 (twice).}
 The exact numeric comparisons were not disclosed, but the comparison values used in our study were subjected to the constraints of having the same ratio values and that no value was used more than twice.
 
-Each graph is presented so that there are ten bars.
-Within a graph, only two bars are marked for identification.
+Each graph is presented so that there are ten bars where only two of the bars are marked for identification.
 Cleveland and McGill did not specify the random process for the heights of the eight other bars, so we used a scaled Beta distribution with parameters that limit excessive noise around the bars used for comparisons.
 The aspect ratio of the plots is approximately 4:3.3, which was determined by measuring the pixels of a figure in Cleveland and McGill's paper.
 
-\hypertarget{some-name-about-graphs-goes-here}{%
-\subsection{SOME NAME ABOUT GRAPHS GOES HERE}\label{some-name-about-graphs-goes-here}}
+\hypertarget{constructing-graph-units-possible-name-change-here}{%
+\subsection{Constructing graph units (POSSIBLE NAME CHANGE HERE)}\label{constructing-graph-units-possible-name-change-here}}
 
 Due to limitations, creative adjustments were made from Cleveland and McGill's study to closely match both types of 3D charts (digital and 3D printed) to our 2D charts.
 The graphs share a common layout, where two groupings of five bars are identified by either ``A'' or ``B''.
 Circles and triangles are used to identify the bars for subjects to make comparisons.
 
-*** CREATE NEW VISUALIZATION WITH THE ACTUAL PLOTS HERE ***
+\includegraphics[width=3.125in,height=\textheight]{plot-types.png}
 
 The ggplot2 package was utilized to create the 2D bar charts.
 The scale axis was removed, leaving only the bars and a bar grouping identifier.
@@ -155,7 +155,9 @@ Graphs were printed with colored filament that correspond to a color coordinated
 The ratios were randomly assigned a unique color so that the color does not provide an indication as to what ratio is conveyed.
 
 The digital 3D charts are initially angled to mimic the default 3D bar charts of Microsoft Excel, but the interactivity of Shiny will allow users to adjust the viewing angle.
-For a homogeneous appearance of data elements, a solid light grey appearance was used for the digital 3D representation, and the identifiers were marked black indicators for comparison.
+For a homogeneous appearance of data elements, the digital 3D graphs are colored versions of the STL files used to create the 3D printed graphs.
+The colors of the 3D graphs were linked to the ratio of the comparison values so that it was easier to sort the graphs.
+Each ratio was randomly assigned a color and any information linking the color to ratio was hidden from participants.
 
 \hypertarget{study-design}{%
 \subsection{Study Design}\label{study-design}}
@@ -165,6 +167,8 @@ Participants were provided a single kit that has five of seven unique ratio comp
 There are 21 kits in total so that each combination of ratios is accounted for.
 Each graph is randomly assigned either an adjacent or separated comparison.
 
+\includegraphics{study-design.png}
+
 A Shiny application on a single computer is used to administer the graphs and questions to participants in a random order.
 Participants are provided a few sample graphs before receiving the graphs in their randomly assigned kit.
 Prior to answering questions, participants are instructed to make quick judgements for each graph and not to estimate the ratios using physical objects, such as their fingers or pencils.
@@ -173,7 +177,7 @@ For the 3D printed graphs, the Shiny application directs participants to a color
 Each graph has two accompanying questions asking which bar is smaller and what the ratio of the smaller bar is to the larger bar.
 Participants are presented radio buttons to identify the smaller bar and a slider to input a ratio judgement.
 
-The responses will be measured by log error of the distance between the true ratio and the participant ratio judgement.
+Participant responses are measured by log error of the distance between the true ratio and the participant ratio judgement.
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
@@ -199,7 +203,9 @@ The data was analyzed with the same log error that was used by Cleveland and McG
   \(\epsilon_{ijklm}\sim N(0,\sigma^2_\epsilon)\) is the random error
 \end{itemize}
 
-A total of 39 subjects participated in the study. No differences were detected for the true ratio of bars (p-value = .689), whether the bars were adjacent or separated (p-value = .220), or for the plot nested within the true ratio (p-value = .837).
+A total of 39 subjects participated in the study.
+All responses that incorrectly identified the smaller bar were removed.
+No differences were detected for the true ratio of bars (p-value = .689), whether the bars were adjacent or separated (p-value = .220), or for the plot nested within the true ratio (p-value = .837).
 
 \hypertarget{discussion-and-future-work}{%
 \section{Discussion and Future Work}\label{discussion-and-future-work}}

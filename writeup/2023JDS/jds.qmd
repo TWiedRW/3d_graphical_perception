@@ -8,11 +8,11 @@ format:
 
 ---
 
-## NOTES
+# NOTES
 
 - Need to figure out YAML to use correct template
 
-## Abstract
+# Abstract
 
 The use of 3D data visualizations has limitations when the third dimension does not convey any additional information to the viewer. 
 Numerous studies advocate to avoid these types of graphs whenever possible, but these studies are almost entirely focused on the 2D projections of the 3D graphs. 
@@ -22,7 +22,7 @@ While current results from our study do not show differences between 2D and 3D g
 
 
 
-## Introduction
+# Introduction
 
 In 1984, Cleveland and McGill (cite here) published a paper that sets up the foundation for how accurately people extract quantitative information using elementary perceptual tasks (EPTs). These EPTs include graphical elements such as position along a common scale, length, angle, and volume. While the two experiments in their paper highlighted the accuracy for position, length, and angle EPTs, they theorized that the accuracy of judgements using volume was worse than that for judgments using position along a common scale. 
 
@@ -31,7 +31,7 @@ Further studies have shown that 3D graphs are less accurate at portraying numeri
 Here, we provide the process of replication and modernization of testing perceptual judgments to 2D graphs, 3D graphs projected in 2D environments, and 3D printed bar graphs.
 
 
-### Selected Components from Cleveland and McGill
+## Selected Components from Cleveland and McGill
 
 Cleveland and McGill provided a theory and tested for the ordering of perceptual importance for the elements of length, position, and angle. 
 Their first experiment, referenced as the position-length experiment, used five types of bar charts.
@@ -45,13 +45,13 @@ Our study replicates the procedure for the comparisons of the two grouped bar ch
 
 
 
-## Methods
+# Methods
 
 Our study is designed to replicate part of the position-length experiment from Cleveland and McGill as closely as possible.
 In this section, we will discuss the replication process and the design of our modified version of this experiment.
 
 
-### Replicating Cleveland and McGill
+## Replicating Cleveland and McGill
 
 The first step of replicating the position-length experiment was to determine the heights of the bars that are used for participants to use for comparisons.
 These values for the bar heights are linear on a log scale and are given by
@@ -68,7 +68,7 @@ The aspect ratio of the plots is approximately 4:3.3, which was determined by me
 
 
 
-### NEW TITLE HERE
+## NEW TITLE HERE
 
 Due to limitations, creative adjustments were made from Cleveland and McGill’s study to closely match both types of 3D charts (digital and 3D printed) to our 2D charts.
 The graphs share a common layout, where two groupings of five bars are identified by either “A” or “B”.
@@ -90,7 +90,7 @@ The digital 3D charts are initially angled to mimic the default 3D bar charts of
 For a homogeneous appearance of data elements, a solid light grey appearance was used for the digital 3D representation, and the identifiers were marked black indicators for comparison.
 
 
-## Study Design
+# Study Design
 
 In the spirit of replicating Cleveland and McGill's study, members of our Statistics department and their spouses/partners were asked to participate in our study.
 Participants were provided a single kit that has five of seven unique ratio comparisons where each ratio is applied to all three chart types. 
@@ -108,7 +108,7 @@ Participants are presented radio buttons to identify the smaller bar and a slide
 The responses will be measured by log error of the distance between the true ratio and the participant ratio judgement.
 
 
-## Results
+# Results
 
 The data was analyzed with the same log error that was used by Cleveland and McGill. This is presented as the following linear mixed effects model. 
 
@@ -119,7 +119,7 @@ A total of 39 subjects participated in the study. No differences were detected f
 
 *** GRAPH SHOWING MIDMEANS HERE *** CLEAN THIS UP
 
-## Discussion and Future Work
+# Discussion and Future Work
 
 Previous work in 3D graphics would suggest that the errors for the 3D graphs would be larger than the errors for the 2D graphs. 
 The results from our study with 39 participants does not reach the same conclusion, but this could possibly be attributed to the small sample size or that the 3D graphs were not from designed like those found in Microsoft Excel. 
