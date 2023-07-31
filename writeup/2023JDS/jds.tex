@@ -18,7 +18,7 @@
 \usepackage{lipsum} 
 \PassOptionsToPackage{dvipsnames}{xcolor} 
 \newcommand{\svp}[1]{{\textcolor{ForestGreen}{#1}}} 
-\newcommand{\tw}[1]{{\textcolor{Violet}{#1}}}
+\newcommand{\tw}[1]{{\textcolor{Red}{#1}}}
 
 \begin{document}
 \begin{frontmatter}
@@ -57,7 +57,7 @@ The use of 3D data visualizations has limitations when the third dimension does 
 
 \citet{cleveland_graphical_1984} published a paper that sets up the foundation for how accurately people extract quantitative information using elementary perceptual tasks (EPTs).
 Elementary Perceptual Tasks, according to these experiments, include assessing graphical elements such as position along a common scale, length, angle, and volume, and estimating the corresponding numerical value of these representations.
-{\textcolor{Violet}{They found that judgements for comparisons using position along a common scale had smaller log errors than for judgments using length comparisons. The study relied entirely on numerical estimation, which may not always be relevant when extracting information from graphs.}}
+They found that {\textcolor{ForestGreen}{estimates of ratios between positions along a common scale had smaller log errors than estimates of ratios between lengths}}. The study relied entirely on estimation accuracy, which may not always be relevant when extracting information from graphs. For example, {\textcolor{ForestGreen}{estimation is less relevant when ordering values by size}}
 \citet{heerCrowdsourcingGraphicalPerception2010b} replicated some parts of \citet{cleveland_graphical_1984} in an online setting using Mechanical Turk, largely replicating the results of the original study while demonstrating the utility of the Mechanical Turk platform.
 
 Further studies have shown that 3D graphs are less accurate at portraying numeric information that 2D graphs \citep{barfield_effects_1989, fisher_data_1997}. In certain contexts and conditions, there is some research suggesting that 3D graphs may better encode information \citep{brath_3d_2014}.
@@ -115,16 +115,14 @@ The exact numeric comparisons were not disclosed, but the comparison values used
 
 Each graph is presented so that there are ten bars where only two of the bars are marked for identification.
 Cleveland and McGill did not specify the random process for the heights of the eight other bars, so we used a scaled Beta distribution with parameters that limit excessive noise around the bars used for comparisons.
-{\textcolor{Violet}{The code for data generation and the data for the plots we used can be found here:}} \url{https://github.com/TWiedRW/2023-JDS-3dcharts}.
-
-The aspect ratio of the plots is approximately 4:3.3, which was determined by measuring the pixels of a figure in Cleveland and McGill's paper.
+{\textcolor{ForestGreen}{Code to reproduce the data generation process, data underlying the plots used in this study, the rendered plots and STL files, anonymized user data, and analysis code can found be at}} \url{https://github.com/TWiedRW/2023-JDS-3dcharts}.
 
 \hypertarget{stimuli-construction}{%
 \subsection{Stimuli Construction}\label{stimuli-construction}}
 
 The graphs share a common layout across all formats, where two groupings of five bars are identified by ``A'' and ``B'', respectively, and circles and triangles are used to identify the bars participants should compare. Example graphs are shown in
 Figure \ref{fig:plotTypes}.
-{\textcolor{Violet}{There are some graphical elements that cannot be portrayed via 3D printing. For this reason, all graph types do not have axes, gridlines, or floating titles.}}
+There are some graphical elements that cannot be easily portrayed via 3D printing. For this reason, all graph types do not have axes, grid lines, or floating titles.
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{plot-types} \caption{Two dimensional, two-dimensional digital rendering, and 3D-printed charts used in this study.}\label{fig:plotTypes}
@@ -140,7 +138,8 @@ In addition, an ID code was engraved into the bottom of the platform to uniquely
 
 Digital renderings of the generated STL files were created using \citet{rgl} , which integrates into \citet{shiny} using the \citet{mozillafoundationWebGL2D3D2023} extension.
 Rendered 3D charts were initially angled corresponding to the default 3D bar charts present in Microsoft Excel, but WebGL's interactivity allows the user to rotate, scale, and otherwise interact with the chart to change the angle. 3D renderings were colored to correspond to the 3D printed chart filament color.
-{\textcolor{Violet}{The default lighting was removed and replaced with three lights located in fixed positions around rendered figure. The lights were positioned so that one was  behind the rendered figure (x: 910, y: -1000, z:1000), another in front of the figure (x: 780, y: 1030, z: 1000), and one light below the figure (x: 65, y: 15, z: -100).}}
+The default \texttt{rgl} lighting was replaced with three lights located in fixed positions around the rendered figure.
+The lights were positioned so that one was behind the rendered figure , another in front of the figure , and one light below the figure .\}
 3D charts were printed with colored filament corresponding to a specific ratio comparison; this allowed researchers to visually assess kits to ensure that they contained five unique ratios.
 Colors corresponding to each ratio were assigned randomly to ensure that chart color provided no useful information about the ratio value.
 As printed, the base of the chart was 13cm x 3cm x 1cm, with the highest bar rising 9.5cm above the chart base.
@@ -149,9 +148,9 @@ Raised letters and shapes were 2mm above the base or bar, respectively.
 \hypertarget{experiment-design}{%
 \subsection{Experiment Design}\label{experiment-design}}
 
-Participants were provided a kit with five 3d-printed charts, comprising five of the seven unique ratio comparisons; we then used the kit ID to ensure that participants saw computer-rendered charts with ratios corresponding to those in the kit of physical charts.
+Participants were provided a kit with five 3D-printed charts, comprising five of the seven unique ratio comparisons; we then used the kit ID to ensure that participants saw computer-rendered charts with ratios corresponding to those in the kit of physical charts.
 This ensured that the experimental design was balanced across chart type and randomized with respect to the type of comparison (adjacent or separated).
-We printed graphs sufficient to create 21 kits of five 3d-printed charts each.
+We printed 21 kits containing five 3d-printed charts each.
 
 \begin{figure}
 \includegraphics[width=6.4in]{study-design} \caption{A graphical representation of the study design. Only five of the seven ratios were used in each kit where the ratios are randomly selected. A total of 21 kits were created to include all combinations of the five ratios.}\label{fig:studyDesign}
@@ -160,8 +159,16 @@ We printed graphs sufficient to create 21 kits of five 3d-printed charts each.
 \hypertarget{participant-recruitment}{%
 \subsection{Participant Recruitment}\label{participant-recruitment}}
 
-One interesting facet of \citet{cleveland_graphical_1984} is the participant recruitment methodology: ``For each experiment the subjects fell into two categories: (1) a group of females, mostly housewives, without substantial technical experience; (2) a mixture of males and females with substantial technical training and working in technical jobs. Most of the subjects in the position-length experiment participated in the position-angle experiment; in all cases repeat subjects judged the position-angle graphs first.'' It would seem likely that the authors recruited individuals within their respective departments as well as their wives.
-In the spirit of replicating the study, members of the UNL Statistics department and their spouses,partners, and roommates were asked to participate in our study; this replicates the spirit of the original study without the implicit assumptions that graduate students and professors are (1) largely male, (2) are heterosexual, and (3) have unemployed partners.
+One interesting facet of \citet{cleveland_graphical_1984} is the participant recruitment methodology: ``For each experiment the subjects fell into two categories: (1) a group of females, mostly housewives, without substantial technical experience; (2) a mixture of males and females with substantial technical training and working in technical jobs.
+Most of the subjects in the position-length experiment participated in the position-angle experiment; in all cases repeat subjects judged the position-angle graphs first.''
+It would seem likely that the authors recruited individuals within their respective departments as well as their wives.
+In the spirit of replicating the study, members of the UNL Statistics department and their spouses, partners, and roommates were asked to participate in our study; this replicates the spirit of the original study without the implicit assumptions that graduate students and professors are (1) largely male, (2) heterosexual, and (3) have unemployed partners.
+
+A total of 49 participants completed the study; demographics are shown in \ref{fig:demographics}.
+
+\begin{figure}
+\includegraphics[width=0.85\linewidth]{demographic-plots} \caption{Demographic breakdown of participants in the study. All subjects were recruited from faculty and students in the statistics department at University of Nebraska-Lincoln.}\label{fig:demographics}
+\end{figure}
 
 \hypertarget{data-collection}{%
 \subsection{Data Collection}\label{data-collection}}
@@ -171,14 +178,14 @@ Participants provided informed consent through the applet, and then were asked f
 Then, participants were shown a ``practice'' page which allowed them to experiment with the data collection interface and practice estimating the ratio between the bars, as shown in Figure \ref{fig:practice}
 
 \begin{figure}
-\includegraphics[width=6.4in]{03-Practice-2} \caption{Screenshot of Shiny application practice screen. Three 2D bar charts with different ratios were provided, along with sliders indicating the correct proportion. Participants could practice with the sliders and preview the questions that would be asked as part of the task.}\label{fig:practice}
+\includegraphics[width=0.8\linewidth]{03-Practice-2} \caption{Screenshot of Shiny application practice screen. Three 2D bar charts with different ratios were provided, along with sliders indicating the correct proportion. Participants could practice with the sliders and preview the questions that would be asked as part of the task.}\label{fig:practice}
 \end{figure}
 
 Directly before the experiment started, participants were asked to provide the kit ID, along with directions indicating that if the instructions indicated that participants should use a 3D chart for a task, the participant should select a chart from the kit, enter the ID code of that chart from the bottom of the object, and complete the requested task.
 Participants were also instructed to make quick judgments for each graph and not to measure or estimate ratios using physical objects.
 
 \begin{figure}
-\includegraphics[width=6.4in]{05-Experiment-05-filled-in} \caption{Screenshot of the applet collecting data for a 3D rendered chart task. Participants were asked to select which bar (circle or triangle) was smaller, and then to estimate the ratio of the smaller bar to the larger bar.}\label{fig:experiment3dRender}
+\includegraphics[width=0.8\linewidth]{05-Experiment-05-filled-in} \caption{Screenshot of the applet collecting data for a 3D rendered chart task. Participants were asked to select which bar (circle or triangle) was smaller, and then to estimate the ratio of the smaller bar to the larger bar.}\label{fig:experiment3dRender}
 \end{figure}
 
 Each graph (or prompt, in the case of 3D printed charts) in the applet had two corresponding questions for participants to answer: first, participants were to identify the smaller bar by shape, and then, participants were to estimate the ratio of the size of the smaller bar to the size of the larger bar, as shown in Figure \ref{fig:experiment3dRender}.
@@ -186,15 +193,33 @@ Each graph (or prompt, in the case of 3D printed charts) in the applet had two c
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-{\textcolor{Violet}{Cleveland and McGill used }}
+All responses that incorrectly identified the smaller bar were removed from the study before analysis.
 
+\hypertarget{midmeans-of-log-absolute-errors}{%
+\subsection{Midmeans of Log Absolute Errors}\label{midmeans-of-log-absolute-errors}}
+
+Cleveland and McGill used
 \[\log_2(|\text{Judged Percent} - \text{True Percent}|+1/8)\]
+to measure accuracy of their participant's responses.
+In their study, log base 2 seemed appropriate due to ``average relative errors changing by factors less than 10.''
+They also added 1/8 to prevent distortions when the errors were close to zero.
+\citet{heerCrowdsourcingGraphicalPerception2010b} followed the same analysis method, replicating many (but not all) of the results presented in the original paper.
 
-{\textcolor{Violet}{to measure accuracy of their participant's responses. In their study, log base 2 seemed appropriate due to "average relative errors changing by factors less than 10." They also added 1/8 to prevent distortions when the errors were close to zero.}}
+Figure \ref{fig:midmeans-log-errors} shows the midmeans of the log absolute errors compared to the true ratio of the bars for each graph type and comparison type.
+The results tend to indicate that the log absolute errors increase for greater differences between the smaller and larger bars, but are consistent across the graph types.
 
-Our data was analyzed with the same log error that was used by Cleveland and McGill. {\textcolor{Violet}{We used a linear mixed model to account for variation attributed to the participants and to quantify effect sizes.}}
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{log-error-midmeans} \caption{Midmeans of log absolute errors for the true ratio of bars. Each overlaying line are computed with loess.}\label{fig:midmeans-log-errors}
+\end{figure}
 
-This is presented as the following model.
+{\textcolor{ForestGreen}{This is somewhat different than the results in}} \citet{cleveland_graphical_1984} and \citet{heerCrowdsourcingGraphicalPerception2010b}{\textcolor{ForestGreen}{; in both cases the midmean log absolute errors increased until about 55% of the true proportional difference and then decreased.
+It is possible that this difference is due to the fact that we did not require an explicit numerical estimate of the ratio but instead asked participants to indicate the ratio on a slider (which is essentially a number line). 
+This should reduce the cognitive load required to transition from spatial comparison to numerical comparison and then to compute the proportion, but may also have impacted the results.}}
+
+\hypertarget{linear-mixed-effects-model}{%
+\subsection{Linear Mixed Effects Model}\label{linear-mixed-effects-model}}
+
+{\textcolor{ForestGreen}{In addition to replicating the (primarily graphical) analysis of participant errors, we also took a more statistical approach and fitted a linear mixed effects model that accounts for participant variation as well as the effect of comparison type, graph type, and ratio. This allows us to test for significant differences (though given the midmean log absolute error plots, we do not expect to find any) as well as to quantify effect sizes for future studies. The formal statistical model is as follows:}}
 
 \[y_{ijklm}=\mu+S_i+R_j+G(R)_{(k)j}+T_l+\epsilon_{ijklm}\]
 
@@ -215,27 +240,33 @@ This is presented as the following model.
   \(\epsilon_{ijklm}\sim N(0,\sigma^2_\epsilon)\) is the random error
 \end{itemize}
 
-A total of 49 subjects participated in the study.
-
-\begin{figure}
-\includegraphics[width=0.85\linewidth]{demographic-plots} \caption{Demographic breakdown of participants in the study. All subjects were recruited from faculty and students in the statistics department at University of Nebraska-Lincoln.}\label{fig:demographics}
-\end{figure}
-
-All responses that incorrectly identified the smaller bar were removed.
 No differences were detected for the true ratio of bars (p-value = .689), whether the bars were adjacent or separated (p-value = .220), or for the plot nested within the true ratio (p-value = .837).
-
-{\textcolor{Violet}{Figure}} \ref{fig:midmeans-log-errors} {\textcolor{Violet}{shows the midmeans of the log absolute errors compared to the true ratio of the bars for each graph type and comparison type. The results tend to indicate that the log absolute errors increase for greater differences between the smaller and larger bars, but are consistent across the graph types.}}
-
-\begin{figure}
-\includegraphics[width=0.8\linewidth]{log-error-midmeans} \caption{Midmeans of log absolute errors for the true ratio of bars. Each overlaying line are computed with loess.}\label{fig:midmeans-log-errors}
-\end{figure}
+{\textcolor{ForestGreen}{While Heer \& Bostock provided a zip file contianing data and code for their paper, the link is no longer active, so it is not possible to fit a similar model to their data at this time.}}
 
 \hypertarget{discussion-and-future-work}{%
 \section{Discussion and Future Work}\label{discussion-and-future-work}}
 
-Previous work in 3D graphics would suggest that the errors for the 3D graphs would be larger than the errors for the 2D graphs. While we did not find any significant results indicating that 3D graphs are read less accurately, there are two possibilities that might account for this discrepancy. The first is that this study is underpowered - the effect size is small, and our 49 participants were insufficient; the original study included 51 participants, which is slightly larger. The second possibility is more interesting: we examined 3D charts using rendered 3D graphs and 3D printed charts; both of these options allow for participants to interact with the chart, rotating it, and generally perceiving it as one might perceive any other 3D, real, object. This is a far cry from the 3D perspective charts in the original study, which have a fixed angle and perspective and are thus not equivalent to our 3D charts. Future studies should include an additional fixed 3D perspective bar chart, which will at least enable us to examine whether modern 3D rendering environments allow for more accurate conclusions than fixed 3D perspectives.
+Previous work in 3D graphics would suggest that the errors for the 3D graphs would be larger than the errors for the 2D graphs.
+While we did not find any significant results indicating that 3D graphs are read less accurately, there are two possibilities that might account for this discrepancy.
 
-Future iterations of this study will include ``traditional'' 3D graphs created by Microsoft Excel and provide the option for online participants to remove the 3D printed graphs from the graphs in their kit. Stimuli, code, and data for this experiment are provided at \url{https://github.com/TWiedRW/2023-JDS-3dcharts} along with instructions for replicating the analysis.
+The first {\textcolor{ForestGreen}{potential explanation}} is that this study is underpowered - the effect size is small, and our 49 participants were insufficient; the original study included 51 participants, which is slightly larger. {\textcolor{ForestGreen}{However, we should note that the analysis methods used in}} \citet{heerCrowdsourcingGraphicalPerception2010b} and \citet{cleveland_graphical_1984} {\textcolor{ForestGreen}{do not include significance testing beyond the graphical display of confidence intervals.}}
+
+The second possibility is more interesting: we examined 3D charts using rendered 3D graphs and 3D printed charts; both of these options allow for participants to interact with the chart, rotating it, and generally perceiving it as one might perceive any other 3D, real, object.
+This is a far cry from the 3D perspective charts in the original study, which have a fixed angle and perspective and are thus not equivalent to our 3D charts.
+Future studies should include an additional fixed 3D perspective bar chart, which will at least enable us to examine whether modern 3D rendering environments allow for more accurate conclusions than fixed 3D perspectives. Future iterations of this study will include ``traditional'' 3D graphs created by Microsoft Excel (that is, graphs with a fixed 3D perspective rendered in 2D). This option will allow us to examine fixed perspective 3D plots compared to 3D renderings and 2D plots; it will also enable online data collection in addition to the in-person data collection used in this experiment.
+
+{\textcolor{ForestGreen}{Another interesting aspect of our study is that the method used to record participant estimates is different from the method used in the original study as well as Heer \& Bostock's replication study. 
+A method similar to our slider input, marking position on a line, was used in}} \citet{spenceVisualPsychophysicsSimple1990}, {\textcolor{ForestGreen}{but Spence asked participants to estimate}} \(A/(A+B)\), where we asked participants to estimate \(A/B\); {\textcolor{ForestGreen}{thus, our results are still not directly comparable to previous studies.
+We expect that the specific ratio estimated would also have an effect on observed participant errors.}}
+
+{\textcolor{ForestGreen}{The slider method for input of ratio estimates should be easier for participants, as it does not require explicit transformation to the numerical domain. 
+What is clear is that it would be beneficial to assess the impact of measurement method on participant errors directly, so that the results of these different studies might be explained and interpreted with regard both to the stimuli used and the measurement method employed in the experiment.
+Future iterations of this experiment will likely address this estimation difference; such modifications in experimental design are relatively straightforward in Shiny and will provide useful insight into the design of future experiments evaluating the perception of statistical graphics.}}
+
+\hypertarget{supplemental-material}{%
+\subsection{Supplemental Material}\label{supplemental-material}}
+
+Stimuli, code, and data for this experiment are provided at \url{https://github.com/TWiedRW/2023-JDS-3dcharts}.
 
 \bibliography{JDS2023.bib}
 \bibliographystyle{jds}
