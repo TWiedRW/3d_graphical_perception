@@ -192,6 +192,8 @@ Participants were also instructed to make quick judgments for each graph and not
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
+{\textcolor{ForestGreen}{XXX did C\&M use mixed effects models? If not, then you want to talk about the log2 part first, and then talk about why you used a mixed effects model. XXX}}
+
 The data was analyzed with the same log error that was used by Cleveland and McGill. This is presented as the following linear mixed effects model.
 
 \[y_{ijklm}=\mu+S_i+R_j+G(R)_{(k)j}+T_l+\epsilon_{ijklm}\]
@@ -213,18 +215,16 @@ The data was analyzed with the same log error that was used by Cleveland and McG
   \(\epsilon_{ijklm}\sim N(0,\sigma^2_\epsilon)\) is the random error
 \end{itemize}
 
-A total of 39 subjects participated in the study.
+A total of 39 subjects participated in the study. {\textcolor{ForestGreen}{XXX Need to add in demographics - how many of each group? Breakdown by sex, age? XXX}}
 All responses that incorrectly identified the smaller bar were removed.
 No differences were detected for the true ratio of bars (p-value = .689), whether the bars were adjacent or separated (p-value = .220), or for the plot nested within the true ratio (p-value = .837).
 
 \hypertarget{discussion-and-future-work}{%
 \section{Discussion and Future Work}\label{discussion-and-future-work}}
 
-Previous work in 3D graphics would suggest that the errors for the 3D graphs would be larger than the errors for the 2D graphs. The results from our study with 39 participants does not reach the same conclusion, but this could possibly be attributed to the small sample size or that the 3D graphs were not from designed like those found in Microsoft Excel. Incorporating a larger sample size and typical 3D graphs will help to replicate previous work and test if the projections of 3D graphs is the limiting factor in the ability to accurately draw comparisons.
+Previous work in 3D graphics would suggest that the errors for the 3D graphs would be larger than the errors for the 2D graphs. {\textcolor{ForestGreen}{While we did not find any significant results indicating that 3D graphs are read less accurately, there are two possibilities that might account for this discrepancy. The first is that this study is underpowered - the effect size is small, and our 39 participants were insufficient; the original study included 51 participants, which is slightly larger. The second possibility is more interesting: we examined 3D charts using rendered 3D graphs and 3D printed charts; both of these options allow for participants to interact with the chart, rotating it, and generally perceiving it as one might perceive any other 3D, real, object. This is a far cry from the 3D perspective charts in the original study, which have a fixed angle and perspective and are thus not equivalent to our 3D charts. Future studies should include an additional fixed 3D perspective bar chart, which will at least enable us to examine whether modern 3D rendering environments allow for more accurate conclusions than fixed 3D perspectives.}}
 
-The goal of this study was to verify that previous research into graphics is upheld under a new set of circumstances. It started with a question, followed by research into prior work, and then by designing and conducting a study. This general framework of research is useful to all fields of study and is taught in most introductory statistics courses. The next step of this study is to collect more data while simultaneously providing students the opportunity to learn about the research process from both the perspectives of an experiment participant and the views of the researchers. At University of Nebraska-Lincoln, students taking introductory statistics will have the opportunity to participate in the experiment while also completing pre/post experiment surveys and reflections on a two-page abstract and a presentation of results.
-
-Future iterations of this study will include ``traditional'' 3D graphs created by Microsoft Excel and provide the option for online participants to remove the 3D printed graphs from the graphs in their kit. At the final conclusion of the study, we will release a repository to encourage replication and sharing of experimental results.
+Future iterations of this study will include ``traditional'' 3D graphs created by Microsoft Excel and provide the option for online participants to remove the 3D printed graphs from the graphs in their kit. {\textcolor{ForestGreen}{Stimuli, code, and data for this experiment are provided at ... new repository set up to correspond to this paper ... along with instructions for replicating the analysis.}}
 
 \newpage
 
