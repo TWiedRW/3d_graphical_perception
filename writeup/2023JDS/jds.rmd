@@ -25,7 +25,12 @@ classoption:
 - inpress
 - dvipsnames
 preamble: |
-  \usepackage{amsfonts,amsmath,amssymb,amsthm} \usepackage{booktabs} \usepackage{lipsum} \PassOptionsToPackage{dvipsnames}{xcolor} \newcommand{\svp}[1]{{\textcolor{ForestGreen}{#1}}} \newcommand{\tw}[1]{{\textcolor{Violet}{#1}}}
+  \usepackage{amsfonts,amsmath,amssymb,amsthm} 
+  \usepackage{booktabs} 
+  \usepackage{lipsum} 
+  \PassOptionsToPackage{dvipsnames}{xcolor} 
+  \newcommand{\svp}[1]{{\textcolor{ForestGreen}{#1}}} 
+  \newcommand{\tw}[1]{{\textcolor{Violet}{#1}}}
 abstract: "The use of 3D data visualizations has limitations when the third dimension
   does not convey any additional information to the viewer. Numerous studies advocate
   to avoid these types of graphs whenever possible, but these studies are almost entirely
