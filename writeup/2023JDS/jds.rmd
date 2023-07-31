@@ -1,67 +1,85 @@
 ---
-title: Evaluating Perceptual Judgements on 3D Printed Bar Charts
-short-title: Perceptual Judgements on 3D Printed Bar Charts # running title
+title: "Evaluating Perceptual Judgements on 3D Printed Bar Charts"
 author:
-  - first: Tyler                 # first name
-    first-init: D.              # initial of first name
-    last: Wiederich                  # last name
-    marker: 1               # identifier for the affiliation
-    footnote-id: 1              # optional identifier for the footnote
-    email: twiederich2@huskers.unl.edu          # optional email address
-  - first: Susan
-    first-init: R.
-    last: VanderPlas
-    marker: 1
-    footnote-id: 2
-    email: susan.vanderplas@unl.edu
-
-footnote:
-  - content: Tyler Wiederich
-    type: corresp               # set type for the corresponding author
-    id: 1
-  - content: Susan VanderPlas
-    type: corresp
-    id: 2
+- first: Tyler
+  first-init: T.
+  last: Wiederich
+  marker: 1
+  footnote-id: 1
+  email: twiederich2@huskers.unl.edu
+- first: Susan
+  first-init: S.
+  last: VanderPlas
+  marker: 1
+  email: susan.vanderplas@unl.edu
+short-title: Perceptual Judgements on 3D Printed Bar Charts
+output:
+  jds.rmd::pdf_article: default
 affiliation:
-  - institution: University of Nebraska-Lincoln
-    prefix: Department of Statistics        # optional
-    country: United States of America
-    marker: 1
-
+- institution: "University of Nebraska-Lincoln"
+  prefix: Department of Statistics
+  country: United States of America
+  marker: 1
 classoption:
-  - letterpaper    # or a4paper, etc.
-  - inpress        # or review
-# - linenumber     # add line number for submission
-preamble: >
-  \usepackage{amsfonts,amsmath,amssymb,amsthm}
-  \usepackage{booktabs}
-  \usepackage{lipsum}
-abstract: >
-  The use of 3D data visualizations has limitations when the third dimension does not convey any additional information to the viewer. Numerous studies advocate to avoid these types of graphs whenever possible, but these studies are almost entirely focused on the 2D projections of the 3D graphs. This paper describes the partial replication of a well-known paper in data visualization and its adaptation to focus on 3D printed bar charts. While current results from our study do not show differences between 2D and 3D graphs, we will use this study to provide students of a introductory statistics course hands-on experience with the research process.
+- letterpaper
+- inpress
+- dvipsnames
+preamble: |
+  \usepackage{amsfonts,amsmath,amssymb,amsthm} \usepackage{booktabs} \usepackage{lipsum} \PassOptionsToPackage{dvipsnames}{xcolor} \newcommand{\svp}[1]{{\textcolor{ForestGreen}{#1}}} \newcommand{\tw}[1]{{\textcolor{Violet}{#1}}}
+abstract: "The use of 3D data visualizations has limitations when the third dimension
+  does not convey any additional information to the viewer. Numerous studies advocate
+  to avoid these types of graphs whenever possible, but these studies are almost entirely
+  focused on the 2D projections of the 3D graphs. This paper describes the partial
+  replication of a well-known paper in data visualization and its adaptation to focus
+  on 3D printed bar charts. While current results from our study do not show differences
+  between 2D and 3D graphs, we will use this study to provide students of a introductory
+  statistics course hands-on experience with the research process.\n"
 keywords:
-# alphabetical; excluding anything in the title already; lower case
-  - graphics
-  - 3D bar charts
-  - 3D printing
-
+- graphics
+- 3D bar charts
+- 3D printing
 bibliography: JDS2023.bib
-output: jds.rmd::pdf_article
+footnote:
+- content: Tyler Wiederich
+  type: corresp
+  id: 1
 ---
 
+```{r, include = F}
+knitr::opts_chunk$set(echo = F, dpi = 300)
+```
 
 # Introduction
 
-\citet{cleveland_graphical_1984} published a paper that sets up the foundation for how accurately people extract quantitative information using elementary perceptual tasks (EPTs). These EPTs include graphical elements such as position along a common scale, length, angle, and volume. While the two experiments in their paper highlighted the accuracy for position, length, and angle EPTs, they theorized that the accuracy of judgements using volume was worse than that for judgments using position along a common scale. 
+## Elementary Graphical Tasks
+@cleveland_graphical_1984 published a paper that sets up the foundation for how accurately people extract quantitative information using elementary perceptual tasks (EPTs). 
+\svp{Elementary Perceptual Tasks, according to these experiments,} include \svp{assessing} graphical elements such as position along a common scale, length, angle, and volume\svp{, and estimating the corresponding numerical value of these representations}.
+\svp{XXX describe the overall results here XXX}
+\svp{XXX Discuss that these results are primarily concerned with accuracy of numerical estimation, which is not always relevant. XXX}
+@heerCrowdsourcingGraphicalPerception2010b \svp{replicated some parts of} @cleveland_graphical_1984 \svp{in an online setting using Mechanical Turk, largely replicating the results of the original study while demonstrating the utility of the Mechanical Turk platform.} 
+<!-- While the two experiments in their paper highlighted the accuracy for position, length, and angle EPTs, they theorized that the accuracy of judgements using volume was worse than that for judgments using position along a common scale.  -->
 
-**OLD: Further studies have shown that 3D graphs are less accurate at portraying numeric information that 2D graphs \citep{barfield_effects_1989,fisher_data_1997}. In certain contexts and conditions, there is some research suggesting that 3D graphs may better encode information \citep{brath_3d_2014}.**
+**OLD: Further studies have shown that 3D graphs are less accurate at portraying numeric information that 2D graphs [@barfield_effects_1989;@fisher_data_1997]. In certain contexts and conditions, there is some research suggesting that 3D graphs may better encode information \citep{brath_3d_2014}.**
+
+## 3D Graphical Perception
+\svp{Chart perception is often affected by the visual system's implicit assumption that visual stimuli are three-dimensional; after all, most of the visual input we process does come from a three-dimensional world, but charts are artificial and largely exist in two dimensions.}
+\svp{This occasionally causes problems: the line-width illusion, for instance, has been attributed to implicit 3D perception of two-dimensional stimuli and can affect perception of error bands, candlestick plots, and Sankey diagrams} [@vanderplasSignsSineIllusion2015;@daySineIllusion1991;@hofmannCommonAnglePlots2013].
+
 
 The use of 3D graphics have been explored in multiple studies. 
-\citet{fisher_data_1997} explored the preference of using either 2D or 3D graphs and found that subjects tended to use simpler 2D graphs when tasked with extracting information. \citet{barfield_effects_1989} compared 2D and 3D graphs presented on paper and on computers.
+@fisher_data_1997 explored the preference of using either 2D or 3D graphs and found that subjects tended to use simpler 2D graphs when tasked with extracting information. @barfield_effects_1989 compared 2D and 3D graphs presented on paper and on computers.
 Their results showed that the accuracy of subject answers depended on their skill level. 
 Novice subjects were more accurate with 2D paper graphs and experienced managers were more accurate with 3D computer graphs. 
 For both experience levels, participants were more confident in their answers using 2D graphs over other presentations of data. 
 There are instances where 2D graphs perform better than 3D graphs, but there are times where 3D graphs may better encode information.
-\citet{brath_3d_2014} highlights the intrinsic attributes of 3D graphs and its benefits when used appropriately with other 3D elements such as lighting and correct portrayal of data attributes.
+@brath_3d_2014 highlights the intrinsic attributes of 3D graphs and its benefits when used appropriately with other 3D elements such as lighting and correct portrayal of data attributes.
+
+\svp{There is thus good reason to be wary of the use of three dimensions where only two are necessary to convey data. 
+However, the situation is different now than it was in 1984 when Cleveland \& McGill published their seminal work; it has even changed since 2014. 
+Digital graphics has developed quickly, along with the hardware necessary to support these software developments. 
+As a result, we have much more natural rendering of 3D objects virtually, and we can also print graphics in three dimensions, moving the artificial charts into a more natural setting.
+As a result, it is reasonable to reconsider the use of 3D charts, not only because of technological developments, but because these charts provide the opportunity to make visual graphics accessible to those with limited or absent vision.}
+
 
 Here, we provide the process of replication and modernization of testing perceptual judgments to 2D graphs, 3D graphs projected in 2D environments, and 3D printed bar graphs.
 
@@ -82,7 +100,7 @@ Our study replicates the procedure for the comparisons of the two grouped bar ch
 # Methods
 
 
-Our study is designed to replicate part of the position-length experiment from Cleveland and McGill as closely as possible.
+Our study is designed to replicate \svp{and expand upon} the position-length experiment from Cleveland and McGill as closely as possible.
 In this section, we will discuss the replication process and the design of our modified version of this experiment.
 
 ## Replicating Cleveland and McGill
@@ -97,50 +115,75 @@ These values for the bar heights are linear on a log scale and are given by
 The exact numeric comparisons were not disclosed, but the comparison values used in our study were subjected to the constraints of having the same ratio values and that no value was used more than twice.
 
 Each graph is presented so that there are ten bars where only two of the bars are marked for identification.
-Cleveland and McGill did not specify the random process for the heights of the eight other bars, so we used a scaled Beta distribution with parameters that limit excessive noise around the bars used for comparisons.
+Cleveland and McGill did not specify the random process for the heights of the eight other bars, so we used a scaled Beta distribution with parameters that limit excessive noise around the bars used for comparisons. \svp{XXX Indicate where code for this is available, as well as the data for each plot used in the study XXX}
 The aspect ratio of the plots is approximately 4:3.3, which was determined by measuring the pixels of a figure in Cleveland and McGill’s paper.
 
-## Constructing graph units (POSSIBLE NAME CHANGE HERE)
+## Stimuli Construction
 
+\svp{XXX what limitations? What adjustments did we make? XXX}
 Due to limitations, creative adjustments were made from Cleveland and McGill’s study to closely match both types of 3D charts (digital and 3D printed) to our 2D charts.
-The graphs share a common layout, where two groupings of five bars are identified by either “A” or “B”.
-Circles and triangles are used to identify the bars for subjects to make comparisons.
+The graphs share a common layout \svp{across all formats}, where two groupings of five bars are identified by \svp{"A" and "B", respectively, and circles and triangles are used to identify the bars participants should compare. Example graphs are shown in} 
+Figure \@ref(fig:plotTypes).
 
-![](plot-types.png){height=auto; width=300px}
+```{r plotTypes, fig.cap = "Two dimensional, two-dimensional digital rendering, and 3D-printed charts used in this study.", out.width = "100%"}
+knitr::include_graphics("plot-types.png", dpi = 300)
+```
 
-The ggplot2 package was utilized to create the 2D bar charts. 
+The ggplot2 [@ggplot2] package was utilized to create the 2D bar charts. 
 The scale axis was removed, leaving only the bars and a bar grouping identifier.
 The bars used for comparisons had the identifying mark at a height of 5 out of 100 for the 2D plots, and the 3D plots had the identifying marks on top of the bars.
 
-For the 3D printed charts, the identifying marks were raised by a marginal amount so that they can be immediately identified after printing. 
-Other non-data related elements were also raised for the same reason.
-A negative-space engraving on the bottom of the 3D printed graph uniquely identifies each graph.
-Graphs were printed with colored filament that correspond to a color coordinated ratio comparison.
-The ratios were randomly assigned a unique color so that the color does not provide an indication as to what ratio is conveyed.
+\svp{The 3D renderings and 3D printed charts were both created using} OpenSCAD [@kintelOpenSCADDocumentation2023], \svp{which creates STL files from markup describing the object's geometric composition. 
+Charts were composed of a platform, raised labels for the A and B groups of bars, circle and triangle markers indicating the bars of interest, and the bars themselves; values for the bar heights were inserted into the markup using R} [@R].
+\svp{In addition, an ID code was engraved into the bottom of the platform to uniquely identify each object; this allows the researchers to ensure that the 3D printed charts are correctly allocated to stimulus sets.}
 
-The digital 3D charts are initially angled to mimic the default 3D bar charts of Microsoft Excel, but the interactivity of Shiny will allow users to adjust the viewing angle. 
-For a homogeneous appearance of data elements, the digital 3D graphs are colored versions of the STL files used to create the 3D printed graphs.
-The colors of the 3D graphs were linked to the ratio of the comparison values so that it was easier to sort the graphs.
-Each ratio was randomly assigned a color and any information linking the color to ratio was hidden from participants.
+\svp{Digital renderings of the generated STL files were created using} @rgl \svp{, which integrates into} @shiny \svp{using the} @mozillafoundationWebGL2D3D2023 \svp{extension}.
+\svp{Rendered 3D charts were initially angled corresponding to the default 3D bar charts present in Microsoft Excel, but WebGL's interactivity allows the user to rotate, scale, and otherwise interact with the chart to change the angle. 3D renderings were colored to correspond to the 3D printed chart filament color.}
+\svp{XXX discuss the lighting and rendering settings you used.}
 
-## Study Design
+3D charts were printed with colored filament \svp{corresponding to a specific} ratio comparison\svp{; this allowed researchers to visually assess kits to ensure that they contained five unique ratios}.
+\svp{Colors corresponding to each ratio were assigned randomly to ensure that chart color provided no useful information about the ratio value.
+As printed, the base of the chart was 13cm x 3cm x 1cm, with the highest bar rising 9.5cm above the chart base.
+Raised letters and shapes were 2mm above the base or bar, respectively.}
 
-In the spirit of replicating Cleveland and McGill's study, members of our Statistics department and their spouses/partners were asked to participate in our study.
-Participants were provided a single kit that has five of seven unique ratio comparisons where each ratio is applied to all three chart types. 
-There are 21 kits in total so that each combination of ratios is accounted for.
-Each graph is randomly assigned either an adjacent or separated comparison.
+## Experiment Design
 
-![](study-design.png)
+Participants were provided a kit with five \svp{3d-printed charts, comprising five} of the seven unique ratio comparisons\svp{; we then used the kit ID to ensure that participants saw computer-rendered charts with ratios corresponding to those in the kit of physical charts}.
+\svp{This ensured that the experimental design was balanced across chart type and randomized with respect to the type of comparison (adjacent or separated).}
+\svp{We printed graphs sufficient to create 21 kits of five 3d-printed charts each.}
+<!-- There are 21 kits in total so that each combination of ratios is accounted for. -->
+<!-- Each graph is randomly assigned either an adjacent or separated comparison. -->
 
-A Shiny application on a single computer is used to administer the graphs and questions to participants in a random order. 
-Participants are provided a few sample graphs before receiving the graphs in their randomly assigned kit.
-Prior to answering questions, participants are instructed to make quick judgements for each graph and not to estimate the ratios using physical objects, such as their fingers or pencils.
-For the 3D printed graphs, the Shiny application directs participants to a colored graph in a bag and to verify the identifier on the bottom of the graph. 
+```{r studyDesign, fig.cap = "A graphical representation of the study design. XXX is this accurate? Didn't we decide to do something like ensuring that either the smallest or largest ratio was included? You should show all 7 ratios, and indicate that we selected 5, as well. XXX"}
+knitr::include_graphics("study-design.png")
+```
 
-Each graph has two accompanying questions asking which bar is smaller and what the ratio of the smaller bar is to the larger bar. 
-Participants are presented radio buttons to identify the smaller bar and a slider to input a ratio judgement.
 
-Participant responses are measured by log error of the distance between the true ratio and the participant ratio judgement.
+## Participant Recruitment
+
+\svp{One interesting facet of} 
+@cleveland_graphical_1984 
+\svp{is the participant recruitment methodology: "For each experiment the subjects fell into two categories: (1) a group of females, mostly housewives, without substantial technical experience; (2) a mixture of males and females with substantial technical training and working in technical jobs. Most of the subjects in the position-length experiment participated in the positionangle experiment; in all cases repeat subjects judged the position-angle graphs first." It would seem likely that the authors recruited individuals within their respective departments as well as their wives.}
+In the spirit of replicating \svp{the} study, members of \svp{the UNL} Statistics department and their \svp{spouses,partners, and roommates} were asked to participate in our study\svp{; this replicates the spirit of the original study without the implicit assumptions that graduate students and professors are (1) largely male, (2) are heterosexual, and (3) have unemployed partners}.
+
+## Data Collection
+
+\svp{A Shiny applet was used for data collection, along with the provided kit of 3D printed charts.
+Participants provided informed consent through the applet, and then were asked for demographic information (age, gender, education level). 
+Then, participants were shown a "practice" page which allowed them to experiment with the data collection interface and practice estimating the ratio between the bars, as shown in} Figure \@ref(fig:practice)
+
+```{r practice, fig.cap = "Screenshot of Shiny application practice screen. Three 2D bar charts with different ratios were provided, along with sliders indicating the correct proportion. Participants could practice with the sliders and preview the questions that would be asked as part of the task."}
+knitr::include_graphics("03-Practice-2.png")
+```
+
+\svp{Directly before the experiment started, participants were asked to provide the kit ID, along with directions indicating that if the instructions indicated that participants should use a 3D chart for a task, the participant should select a chart from the kit, enter the ID code of that chart from the bottom of the object, and complete the requested task.
+Participants were also instructed to make quick judgments for each graph and not to measure or estimate ratios using physical objects.}
+
+```{r experiment3dRender, fig.cap = "Screenshot of the applet collecting data for a 3D rendered chart task. Participants were asked to select which bar (circle or triangle) was smaller, and then to estimate the ratio of the smaller bar to the larger bar."}
+knitr::include_graphics("05-Experiment-05-filled-in.png")
+```
+
+\svp{Each graph (or prompt, in the case of 3D printed charts) in the applet had two corresponding questions for participants to answer: first, participants were to identify the smaller bar by shape, and then, participants were to estimate the ratio of the size of the smaller bar to the size of the larger bar, as shown in} Figure \@ref(fig:experiment3dRender). 
 
 
 # Results
@@ -195,87 +238,3 @@ Future iterations of this study will include “traditional” 3D graphs created
 - Work on lit review
 
 - Everything on next pages are kept only for reference. Remove these when draft is ready
-
-
-
-
-\newpage
-
-
-# Tables
-
-We recommend \LaTeX\ package \texttt{booktabs} for professional
-looking tables. Its toprule and bottomrule are thicker than midrule.
-
-A professional table contains no vertical lines.
-
-
-# Figures
-
-Vector graphics do not lose clarity when being scaled. Make your
-figure in pdf format when you first generate it and keep in mind its
-sizes in the article to avoid over-scaling. Do not simply convert a
-jpeg or png image to a pdf.
-
-
-# Code
-
-The document class \texttt{jds} provides several commands to decorate
-\begin{itemize}
-\item inline code, such as \code{print("Hello world!")};
-\item programming language, such as \proglang{R}, \proglang{Python}, and
-  \proglang{C++};
-\item software package, such as \pkg{stats}, \pkg{utils}.
-\end{itemize}
-
-```{r example-code, comment = ""}
-## Dobson (1990) Page 93: Randomized Controlled Trial :
-counts <- c(18, 17, 15, 20, 10, 20, 25, 13, 12)
-outcome <- gl(3, 1, 9)
-treatment <- gl(3, 3)
-glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
-summary(glm.D93)
-```
-
-# Guide for Authors
-
-The following requirements must be followed as closely as possible. A
-technically acceptable manuscript that fails to follow these requirements may be
-returned for retyping, leading to delay in publication.We only accept
-submissions in PDF format. The Latex file must be provided after the manuscript
-is accepted.
-
-## Submission of Papers
-
-Submission of a manuscript must be the original work of the author(s) and have
-not been published elsewhere or under consideration for another publication, or
-a substantially similar form in any language.
-
-Authors are encouraged to recommend three to five individuals (including their
-research fields, e-mail, phone numbers and addresses) who are qualified to serve
-as referees for their paper.
-
-
-
-# Citing References
-
-The citations are in the author-year format with the
-\texttt{jds} bibstyle.
-
-<!-- A bibfile contains all the citations in -->
-<!-- bibtex format is prepared (see \texttt{JDSbib.bib}). Some characters -->
-<!-- in the title of the references needs to be protected so that the style -->
-<!-- file does not alter it. For example, in the bibtex entry for -->
-<!-- \citet{Pozd:etal:2017}, the ``B'' in ``Brownian'' and the ``E'' in -->
-<!-- ``estimation''  following the colon are protected. -->
-<!-- A book reference \citep[e;g.,][]{Kotz2001} should have an address field. -->
-
-
-Citations can be in either text or parenthesis format style with
-\texttt{$\backslash$citet} or \texttt{$\backslash$citep},
-respectively. For example, \citet{KoenkerBassett1978} is a seminal
-work on quantile regression; The Laplace distribution has applications
-in many fields \citep{Kotz2001}.
-
-
-
