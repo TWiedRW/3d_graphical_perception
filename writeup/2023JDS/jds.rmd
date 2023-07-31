@@ -226,15 +226,3 @@ Future iterations of this study will include “traditional” 3D graphs created
 
 
 
-
-
-
-\newpage
-
-# NOTES
-
-- Need to update image
-
-- Work on lit review
-
-- Everything on next pages are kept only for reference. Remove these when draft is ready
