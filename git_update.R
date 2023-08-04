@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 # Sorry this isn't elegant but necessary for the cron tab to work
-setwd("~/Projects/Graphics/2022-Tyler-3D_Graphical_Perception/")
+setwd("~/Projects/Students/Wiederich-Tyler/2022-Tyler-3D_Graphical_Perception/")
 
 # Set up authentication via ssh
 cred <- git2r::cred_ssh_key("~/.ssh/id_rsa.pub", "~/.ssh/id_rsa")
