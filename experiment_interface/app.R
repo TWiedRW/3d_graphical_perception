@@ -7,9 +7,10 @@ library(rayshader)
 library(shinyjs)
 library(markdown)
 library(reactlog)
+# library(shinylogs)
 
 #Current database to work with
-currentDB <- "218pilot2023b-2.db"
+currentDB <- "218pilot2023b-3.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -60,7 +61,7 @@ dbTables <- dbListTables(con)
 #     userAppStartTime = NA,
 #     consent = NA,
 #     nickname = NA,
-#     age = NA, 
+#     age = NA,
 #     gender = NA,
 #     education = NA
 #   ))
@@ -122,23 +123,23 @@ consent_form <- {
 }
 
 demographicsUI <- {fluidPage(
-  tags$head(
-    # tags$link(rel = "stylesheet", type = "text/css", href = "app.css"),
-    HTML("<script>
-  // Initialize the agent at application startup.
-  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3')
-    .then(FingerprintJS => FingerprintJS.load())
-  // Get the visitor identifier when you need it.
-  fpPromise
-    .then(fp => fp.get())
-    .then(result => {
-      // This is the visitor identifier:
-      const visitorId = result.visitorId
-      console.log(visitorId)
-      Shiny.setInputValue('fingerprint', visitorId);
-    })
-    .catch(error => console.error(error))</script>")
-  ),
+  # tags$head(
+  #   # tags$link(rel = "stylesheet", type = "text/css", href = "app.css"),
+  #   HTML("<script>
+  # // Initialize the agent at application startup.
+  # const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3')
+  #   .then(FingerprintJS => FingerprintJS.load())
+  # // Get the visitor identifier when you need it.
+  # fpPromise
+  #   .then(fp => fp.get())
+  #   .then(result => {
+  #     // This is the visitor identifier:
+  #     const visitorId = result.visitorId
+  #     console.log(visitorId)
+  #     Shiny.setInputValue('fingerprint', visitorId);
+  #   })
+  #   .catch(error => console.error(error))</script>")
+  # ),
   fluidRow(
     column(
       width = 8, offset = 2,
@@ -356,6 +357,7 @@ exitUI <- {fluidPage(
 
 ui <- navbarPage(
   'Perceptual Judgments Experiment',
+  # use_tracking(),
   # Common header for all panels
   header = tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
@@ -378,6 +380,9 @@ server <- function(input, output, session) {
   shinyjs::disable(selector = '.navbar-nav a[data-value="Instructions"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Experiment"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Finishing Up"]')
+  
+  
+  # track_usage(storage_mode = store_json(path = "logs/"))
   
   #See if this prevents unnecessary plots from appearing
   try(close3d())
@@ -417,6 +422,8 @@ server <- function(input, output, session) {
     input$toPracticeInstructions, {
       updateNavbarPage(inputId = 'nav', selected = 'Practice')
       
+      cat("Move to practice page")
+      
       # Only write to DB if consent
       if (input$consent == "TRUE") {
         con <- dbConnect(SQLite(), currentDB )
@@ -429,7 +436,7 @@ server <- function(input, output, session) {
           stat218 = input$stat218student,
           userAppStartTime = isolate(timing$startExp),
           consent = input$consent,
-          nickname = ifelse(is.null(input$fingerprint), "", input$fingerprint),
+          nickname = "Unknown",
           participantUnique = input$participantUnique,
           
           age = input$age,
@@ -704,7 +711,7 @@ server <- function(input, output, session) {
                     'User matrix not valid'))
       userMatrixSave <- trial_data$info %>% 
         #select(-trial) %>%
-        mutate(nickname = input$fingerprint,
+        mutate(nickname = "Unknown", 
                onlineOnly = input$onlineOnly,
                participantUnique = input$participantUnique,
                click = trial_data$plot3dClicks,
@@ -748,7 +755,7 @@ server <- function(input, output, session) {
       #Save data
       results <- trial_data$info %>% 
         select(-trial) %>%
-        mutate(nickname = input$fingerprint,
+        mutate(nickname = "Unknown",
                participantUnique = input$participantUnique,
                appStartTime = timing$startExp,
                plotStartTime = trial_data$startTime,
