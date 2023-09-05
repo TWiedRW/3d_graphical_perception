@@ -1,4 +1,4 @@
-library(shiny)
+library(shiny) #test
 library(shinyWidgets)
 library(rgl)
 library(RSQLite)
@@ -10,7 +10,7 @@ library(reactlog)
 # library(shinylogs)
 
 #Current database to work with
-currentDB <- "218pilot2023b-3.db"
+currentDB <- "TESTING2.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -48,47 +48,13 @@ set85id_colors <- tibble(set85id = c(1, 2, 3, 4, 5, 6, 9),
 
 stl_files <- list.files('stl_files', pattern = '.stl$')
 
+#Random kit for online, predetermine at start of app
+online_kit = sample(x = 1:21, size = 1)
+
 # Database ----------------------------------------------------------------
 
 #Create database if does not exist
 con <- dbConnect(SQLite(), currentDB)
-
-dbTables <- dbListTables(con)
-
-# #Create user space
-# if(!('user' %in% dbTables)){
-#   dbWriteTable(con, 'users', data.frame(
-#     userAppStartTime = NA,
-#     consent = NA,
-#     nickname = NA,
-#     age = NA,
-#     gender = NA,
-#     education = NA
-#   ))
-# }
-# 
-# #Create result space
-# if(!('results' %in% dbTables)){
-#   dbWriteTable(con, 'results', data.frame(
-#     plot = NA,
-#     ratio = NA,
-#     type = NA,
-#     file = NA,
-#     fileID = NA,
-#     set85id = NA,
-#     graphtype = NA,
-#     userStart = NA,
-#     kit = NA,
-#     nickname = NA,
-#     appStartTime = NA,
-#     plotStartTime = NA,
-#     plotEndTime = NA,
-#     whichIsSmaller = NA,
-#     byHowMuch = NA,
-#     graphCorrecter = NA
-#   ))
-# }
-
 dbDisconnect(con)
 
 
@@ -275,7 +241,7 @@ instructions <- {fluidPage(
              'You will see a series of 15-20 charts in this experiment.',
              'On each screen, you will see either a rendered chart (in 2D or 3D), or a prompt to choose a 3D printed chart from your kit.'),
            br(),
-           p("Before you start, please enter your kit number so that we know what charts you have."),
+           p("Before you start, please enter your kit number so that we know what charts you have, or check the 'Online only' box below if you do not have access to the 3D-printed charts."),
            selectizeInput('kitID', 'Kit ID: ', choices = c(1:21, "Other"), width = '30%',   
                           # https://stackoverflow.com/questions/24175997/force-no-default-selection-in-selectinput
                           options = list(
@@ -283,7 +249,7 @@ instructions <- {fluidPage(
                             onInitialize = I('function() { this.setValue(""); }')
                           )),
            br(),
-           checkboxInput('onlineOnly', 'Please check this box if you do not have access to the 3D printed bar charts.'),
+           checkboxInput('onlineOnly', 'Online only: Please check this box only if you do not have access to the 3D printed bar charts.'),
            
            h4("Chart Selection"),
            p("If you are instructed to use a 3D chart, you will pick one of the charts from your kit and select the ID code on the bottom of the chart. ",
@@ -429,12 +395,12 @@ server <- function(input, output, session) {
         con <- dbConnect(SQLite(), currentDB )
         
         #User start time with the app, use with nickname for unique ID
-        timing$startExp <- Sys.time()
+        timing$startApp <- Sys.time()
         
         #Demographic dataset
         demographics <- data.frame(
           stat218 = input$stat218student,
-          userAppStartTime = isolate(timing$startExp),
+          userAppStartTime = isolate(timing$startApp),
           consent = input$consent,
           nickname = "Unknown",
           participantUnique = input$participantUnique,
@@ -445,8 +411,10 @@ server <- function(input, output, session) {
         )
         
         message(paste0(demographics, collapse = "\t"))
+        try({
         dbWriteTable(con, 'user', demographics, append = T)
         dbDisconnect(con)
+        })
       }
     })
   
@@ -481,6 +449,12 @@ server <- function(input, output, session) {
     actionButton('toExp', 'Begin')
   })
   
+  observeEvent(input$onlineOnly, {
+    if(input$onlineOnly){
+    updateSelectInput(inputId = 'kitID', selected = online_kit)
+    }
+  })
+  
   output$expNextBtn <- renderUI({
     if (input$consent == "FALSE") {
       list(
@@ -499,10 +473,12 @@ server <- function(input, output, session) {
   })
   
   
+  
   # Get plots in a particular kit
   plots_in_kit <- reactive({
     validate(need(!is.na(as.numeric(input$kitID)), "Please provide kit ID to continue"))
     kitID_num <- as.numeric(input$kitID)
+
     if (!is.na(kitID_num)) {
       # Filter data for given kit
       kitsWithData[[kitID_num]] %>% 
@@ -553,6 +529,8 @@ server <- function(input, output, session) {
     plot3dClicks = 0,
     curUserMatrix = data.frame()
   )
+  
+  
   
   is3dtrial <- reactive({ # Define a reactive variable that is just is it a 3d plot
     tmp <- isolate(plots_trial()$plot)
@@ -722,8 +700,12 @@ server <- function(input, output, session) {
                   by = 'dummy') %>% 
         select(-dummy)
 
+      try({
       dbWriteTable(con, 'userMatrix', userMatrixSave, append = T)
       dbDisconnect(con)
+      })
+      try(write.csv(userMatrixSave, paste0('csv/', input)))
+      
     } else {
       message("Results not written to database - no consent")
     }
@@ -757,7 +739,8 @@ server <- function(input, output, session) {
         select(-trial) %>%
         mutate(nickname = "Unknown",
                participantUnique = input$participantUnique,
-               appStartTime = timing$startExp,
+               appStartTime = timing$startApp,
+               expStartTime = timing$startExp,
                plotStartTime = trial_data$startTime,
                plotEndTime = trial_data$endTime,
                plot3dClicks = trial_data$plot3dClicks,
@@ -765,8 +748,17 @@ server <- function(input, output, session) {
                byHowMuch = trial_data$byHowMuch,
                file = ifelse(is.na(file), input$`plotID3d`, file),
                graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA))
+      
+      try({
       dbWriteTable(con, 'results', results, append = T)
       dbDisconnect(con)
+      })
+      # try({ #NOT WORKING AT THE MOMENT, UNSURE WHY??
+      #   write.csv(results, paste0('csv/results-', 
+      #                             input$participantUnique, 
+      #                             isolate(timing$startApp)), '.csv',
+      #             append = T)
+      # })
     } else {
       message("Results not written to database - no consent")
     }
