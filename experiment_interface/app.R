@@ -45,6 +45,8 @@ shinyjs.enableTab = function(param) {
 
 set85id_colors <- tibble(set85id = c(1, 2, 3, 4, 5, 6, 9), 
                          print_color = c("#1B90A9", "#0A5447", "#DD1F31", "#F9E000", "#1883C5", "#F98F00", "#6F4D89"))
+set85id_colors2 <- tibble(set85id = c(1, 2, 3, 4, 5, 6, 9), 
+                          print_color = c("#F9E000", "#F98F00", "#1883C5", "#DD1F31", "#0A5447", "#6F4D89", "#1B90A9"))
 
 stl_files <- list.files('stl_files', pattern = '.stl$')
 
@@ -615,7 +617,9 @@ server <- function(input, output, session) {
   
   output$bar2d <- renderPlot({
     validate(need(trial_data$info$plot == '2dDigital', ''))
-    Bar2D(trial_data$df)
+    tmpID2 <- plots_trial()$fileID[trial_data$trialID]
+    colors2 <- rep(set85id_colors2$print_color, each = 2)
+    Bar2D(trial_data$df, color = colors2[tmpID2])
   })
   
   output$print3d <- renderPlot({
@@ -635,7 +639,7 @@ server <- function(input, output, session) {
   output$bar3s <- renderImage({
     validate(need(trial_data$info$plot == '3dStatic', ''))
     list(src = paste0('data/static3d/static3d-', plots_in_kit()$fileID[trial_data$trialID],'png.png'),
-         width = '400px',
+         width = '388px',
          alt = '3d static plot')
   }, deleteFile = FALSE)
   
@@ -664,10 +668,10 @@ server <- function(input, output, session) {
     switch(
       as.character(trial_data$info$plot),
       'refresh' = plotOutput('refresh'),
-      '2dDigital' = plotOutput('bar2d', width = '400px'),
+      '2dDigital' = plotOutput('bar2d', width = '368px'),
       '3dPrint' = plotOutput('print3d', width = '400px'),
-      '3dStatic' = imageOutput('bar3s', width = '400px'),
-      '3dDigital' = rglwidgetOutput('bar3d', width = '400px')
+      '3dStatic' = imageOutput('bar3s', width = 'auto'), #width defined in renderImage
+      '3dDigital' = rglwidgetOutput('bar3d')
     )}
   })
   
