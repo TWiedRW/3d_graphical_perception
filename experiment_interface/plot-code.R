@@ -1,11 +1,12 @@
 require(tidyverse)
 
 #### 2D Bar Chart ####
-Bar2D <- function(data, mark_height = 5){
+Bar2D <- function(data, mark_height = 5, color = 'grey50'){
   ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
     facet_grid(.~Group, switch = 'x') + 
     geom_col(color = 'black',
-             fill = NA,
+             fill = color,
+             #color = color,
              width = 1) +
     geom_point(data = dplyr::filter(data, IDchr != ""),
                mapping = aes(x = GroupOrder, y = mark_height),
@@ -16,7 +17,7 @@ Bar2D <- function(data, mark_height = 5){
     theme_minimal() +
     theme(axis.title = element_blank(),
           panel.grid = element_blank(),
-          aspect.ratio = 4/3.3,
+          #aspect.ratio = 4/3.3,
           axis.text.y = element_blank(),
           axis.text.x = element_text(size = 20),
           strip.text = element_text(size = 20),
@@ -27,8 +28,7 @@ Bar2D <- function(data, mark_height = 5){
 print3DPlot <- ggplot(mapping = aes(x = 1, y = 1)) +
   geom_text(aes(label = 'Please randomly select a chart\nfrom your kit'),
             size = 6) +
-  theme_void() +
-  theme(aspect.ratio = 4/3.3)
+  theme_void()
 
 Bar3D <- function(file, color = 'black'){
   rgl::readSTL(file, 

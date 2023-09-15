@@ -10,7 +10,7 @@ library(reactlog)
 # library(shinylogs)
 
 #Current database to work with
-currentDB <- "218pilot2023c.db"
+currentDB <- "218pilot2023c-test.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -708,7 +708,7 @@ server <- function(input, output, session) {
       dbWriteTable(con, 'userMatrix', userMatrixSave, append = T)
       dbDisconnect(con)
       })
-      try(write.csv(userMatrixSave, paste0('csv/', input)))
+      #try(write.csv(userMatrixSave, paste0('csv/', input)))
       
     } else {
       message("Results not written to database - no consent")
