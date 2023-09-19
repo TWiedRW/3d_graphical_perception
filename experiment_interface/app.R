@@ -53,6 +53,14 @@ stl_files <- list.files('stl_files', pattern = '.stl$')
 #Random kit for online, predetermine at start of app
 online_kit = sample(x = 1:21, size = 1)
 
+#Random order for triangle/circle
+shape_order = sample(x=1:2, size = 100, replace = T)
+
+
+
+
+
+
 # Database ----------------------------------------------------------------
 
 #Create database if does not exist
@@ -529,6 +537,7 @@ server <- function(input, output, session) {
     whichIsSmaller = NULL,
     byHowMuch = NULL,
     plot3dClicks = 0,
+    shape_order = NULL,
     curUserMatrix = data.frame()
   )
   
@@ -585,6 +594,7 @@ server <- function(input, output, session) {
     # First set info := current trial row from plots_in_kit()
     trial_data$info <- dplyr::filter(plots_trial(), trial == trial_data$trialID) 
     trial_data$full_info <- !is3dtrial()
+    trial_data$shape_order <- shape_order[trial_data$trialID]
   })
   
   # Update dataset when plotID3d is set
@@ -619,7 +629,7 @@ server <- function(input, output, session) {
     validate(need(trial_data$info$plot == '2dDigital', ''))
     tmpID2 <- plots_trial()$fileID[trial_data$trialID]
     colors2 <- rep(set85id_colors2$print_color, each = 2)
-    Bar2D(trial_data$df, color = colors2[tmpID2])
+    Bar2D(trial_data$df, color = colors2[tmpID2], shape_order = trial_data$shape_order)
   })
   
   output$print3d <- renderPlot({
@@ -638,7 +648,7 @@ server <- function(input, output, session) {
   
   output$bar3s <- renderImage({
     validate(need(trial_data$info$plot == '3dStatic', ''))
-    list(src = paste0('data/static3d/static3d-', plots_in_kit()$fileID[trial_data$trialID],'png.png'),
+    list(src = paste0('data/static3d/static3d-', plots_in_kit()$fileID[trial_data$trialID], '-', trial_data$shape_order, '.png'),
          width = '388px',
          alt = '3d static plot')
   }, deleteFile = FALSE)
@@ -740,7 +750,7 @@ server <- function(input, output, session) {
       
       #Save data
       results <- trial_data$info %>% 
-        select(-trial) %>%
+        #select(-trial) %>%
         mutate(nickname = "Unknown",
                participantUnique = input$participantUnique,
                appStartTime = timing$startApp,
@@ -751,7 +761,8 @@ server <- function(input, output, session) {
                whichIsSmaller = trial_data$whichIsSmaller,
                byHowMuch = trial_data$byHowMuch,
                file = ifelse(is.na(file), input$`plotID3d`, file),
-               graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA))
+               graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA),
+               shapeOrder = ifelse(plot %in% c('3dStatic', '2dDigital'), trial_data$shape_order, 1))
       
       try({
       dbWriteTable(con, 'results', results, append = T)
