@@ -1,7 +1,20 @@
 require(tidyverse)
 
 #### 2D Bar Chart ####
-Bar2D <- function(data, mark_height = 5, color = 'grey50'){
+Bar2D <- function(data, mark_height = 5, color = 'grey50', shape_order=c(1,2)){
+  
+  if(shape_order==1){
+    shape1 = 17
+    shape2 = 16
+  } else if(shape_order==2){
+    shape1 = 16
+    shape2 = 17
+  } else {
+      cat('Invalid shape order for 2D chart: defaulting to original order')
+      shape1 = 17
+      shape2 = 16
+    }
+  
   ggplot(data, mapping = aes(x = GroupOrder, y = Height)) +
     facet_grid(.~Group, switch = 'x') + 
     geom_col(color = 'black',
@@ -10,7 +23,7 @@ Bar2D <- function(data, mark_height = 5, color = 'grey50'){
              width = 1) +
     geom_point(data = dplyr::filter(data, IDchr != ""),
                mapping = aes(x = GroupOrder, y = mark_height),
-               shape = c(17,16),
+               shape = c(shape1, shape2),
                size = 3) +
     scale_x_discrete() +
     ylim(0, 100) +
