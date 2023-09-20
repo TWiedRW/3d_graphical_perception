@@ -421,10 +421,8 @@ server <- function(input, output, session) {
         )
         
         message(paste0(demographics, collapse = "\t"))
-        try({
         dbWriteTable(con, 'user', demographics, append = T)
         dbDisconnect(con)
-        })
       }
     })
   
@@ -702,7 +700,7 @@ server <- function(input, output, session) {
       validate(need(nrow(trial_data$curUserMatrix) >= 1,
                     'User matrix not valid'))
       userMatrixSave <- trial_data$info %>% 
-        #select(-trial) %>%
+        select(-trial) %>%
         mutate(nickname = "Unknown", 
                onlineOnly = input$onlineOnly,
                participantUnique = input$participantUnique,
@@ -714,10 +712,10 @@ server <- function(input, output, session) {
                   by = 'dummy') %>% 
         select(-dummy)
 
-      try({
+
       dbWriteTable(con, 'userMatrix', userMatrixSave, append = T)
       dbDisconnect(con)
-      })
+
       #try(write.csv(userMatrixSave, paste0('csv/', input)))
       
     } else {
@@ -764,10 +762,9 @@ server <- function(input, output, session) {
                graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA),
                shapeOrder = ifelse(plot %in% c('3dStatic', '2dDigital'), trial_data$shape_order, 1))
       
-      try({
       dbWriteTable(con, 'results', results, append = T)
       dbDisconnect(con)
-      })
+
       # try({ #NOT WORKING AT THE MOMENT, UNSURE WHY??
       #   write.csv(results, paste0('csv/results-', 
       #                             input$participantUnique, 
