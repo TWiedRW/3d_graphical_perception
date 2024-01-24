@@ -8,7 +8,7 @@ visibility: hidden !important;
 }
 .irs-min:before {
 visibility: visible;
-content: 'Smaller';
+content: '0';
 position: left;
 }
 
@@ -17,6 +17,6 @@ visibility: hidden !important;
 }
 .irs-max:after {
 visibility: visible;
-content: 'Larger';
+content: '100';
 position: left;
 }

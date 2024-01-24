@@ -10,7 +10,7 @@ library(reactlog)
 # library(shinylogs)
 
 #Current database to work with
-currentDB <- "218pilot2023c.db"
+currentDB <- "218pilot2024a.db"
 
 #Run if new stl files are provided. This will fix the format so R can read it
 #source('code/fix_stl.R')
@@ -159,7 +159,7 @@ practiceUI <- {fluidPage(
         p(
           "In this survey, a series of graphs will be given to you. Each graph will have 10 bars; two of the bars will be identified with a circle and a triangle.",
           "First, we will ask you to identify which bar (circle or triangle) is smaller.",
-          "Then, we will ask you to estimate what size the smaller bar is in comparison to the larger bar. That is, if the large bar is 1, what fraction of 1 is the smaller bar?"
+          "Then, we will ask you to estimate the size of the smaller bar if the larger bar is 100 units tall."
         ),
         
         p(
@@ -195,7 +195,7 @@ practiceUI <- {fluidPage(
              selectizeInput('dummy5', 'Which bar is smaller?',
                             choices = c('', 'Circle (●)', 'Triangle (▲)'),
                             selected = 'Circle (●)'),
-             sliderInput('dummy2', label = 'What size is the smaller bar in comparison to the larger bar?',
+             sliderInput('dummy2', label = 'If the larger bar is 100 units tall, how tall is the smaller bar?',
                          min = 0, max = 100, value = 66,
                          step = 0.1, ticks = F),
              sliderInput('dummy8', label = 'Correct answer:',
@@ -207,7 +207,7 @@ practiceUI <- {fluidPage(
              selectizeInput('dummy4', 'Which bar is smaller?',
                             choices = c('', 'Circle (●)', 'Triangle (▲)'),
                             selected = 'Triangle (▲)'),
-             sliderInput('dummy1', label = 'What size is the smaller bar in comparison to the larger bar?',
+             sliderInput('dummy1', label = 'If the larger bar is 100 units tall, how tall is the smaller bar?',
                          min = 0, max = 100, value = 33,
                          step = 0.1, ticks = F),
              sliderInput('dummy7', label = 'Correct answer:',
@@ -219,7 +219,7 @@ practiceUI <- {fluidPage(
              selectizeInput('dummy6', 'Which bar is smaller?',
                             choices = c('', 'Circle (●)', 'Triangle (▲)'),
                             selected = 'Triangle (▲)'),
-             sliderInput('dummy3', label = 'What size is the smaller bar in comparison to the larger bar?',
+             sliderInput('dummy3', label = 'If the larger bar is 100 units tall, how tall is the smaller bar?',
                          min = 0, max = 100, value = 33,
                          step = 0.1, ticks = F),
              sliderInput('dummy9', label = 'Correct answer:',
@@ -287,7 +287,7 @@ experimentUI <- {fluidPage(
       selectizeInput('smaller', 'Which bar is smaller?',
                      choices = c('', 'Circle (●)', 'Triangle (▲)'),
                      selected = NA),
-      sliderInput('ratio', label = 'Approximately what size is the smaller bar in comparison to the larger bar?',
+      sliderInput('ratio', label = 'If the larger bar is 100 units tall, how tall is the smaller bar?',
                   min = 0, max = 100, value = 50,
                   step = 0.1, ticks = F),
       br(),
