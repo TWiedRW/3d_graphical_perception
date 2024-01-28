@@ -1,3 +1,6 @@
+library(tidyverse)
+library(words)
+
 #### This is necessary to remove naughty words from the word list before generating codes
 # library(words) # Word game dictionary, used to generate response code
 data(words, package = "words")
