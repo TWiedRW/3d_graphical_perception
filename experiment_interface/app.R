@@ -350,6 +350,8 @@ ui <- navbarPage(
 
 # Server ------------------------------------------------------------------
 server <- function(input, output, session) {
+  session.id <- reactive({ as.character(floor(runif(1)*1e20)) })
+  
   # disable tabs on page load
   shinyjs::disable(selector = '.navbar-nav a[data-value="Demographics"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Practice"]')
@@ -412,7 +414,7 @@ server <- function(input, output, session) {
           stat218 = input$stat218student,
           userAppStartTime = isolate(timing$startApp),
           consent = input$consent,
-          nickname = "Unknown",
+          nickname = as.character(session.id()),
           participantUnique = input$participantUnique,
           
           age = input$age,
@@ -701,12 +703,13 @@ server <- function(input, output, session) {
                     'User matrix not valid'))
       userMatrixSave <- trial_data$info %>% 
         select(-trial) %>%
-        mutate(nickname = "Unknown", 
-               onlineOnly = input$onlineOnly,
-               participantUnique = input$participantUnique,
-               click = trial_data$plot3dClicks,
-               clickTime = Sys.time(),
-               dummy = 1
+        mutate(
+          nickname = as.character(session.id()), 
+          onlineOnly = input$onlineOnly,
+          participantUnique = input$participantUnique,
+          click = trial_data$plot3dClicks,
+          clickTime = Sys.time(),
+          dummy = 1
         ) %>% 
         full_join(data.frame(dummy = 1, trial_data$curUserMatrix),
                   by = 'dummy') %>% 
@@ -749,18 +752,19 @@ server <- function(input, output, session) {
       #Save data
       results <- trial_data$info %>% 
         #select(-trial) %>%
-        mutate(nickname = "Unknown",
-               participantUnique = input$participantUnique,
-               appStartTime = timing$startApp,
-               expStartTime = timing$startExp,
-               plotStartTime = trial_data$startTime,
-               plotEndTime = trial_data$endTime,
-               plot3dClicks = trial_data$plot3dClicks,
-               whichIsSmaller = trial_data$whichIsSmaller,
-               byHowMuch = trial_data$byHowMuch,
-               file = ifelse(is.na(file), input$`plotID3d`, file),
-               graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA),
-               shapeOrder = ifelse(plot %in% c('3dStatic', '2dDigital'), trial_data$shape_order, 1))
+        mutate(
+          nickname = as.character(session.id()),
+          participantUnique = input$participantUnique,
+          appStartTime = timing$startApp,
+          expStartTime = timing$startExp,
+          plotStartTime = trial_data$startTime,
+          plotEndTime = trial_data$endTime,
+          plot3dClicks = trial_data$plot3dClicks,
+          whichIsSmaller = trial_data$whichIsSmaller,
+          byHowMuch = trial_data$byHowMuch,
+          file = ifelse(is.na(file), input$`plotID3d`, file),
+          graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA),
+          shapeOrder = ifelse(plot %in% c('3dStatic', '2dDigital'), trial_data$shape_order, 1))
       
       dbWriteTable(con, 'results', results, append = T)
       dbDisconnect(con)
