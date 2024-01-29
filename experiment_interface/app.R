@@ -336,9 +336,9 @@ ui <- navbarPage(
   'Perceptual Judgments Experiment',
   # use_tracking(),
   # Common header for all panels
-  header = tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
-  ),
+#  header = tags$head(
+#    tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
+#  ),
   id = 'nav',
   tabPanel('Consent', consent_form),
   tabPanel('Demographics', uiOutput("demographics")),
