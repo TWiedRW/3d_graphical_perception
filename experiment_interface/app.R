@@ -287,7 +287,7 @@ experimentUI <- {fluidPage(
       selectizeInput('smaller', 'Which bar is smaller?',
                      choices = c('', 'Circle (●)', 'Triangle (▲)'),
                      selected = NA),
-      sliderInput('ratio', label = 'If the larger bar is 100 units tall, how tall is the smaller bar?',
+      sliderInput('ratio', label = 'If the larger marked bar is 100 units tall, how tall is the smaller marked bar?',
                   min = 0, max = 100, value = 50,
                   step = 0.1, ticks = F),
       br(),
@@ -296,6 +296,7 @@ experimentUI <- {fluidPage(
     ),
     mainPanel(
       uiOutput('expPlot'),
+      uiOutput("iswebgl"),
       width = 8
     )
   )
@@ -460,8 +461,10 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$onlineOnly, {
-    if(input$onlineOnly){
-    updateSelectInput(inputId = 'kitID', selected = online_kit)
+    if (!is.na(input$onlineOnly)) {
+      if(input$onlineOnly){
+        updateSelectInput(inputId = 'kitID', selected = online_kit)
+      }
     }
   })
   
@@ -477,7 +480,7 @@ server <- function(input, output, session) {
         validate(need(input$plotID3d != "--Select--", "Please choose a 3d plot ID to continue"))
       }
       validate(need(input$smaller != "", "Please identify the smaller bar to continue"))
-      validate(need(input$ratio != "0.50", "Please show the size of the small bar relative to the large bar to continue"))
+      validate(need(input$ratio != 50, "Please show the size of the small bar relative to the large bar to continue"))
       actionButton('expNext', 'Next')
     }
   })
@@ -549,6 +552,16 @@ server <- function(input, output, session) {
       tmp[pmin(trial_data$max_trials, trial_data$trialID)] == '3dPrint'
     } else {
       FALSE
+    }
+  })
+  
+  output$iswebgl <- renderUI({
+    if (length(trial_data$info$plot) > 0) {
+      if (str_detect(trial_data$info$plot, "3[Dd] ?[Dd]igital")) {
+        helpText("You can interact with this plot and rotate it to get a better estimate.")
+      } else {
+        helpText("Make your best estimate of the proportion of the smaller marked bar to the proportion of the larger marked bar.")
+      }
     }
   })
   
@@ -674,15 +687,18 @@ server <- function(input, output, session) {
     if (trial_data$trialID > trial_data$max_trials) {
       message('Trial ID exceeds maximum number of trials')
     } else{
-    message(sprintf("Trial: %d is a %s", trial_data$trialID, trial_data$info$plot))
-    switch(
-      as.character(trial_data$info$plot),
-      'refresh' = plotOutput('refresh'),
-      '2dDigital' = plotOutput('bar2d', width = '368px'),
-      '3dPrint' = plotOutput('print3d', width = '400px'),
-      '3dStatic' = imageOutput('bar3s', width = 'auto'), #width defined in renderImage
-      '3dDigital' = rglwidgetOutput('bar3d')
-    )}
+      if(trial_data$info$plot != "refresh") {
+        message(sprintf("Trial: %d is a %s", trial_data$trialID, trial_data$info$plot))
+      }
+      switch(
+        as.character(trial_data$info$plot),
+        'refresh' = plotOutput('refresh'),
+        '2dDigital' = plotOutput('bar2d', width = '368px'),
+        '3dPrint' = plotOutput('print3d', width = '400px'),
+        '3dStatic' = imageOutput('bar3s', width = 'auto'), #width defined in renderImage
+        '3dDigital' = rglwidgetOutput('bar3d')
+      )
+    }
   })
   
   onclick('bar3d', {
