@@ -357,6 +357,8 @@ server <- function(input, output, session) {
   shinyjs::disable(selector = '.navbar-nav a[data-value="Experiment"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Finishing Up"]')
   
+  # Creates a unique session ID (https://stackoverflow.com/questions/49729733/is-there-a-unique-session-id-session-key-assigned-to-each-shinyr-session/52093223#52093223)
+  session.id <- reactive({ as.character(floor(runif(1)*1e20)) })
   
   # track_usage(storage_mode = store_json(path = "logs/"))
   
@@ -412,7 +414,7 @@ server <- function(input, output, session) {
           stat218 = input$stat218student,
           userAppStartTime = isolate(timing$startApp),
           consent = input$consent,
-          nickname = "Unknown",
+          nickname = session.id(),
           participantUnique = input$participantUnique,
           
           age = input$age,
