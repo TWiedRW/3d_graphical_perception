@@ -29,7 +29,7 @@ if (any(stringr::str_detect(modified, "(experiment_interface/.*\\.db)|(experimen
   try(git2r::commit(message = "Update data and codes"))
 
   # Update
-  git2r::pull(repo = repo, credentials = cred)
+  git2r::pull(repo = ".", credentials = cred)
   git2r::push(getwd(), credentials = cred)
 
   if (length(git2r::status()$unstaged$conflicted) > 0) {

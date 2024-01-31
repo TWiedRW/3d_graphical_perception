@@ -287,7 +287,7 @@ experimentUI <- {fluidPage(
       selectizeInput('smaller', 'Which bar is smaller?',
                      choices = c('', 'Circle (●)', 'Triangle (▲)'),
                      selected = NA),
-      sliderInput('ratio', label = 'If the larger bar is 100 units tall, how tall is the smaller bar?',
+      sliderInput('ratio', label = 'If the larger marked bar is 100 units tall, how tall is the smaller marked bar?',
                   min = 0, max = 100, value = 50,
                   step = 0.1, ticks = F),
       br(),
@@ -296,6 +296,7 @@ experimentUI <- {fluidPage(
     ),
     mainPanel(
       uiOutput('expPlot'),
+      uiOutput("iswebgl"),
       width = 8
     )
   )
@@ -335,9 +336,9 @@ ui <- navbarPage(
   'Perceptual Judgments Experiment',
   # use_tracking(),
   # Common header for all panels
-  header = tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
-  ),
+#  header = tags$head(
+#    tags$link(rel = "stylesheet", type = "text/css", href = "app.css")
+#  ),
   id = 'nav',
   tabPanel('Consent', consent_form),
   tabPanel('Demographics', uiOutput("demographics")),
@@ -350,6 +351,8 @@ ui <- navbarPage(
 
 # Server ------------------------------------------------------------------
 server <- function(input, output, session) {
+  session.id <- reactive({ as.character(floor(runif(1)*1e20)) })
+  
   # disable tabs on page load
   shinyjs::disable(selector = '.navbar-nav a[data-value="Demographics"]')
   shinyjs::disable(selector = '.navbar-nav a[data-value="Practice"]')
@@ -414,7 +417,8 @@ server <- function(input, output, session) {
           stat218 = input$stat218student,
           userAppStartTime = isolate(timing$startApp),
           consent = input$consent,
-          nickname = session.id(),
+          nickname = as.character(session.id()),
+
           participantUnique = input$participantUnique,
           
           age = input$age,
@@ -460,8 +464,10 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$onlineOnly, {
-    if(input$onlineOnly){
-    updateSelectInput(inputId = 'kitID', selected = online_kit)
+    if (!is.na(input$onlineOnly)) {
+      if(input$onlineOnly){
+        updateSelectInput(inputId = 'kitID', selected = online_kit)
+      }
     }
   })
   
@@ -477,7 +483,7 @@ server <- function(input, output, session) {
         validate(need(input$plotID3d != "--Select--", "Please choose a 3d plot ID to continue"))
       }
       validate(need(input$smaller != "", "Please identify the smaller bar to continue"))
-      validate(need(input$ratio != "0.50", "Please show the size of the small bar relative to the large bar to continue"))
+      validate(need(input$ratio != 50, "Please show the size of the small bar relative to the large bar to continue"))
       actionButton('expNext', 'Next')
     }
   })
@@ -550,6 +556,16 @@ server <- function(input, output, session) {
       tmp[pmin(trial_data$max_trials, trial_data$trialID)] == '3dPrint'
     } else {
       FALSE
+    }
+  })
+  
+  output$iswebgl <- renderUI({
+    if (length(trial_data$info$plot) > 0) {
+      if (str_detect(trial_data$info$plot, "3[Dd] ?[Dd]igital")) {
+        helpText("You can interact with this plot and rotate it to get a better estimate.")
+      } else {
+        helpText("Make your best estimate of the proportion of the smaller marked bar to the proportion of the larger marked bar.")
+      }
     }
   })
   
@@ -675,15 +691,18 @@ server <- function(input, output, session) {
     if (trial_data$trialID > trial_data$max_trials) {
       message('Trial ID exceeds maximum number of trials')
     } else{
-    message(sprintf("Trial: %d is a %s", trial_data$trialID, trial_data$info$plot))
-    switch(
-      as.character(trial_data$info$plot),
-      'refresh' = plotOutput('refresh'),
-      '2dDigital' = plotOutput('bar2d', width = '368px'),
-      '3dPrint' = plotOutput('print3d', width = '400px'),
-      '3dStatic' = imageOutput('bar3s', width = 'auto'), #width defined in renderImage
-      '3dDigital' = rglwidgetOutput('bar3d')
-    )}
+      if(trial_data$info$plot != "refresh") {
+        message(sprintf("Trial: %d is a %s", trial_data$trialID, trial_data$info$plot))
+      }
+      switch(
+        as.character(trial_data$info$plot),
+        'refresh' = plotOutput('refresh'),
+        '2dDigital' = plotOutput('bar2d', width = '368px'),
+        '3dPrint' = plotOutput('print3d', width = '400px'),
+        '3dStatic' = imageOutput('bar3s', width = 'auto'), #width defined in renderImage
+        '3dDigital' = rglwidgetOutput('bar3d')
+      )
+    }
   })
   
   onclick('bar3d', {
@@ -704,12 +723,13 @@ server <- function(input, output, session) {
                     'User matrix not valid'))
       userMatrixSave <- trial_data$info %>% 
         select(-trial) %>%
-        mutate(nickname = "Unknown", 
-               onlineOnly = input$onlineOnly,
-               participantUnique = input$participantUnique,
-               click = trial_data$plot3dClicks,
-               clickTime = Sys.time(),
-               dummy = 1
+        mutate(
+          nickname = as.character(session.id()), 
+          onlineOnly = input$onlineOnly,
+          participantUnique = input$participantUnique,
+          click = trial_data$plot3dClicks,
+          clickTime = Sys.time(),
+          dummy = 1
         ) %>% 
         full_join(data.frame(dummy = 1, trial_data$curUserMatrix),
                   by = 'dummy') %>% 
@@ -752,18 +772,19 @@ server <- function(input, output, session) {
       #Save data
       results <- trial_data$info %>% 
         #select(-trial) %>%
-        mutate(nickname = session.id(),
-               participantUnique = input$participantUnique,
-               appStartTime = timing$startApp,
-               expStartTime = timing$startExp,
-               plotStartTime = trial_data$startTime,
-               plotEndTime = trial_data$endTime,
-               plot3dClicks = trial_data$plot3dClicks,
-               whichIsSmaller = trial_data$whichIsSmaller,
-               byHowMuch = trial_data$byHowMuch,
-               file = ifelse(is.na(file), input$`plotID3d`, file),
-               graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA),
-               shapeOrder = ifelse(plot %in% c('3dStatic', '2dDigital'), trial_data$shape_order, 1))
+        mutate(
+          nickname = as.character(session.id()),
+          participantUnique = input$participantUnique,
+          appStartTime = timing$startApp,
+          expStartTime = timing$startExp,
+          plotStartTime = trial_data$startTime,
+          plotEndTime = trial_data$endTime,
+          plot3dClicks = trial_data$plot3dClicks,
+          whichIsSmaller = trial_data$whichIsSmaller,
+          byHowMuch = trial_data$byHowMuch,
+          file = ifelse(is.na(file), input$`plotID3d`, file),
+          graphCorrecter = ifelse(plot == '3dPrint', input$incorrectGraph, NA),
+          shapeOrder = ifelse(plot %in% c('3dStatic', '2dDigital'), trial_data$shape_order, 1))
       
       dbWriteTable(con, 'results', results, append = T)
       dbDisconnect(con)
