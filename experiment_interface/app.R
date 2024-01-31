@@ -525,6 +525,7 @@ server <- function(input, output, session) {
   # Initialize reactive values for trial information
   trial_data <- reactiveValues(
     trialID = NA,
+    session.id = NULL,
     max_trials = 20,
     plots_3d_options = NULL,
     plots_3d_used = NULL,
@@ -751,7 +752,7 @@ server <- function(input, output, session) {
       #Save data
       results <- trial_data$info %>% 
         #select(-trial) %>%
-        mutate(nickname = "Unknown",
+        mutate(nickname = session.id(),
                participantUnique = input$participantUnique,
                appStartTime = timing$startApp,
                expStartTime = timing$startExp,
