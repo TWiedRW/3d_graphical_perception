@@ -22,7 +22,26 @@ load('data/kits.Rdata')
 source("demo-plots.R")
 
 # Code to generate completion codes and save all codes to a file
-source("completion-code.R")
+# source("completion-code.R")
+
+generate_completion_code <- function(nwords = 4, sep = '-', exclusion_file = "codes.txt") {
+  # Generate new code
+  newcode <- paste0(
+    apply(
+      replicate(nwords, sample(0:9, 5, replace = T)),
+      2, paste0, collapse = ''
+    ), collapse = '-'
+  )
+  
+  oldcodes <- readLines(exclusion_file)
+  if (newcode %in% oldcodes) {
+    message("Code collision, generating new code")
+    newcode <- generate_completion_code(nwords = nwords, sep = sep, exclusion_file = exclusion_file)
+  }
+  
+  writeLines(c(oldcodes, newcode), exclusion_file)
+  return(newcode)
+}
 
 # Functions to generate experiment charts
 source("plot-code.R")
